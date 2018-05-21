@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/gitlab_service?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: choerodon
+    password: choerodon
+  cloud:
+    stream:
+        kafka:
+          binder:
+            brokers: 127.0.0.1:9092
+            zkNodes: 127.0.0.1:2181
+        default-binder: kafka
+  sleuth:
+    integration:
+      enabled: false
+    scheduled:
+      enabled: false
+    sampler:
+      percentage: 1.0
+choerodon:
+  event:
+    consumer:
+      enabled: true # 是否开启，不设置默认开启
+      queue-type: kafka # 消息队列类型
+      enable-duplicate-remove: true # 是否开启去重
+      failed-strategy: nothing # 失败策略。支持nothing(什么都不做), send_back_event_store(回传到event store)两种
+      retry:
+        enabled: true # 是否开启重试功能
+      kafka:
+        bootstrap-servers: localhost:9092 # kafka地址
+gitlab:
+  url: "gitlab.example.com"
+  privateToken: "123456"
+eureka:
+  instance:
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 3
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8000/eureka/
+    registryFetchIntervalSeconds: 1
+feign:
+  hystrix:
+    enabled: true
