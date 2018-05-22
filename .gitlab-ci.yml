@@ -7,7 +7,10 @@ stages:
 maven-test-branches:
   stage: mvn-package
   script:
-    - git_merge develop
+    - git config user.name ${GITLAB_USER_NAME}
+    - git config user.email ${GITLAB_USER_EMAIL}
+    - git checkout -t origin/develop
+    - git merge ${CI_COMMIT_SHA} --no-commit --no-ff
     - mvn package -U -DskipTests=false 
     - mvn --batch-mode verify sonar:sonar -Dsonar.host.url=${SONAR_URL} -Dsonar.analysis.mode=preview -Dsonar.gitlab.commit_sha=${CI_COMMIT_SHA} -Dsonar.gitlab.ref_name=${CI_COMMIT_REF_NAME} -Dsonar.gitlab.project_id=${CI_PROJECT_ID}
   only:
