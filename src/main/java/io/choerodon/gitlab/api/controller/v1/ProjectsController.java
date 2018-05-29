@@ -60,7 +60,7 @@ public class ProjectsController {
     public ResponseEntity delete(
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "用户名称")
+            @ApiParam(value = "用户Id称")
             @RequestParam(required = false) Integer userId) {
         projectService.deleteProject(projectId, userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -87,7 +87,7 @@ public class ProjectsController {
             @RequestParam String value,
             @ApiParam(value = "变量是否保护", required = true)
             @RequestParam boolean protecteds,
-            @ApiParam(value = "用户名称")
+            @ApiParam(value = "用户Id称")
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(projectService.createVariable(projectId, key, value, protecteds, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
@@ -127,7 +127,7 @@ public class ProjectsController {
      * 更新项目
      *
      * @param projectId  项目对象
-     * @param userId 用户名
+     * @param userId 用户Id
      * @return Project
      */
     @ApiOperation(value = "更新项目")
@@ -157,7 +157,7 @@ public class ProjectsController {
             @PathVariable Integer projectId,
             @ApiParam(value = "保护分支名", required = true)
             @PathVariable String name,
-            @ApiParam(value = "用户名称", required = true)
+            @ApiParam(value = "用户Id称", required = true)
             @RequestParam Integer userId) {
         return Optional.ofNullable(projectService.queryBranchByBranchName(projectId, name, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
@@ -168,7 +168,7 @@ public class ProjectsController {
      * 查询保护分支列表
      *
      * @param projectId 项目Id
-     * @param userId  用户名
+     * @param userId  用户Id
      * @return List
      */
     @ApiOperation(value = "查询项目下所有的保护分支")
@@ -198,7 +198,7 @@ public class ProjectsController {
             @PathVariable Integer projectId,
             @ApiParam(value = "保护分支名", required = true)
             @PathVariable String name,
-            @ApiParam(value = "用户名称", required = true)
+            @ApiParam(value = "用户Id称", required = true)
             @RequestParam Integer userId) {
         projectService.deleteByBranchName(projectId, name, userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);

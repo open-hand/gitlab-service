@@ -42,7 +42,7 @@ public class RepositoryController {
             @RequestParam("name") String name,
             @ApiParam(value = "源分支名", required = true)
             @RequestParam("source") String source,
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(value = "userId") Integer userId
     ) {
         return Optional.ofNullable(repositoryService.createBranch(projectId, name, source, userId))
@@ -62,7 +62,7 @@ public class RepositoryController {
     public ResponseEntity<List<Tag>> listTags(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(repositoryService.listTags(projectId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
@@ -85,7 +85,7 @@ public class RepositoryController {
             @PathVariable Integer projectId,
             @RequestParam("page") int page,
             @RequestParam("perPage") int perPage,
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(repositoryService.listTagsByPage(projectId, page, perPage, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
@@ -111,7 +111,7 @@ public class RepositoryController {
             @RequestParam("name") String name,
             @ApiParam(value = "标签源", required = true)
             @RequestParam("ref") String ref,
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false)
                     Integer userId) {
         return Optional.ofNullable(repositoryService.createTag(projectId, name, ref, userId))
@@ -133,7 +133,7 @@ public class RepositoryController {
             @PathVariable Integer projectId,
             @ApiParam(value = "要删除的分支名", required = true)
             @RequestParam("branchName") String branchName,
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         repositoryService.deleteBranch(projectId, branchName, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -169,7 +169,7 @@ public class RepositoryController {
     @GetMapping("/branches")
     public ResponseEntity<List<Branch>> listBranches(
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(repositoryService.listBranches(projectId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))

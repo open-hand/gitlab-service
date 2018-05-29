@@ -99,15 +99,15 @@ public class UserController {
     }
 
     /**
-     * 根据用户名获得用户信息
+     * 根据用户Id获得用户信息
      *
-     * @param username 用户名
+     * @param username 用户Id
      * @return User
      */
-    @ApiOperation(value = "根据用户名获得用户信息")
+    @ApiOperation(value = "根据用户Id获得用户信息")
     @GetMapping(value = "/{username}/details")
     public ResponseEntity<User> queryUserByUsername(
-            @ApiParam(value = "用户名", required = true)
+            @ApiParam(value = "用户Id", required = true)
             @PathVariable String username) {
         return Optional.ofNullable(userService.queryUserByUsername(username))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
@@ -122,23 +122,23 @@ public class UserController {
     @ApiOperation(value = "删除用户")
     @DeleteMapping(value = "{userId}")
     public ResponseEntity deleteUserByUserId(
-            @ApiParam(value = "用户名", required = true)
+            @ApiParam(value = "用户Id", required = true)
             @PathVariable Integer userId) {
         userService.deleteUserByUserId(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
-     * 根据用户名更新用户
+     * 根据用户Id更新用户
      *
      * @param userId     用户Id
      * @param projectsLimit 创建项目上限
      * @param user          用户信息
      */
-    @ApiOperation(value = "根据用户名更新用户")
+    @ApiOperation(value = "根据用户Id更新用户")
     @PutMapping(value = "/{userId}")
     public ResponseEntity<User> updateUserByUserId(
-            @ApiParam(value = "用户名", required = true)
+            @ApiParam(value = "用户Id", required = true)
             @PathVariable Integer userId,
             @ApiParam(value = "创建项目上限")
             @RequestParam(required = false) Integer projectsLimit,
@@ -150,28 +150,28 @@ public class UserController {
     }
 
     /**
-     * 根据用户名禁用用户
+     * 根据用户Id禁用用户
      *
      * @param userId 用户Id
      */
-    @ApiOperation(value = "根据用户名禁用用户")
+    @ApiOperation(value = "根据用户Id禁用用户")
     @PutMapping(value = "/{userId}/dis_enabled")
     public ResponseEntity disEnabledUserByUserId(
-            @ApiParam(value = "用户名", required = true)
+            @ApiParam(value = "用户Id", required = true)
             @PathVariable Integer userId) {
         userService.disEnabledUserByUserId(userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
-     * 根据用户名启用用户
+     * 根据用户Id启用用户
      *
      * @param userId 用户Id
      */
-    @ApiOperation(value = "根据用户名启用用户")
+    @ApiOperation(value = "根据用户Id启用用户")
     @PutMapping(value = "/{userId}/is_enabled")
     public ResponseEntity enabledUserByUserId(
-            @ApiParam(value = "用户名", required = true)
+            @ApiParam(value = "用户Id", required = true)
             @PathVariable Integer userId) {
         userService.enabledUserByUserId(userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -180,7 +180,7 @@ public class UserController {
     /**
      * 创建用户的Access_Token
      *
-     * @param userId 用户名
+     * @param userId 用户Id
      * @return ImpersonationToken
      */
     @ApiOperation(value = "创建用户的Access_Token")
@@ -194,7 +194,7 @@ public class UserController {
     /**
      * 获取用户的Access_Token
      *
-     * @param userId 用户名
+     * @param userId 用户Id
      * @return List
      */
     @ApiOperation(value = "获取用户的Access_Token")

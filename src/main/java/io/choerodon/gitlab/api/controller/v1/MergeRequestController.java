@@ -49,7 +49,7 @@ public class MergeRequestController {
             @RequestParam("title") String title,
             @ApiParam(value = "源分支名", required = true)
             @RequestParam("description") String description,
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(mergeRequestService.createMergeRequest(projectId,
                 sourceBranch, targetBranch, title, description, userId))
@@ -92,7 +92,7 @@ public class MergeRequestController {
             @PathVariable Integer projectId,
             @ApiParam(value = "合并请求id", required = true)
             @PathVariable("mergeRequestId") Integer mergeRequestId,
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(mergeRequestService.queryMergeRequest(projectId, mergeRequestId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
@@ -139,7 +139,7 @@ public class MergeRequestController {
             @RequestParam("removeSourceBranch") Boolean shouldRemoveSourceBranch,
             @ApiParam(value = "pipeline成功后自动合并分支")
             @RequestParam("mergeWhenPipelineSucceeds") Boolean mergeWhenPipelineSucceeds,
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(mergeRequestService.acceptMergeRequest(projectId,
                 mergeRequestId, mergeCommitMessage, shouldRemoveSourceBranch, mergeWhenPipelineSucceeds, userId))
