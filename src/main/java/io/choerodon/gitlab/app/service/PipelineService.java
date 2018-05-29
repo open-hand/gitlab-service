@@ -18,45 +18,47 @@ public interface PipelineService {
      * @param projectId 项目 Id
      * @param page      页码
      * @param size      每页大小
+     * @param userId    用户Id
      * @return List
      */
-    List<Pipeline> listPipelinesByPage(Integer projectId, Integer page, Integer size);
+    List<Pipeline> listPipelinesByPage(Integer projectId, Integer page, Integer size,Integer userId);
 
     /**
      * 查询项目下的pipelines
      *
      * @param projectId 项目 Id
+     * @param userId    用户Id
      * @return List
      */
-    List<Pipeline> listPipelines(Integer projectId);
+    List<Pipeline> listPipelines(Integer projectId,Integer userId);
 
     /**
      * 查询某个pipelines的具体信息
      *
      * @param projectId  项目 Id
      * @param pipelineId 流水线 Id
-     * @param userName   用户名
+     * @param userId   用户Id
      * @return Pipeline
      */
-    PipelineDto queryPipeline(Integer projectId, Integer pipelineId, String userName);
+    PipelineDto queryPipeline(Integer projectId, Integer pipelineId, Integer userId);
 
     /**
      * Retry jobs in a pipeline
      *
      * @param projectId  项目 Id
      * @param pipelineId 流水线 Id
-     * @param userName   用户名
+     * @param userId   用户Id
      * @return
      */
-    Pipeline retryPipeline(Integer projectId, Integer pipelineId, String userName);
+    Pipeline retryPipeline(Integer projectId, Integer pipelineId, Integer userId);
 
     /**
      * Cancel a pipelines jobs
      *
      * @param projectId  项目 Id
      * @param pipelineId 流水线 Id
-     * @param userName   用户名
+     * @param userId   用户Id
      * @return
      */
-    Pipeline cancelPipeline(Integer projectId, Integer pipelineId, String userName);
+    Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId);
 }

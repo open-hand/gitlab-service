@@ -27,7 +27,7 @@ public class HookController {
      * 创建ProjectHook对象
      *
      * @param projectId   项目id
-     * @param userName    用户名
+     * @param userId    用户Id
      * @param projectHook projectHook对象
      * @return ProjectHook
      */
@@ -36,11 +36,11 @@ public class HookController {
     public ResponseEntity<ProjectHook> create(
             @ApiParam(value = "项目ID", required = true)
             @RequestParam Integer projectId,
-            @ApiParam(value = "userName")
-            @RequestParam(required = false) String userName,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId,
             @ApiParam(value = "projectHook对象", required = true)
             @RequestBody ProjectHook projectHook) {
-        return Optional.ofNullable(hookService.createProjectHook(projectId, projectHook, userName))
+        return Optional.ofNullable(hookService.createProjectHook(projectId, projectHook, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException("error.projects.add.hook"));
     }

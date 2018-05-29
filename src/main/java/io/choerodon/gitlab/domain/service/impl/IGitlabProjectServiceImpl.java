@@ -37,7 +37,7 @@ public class IGitlabProjectServiceImpl implements IGitlabProjectService {
 
     @Override
     public void createGitlabProject(GitlabProjectEventPayload gitlabProjectEventPayload) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(gitlabProjectEventPayload.getUserName());
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(gitlabProjectEventPayload.getUserId());
         try {
             Project project = gitLabApi.getProjectApi().createProject(gitlabProjectEventPayload.getGroupId(),
                     gitlabProjectEventPayload.getPath());

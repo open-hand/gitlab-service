@@ -12,10 +12,10 @@ public interface JobService {
      *
      * @param projectId  项目id
      * @param pipelineId 流水线id
-     * @param userName   用户名
+     * @param userId   用户Id
      * @return List
      */
-    List<Job> listJobs(Integer projectId, Integer pipelineId, String userName);
+    List<Job> listJobs(Integer projectId, Integer pipelineId, Integer userId);
 
     /**
      * 查询项目下某个Job的具体信息

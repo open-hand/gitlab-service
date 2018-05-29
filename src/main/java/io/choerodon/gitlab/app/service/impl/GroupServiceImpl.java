@@ -6,10 +6,7 @@ import java.util.stream.Collectors;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.GroupApi;
-import org.gitlab4j.api.models.AccessLevel;
-import org.gitlab4j.api.models.Group;
-import org.gitlab4j.api.models.Member;
-import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +27,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupDTO createGroup(GroupDTO group, String userName) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userName);
+    public GroupDTO createGroup(GroupDTO group, Integer userId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             GroupApi groupApi = gitLabApi.getGroupApi();
             groupApi.addGroup(group.getName(), group.getPath(), group.getDescription(),
@@ -52,8 +49,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group updateGroup(Integer groupId, String userName, Group group) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userName);
+    public Group updateGroup(Integer groupId, Integer userId, Group group) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             return gitLabApi.getGroupApi().updateGroup(groupId, group.getName(), group.getPath(),
                     group.getDescription(), null, null, group.getVisibility(), null,
@@ -64,12 +61,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void deleteGroup(Integer groupId) {
-        String username = gitlab4jclient.getRealUsername(null);
-        GroupApi groupApi = gitlab4jclient.getGitLabApiUser(username).getGroupApi();
+    public void deleteGroup(Integer groupId,Integer userId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        GroupApi groupApi = gitLabApi.getGroupApi();
         try {
+            User user = gitLabApi.getUserApi().getUser(userId);
             List<Member> members = groupApi.getMembers(groupId)
-                    .stream().filter(t -> username.equals(t.getUsername())).collect(Collectors.toList());
+                    .stream().filter(t -> user.getUsername().equals(t.getUsername())).collect(Collectors.toList());
             if (members != null && AccessLevel.OWNER.value.equals(members.get(0).getAccessLevel().value)) {
                 groupApi.deleteGroup(groupId);
             } else {
@@ -82,8 +80,8 @@ public class GroupServiceImpl implements GroupService {
 
 
     @Override
-    public List<Project> listProjects(Integer groupId, String username) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(username);
+    public List<Project> listProjects(Integer groupId, Integer userId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             return gitLabApi.getGroupApi().getProjects(groupId);
         } catch (GitLabApiException e) {
@@ -92,8 +90,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group queryGroupByName(String groupName) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(null);
+    public Group queryGroupByName(String groupName,Integer userId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             return gitLabApi.getGroupApi().getGroup(groupName);
         } catch (GitLabApiException e) {
@@ -103,7 +101,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> listGroups() {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(null);
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         try {
             return gitLabApi.getGroupApi().getGroups();
         } catch (GitLabApiException e) {

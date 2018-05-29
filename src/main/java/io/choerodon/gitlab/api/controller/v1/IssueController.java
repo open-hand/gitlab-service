@@ -45,19 +45,19 @@ public class IssueController {
     /**
      * 批量创建issue
      *
-     * @param userName  用户名  optional
+     * @param userId  用户Id  optional
      * @param issueDtos issueDto对象Map
      * @return Map
      */
     @ApiOperation(value = "批量创建issue")
     @PostMapping(value = "/batch_create")
     public ResponseEntity<Map<Long, Issue>> batchCreate(
-            @ApiParam(value = "userName")
-            @RequestParam(required = false) String userName,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId,
             @ApiParam(value = "issue参数map", required = true)
             @RequestBody Map<Long, IssueDto> issueDtos) {
 
-        return Optional.ofNullable(issueService.batchCreateIssue(issueDtos, userName))
+        return Optional.ofNullable(issueService.batchCreateIssue(issueDtos, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException("error.issue.add"));
     }
@@ -82,17 +82,17 @@ public class IssueController {
     /**
      * 批量更新issue
      *
-     * @param userName  用户名  optional
+     * @param userId 用户名  optional
      * @param issueDtos issueDto对象
      */
     @ApiOperation(value = "批量更新issue")
     @PutMapping(value = "/batch_update")
     public ResponseEntity batchUpdate(
             @ApiParam(value = "用户名")
-            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) Integer userId,
             @ApiParam(value = "issue参数", required = true)
             @RequestBody List<IssueDto> issueDtos) {
-        issueService.batchUpdateIssue(userName, issueDtos);
+        issueService.batchUpdateIssue(userId, issueDtos);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -124,11 +124,11 @@ public class IssueController {
     public ResponseEntity batchClose(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "userName")
-            @RequestParam(required = false) String userName,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId,
             @ApiParam(value = "issueIid", required = true)
             @RequestBody List<Integer> issueIds) {
-        issueService.batchCloseIssue(projectId, issueIds, userName);
+        issueService.batchCloseIssue(projectId, issueIds, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -160,11 +160,11 @@ public class IssueController {
     public ResponseEntity batchOpen(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "userName")
-            @RequestParam(required = false) String userName,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId,
             @ApiParam(value = "issueIid", required = true)
             @RequestBody List<Integer> issueIds) {
-        issueService.batchOpenIssue(projectId, issueIds, userName);
+        issueService.batchOpenIssue(projectId, issueIds, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -189,7 +189,7 @@ public class IssueController {
      * 批量删除issue
      *
      * @param projectId 项目id
-     * @param userName  用户名  optional
+     * @param userId  用户名  optional
      * @param issueList issueIid List
      */
     @ApiOperation(value = "批量删除issue")
@@ -198,10 +198,10 @@ public class IssueController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "用户名")
-            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) Integer userId,
             @ApiParam(value = "issueIid", required = true)
             @RequestBody List<Integer> issueList) {
-        issueService.listDeleteIssue(projectId, userName, issueList);
+        issueService.listDeleteIssue(projectId, userId, issueList);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

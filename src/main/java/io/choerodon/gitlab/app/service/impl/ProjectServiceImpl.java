@@ -25,8 +25,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public Project createProject(Integer groupId, String projectName, String userName) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userName);
+    public Project createProject(Integer groupId, String projectName, Integer userId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             Project project = gitLabApi.getProjectApi().createProject(groupId, projectName);
             gitLabApi.getRepositoryApi().createBranch(project.getId(), "develop", "master");
@@ -39,10 +39,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void deleteProject(Integer projectId, String userName) {
+    public void deleteProject(Integer projectId, Integer userId) {
         try {
             gitlab4jclient
-                    .getGitLabApi(userName)
+                    .getGitLabApi(userId)
                     .getProjectApi().deleteProject(projectId);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
@@ -50,9 +50,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Map<String, Object> createVariable(Integer projectId, String key, String value, boolean protecteds, String userName) {
+    public Map<String, Object> createVariable(Integer projectId, String key, String value, boolean protecteds, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userName)
+            return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().addVariable(projectId, key, value, protecteds);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
@@ -60,9 +60,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Map<String, Object> createProtectedBranches(Integer projectId, String name, String mergeAccessLevel, String pushAccessLevel, String userName) {
+    public Map<String, Object> createProtectedBranches(Integer projectId, String name, String mergeAccessLevel, String pushAccessLevel, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userName)
+            return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().protectedBranches(projectId, name, mergeAccessLevel, pushAccessLevel);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
@@ -70,11 +70,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project updateProject(Integer projectId, String userName) {
+    public Project updateProject(Integer projectId, Integer userId) {
         try {
             Project project = gitlab4jclient.getGitLabApi().getProjectApi().getProject(projectId);
             project.setDefaultBranch("develop");
-            return gitlab4jclient.getGitLabApi(userName)
+            return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().updateProject(project);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
@@ -82,9 +82,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Map<String, Object> queryBranchByBranchName(Integer id, String name, String userName) {
+    public Map<String, Object> queryBranchByBranchName(Integer id, String name, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userName)
+            return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().getBranch(id, name);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
@@ -92,9 +92,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Map<String, Object>> listBranch(Integer id, String userName) {
+    public List<Map<String, Object>> listBranch(Integer id, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userName)
+            return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().getBranchs(id);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
@@ -102,9 +102,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void deleteByBranchName(Integer id, String name, String userName) {
+    public void deleteByBranchName(Integer id, String name, Integer userId) {
         try {
-            gitlab4jclient.getGitLabApi(userName)
+            gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().deleteBranch(id, name);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());

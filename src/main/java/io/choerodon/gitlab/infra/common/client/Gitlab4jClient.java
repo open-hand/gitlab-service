@@ -17,11 +17,7 @@ import io.choerodon.core.oauth.DetailsHelper;
  */
 @Component
 public class Gitlab4jClient {
-    private static final String ADMIN_USERNAME = "admin";
-
-    private static final String ADMIN_REAL_USERNAME = "admin1";
-
-    private static final String ROOT_USERNAME = "root";
+    private static final Integer ROOT_USER_ID = 1;
 
     @Value("${gitlab.url}")
     private String url;
@@ -31,11 +27,11 @@ public class Gitlab4jClient {
 
     private ConcurrentHashMap<String, GitLabApi> clientMap = new ConcurrentHashMap<>();
 
-    private GitLabApi createGitLabApi(GitLabApi.ApiVersion apiVersion, String username) {
+    private GitLabApi createGitLabApi(GitLabApi.ApiVersion apiVersion, Integer userId) {
         try {
             GitLabApi newGitLabApi = new GitLabApi(apiVersion, url, privateToken);
-            if (username != null) {
-                newGitLabApi.sudo(username);
+            if (userId != null) {
+                newGitLabApi.setSudoAsId(userId);
             }
             return newGitLabApi;
         } catch (GitLabApiException e) {
@@ -43,54 +39,38 @@ public class Gitlab4jClient {
         }
     }
 
-    public GitLabApi getGitLabApiUser(String username) {
-        return getGitLabApi(GitLabApi.ApiVersion.V4, username);
+    public GitLabApi getGitLabApiUser(Integer userId) {
+        return getGitLabApi(GitLabApi.ApiVersion.V4, userId);
     }
 
     public GitLabApi getGitLabApiVersion(GitLabApi.ApiVersion apiVersion) {
-        return getGitLabApi(apiVersion, ROOT_USERNAME);
+        return getGitLabApi(apiVersion, ROOT_USER_ID);
     }
 
     public GitLabApi getGitLabApi() {
-        return getGitLabApiUser(ROOT_USERNAME);
+        return getGitLabApiUser(ROOT_USER_ID);
     }
 
-    public GitLabApi getGitLabApi(String username) {
-        return getGitLabApi(GitLabApi.ApiVersion.V4, getRealUsername(username));
+    public GitLabApi getGitLabApi(Integer userId) {
+        return getGitLabApi(GitLabApi.ApiVersion.V4, userId);
     }
 
     /**
      * 创建gitLabApi
      *
      * @param apiVersion api版本
-     * @param username   用户名
+     * @param userId     用户ID
      * @return GitLabApi
      */
-    public GitLabApi getGitLabApi(GitLabApi.ApiVersion apiVersion, String username) {
-        String key = apiVersion.getApiNamespace() + "-" + username;
+    public GitLabApi getGitLabApi(GitLabApi.ApiVersion apiVersion, Integer userId) {
+        String key = apiVersion.getApiNamespace() + "-" + userId;
         GitLabApi gitLabApi = clientMap.get(key);
         if (gitLabApi != null) {
             return gitLabApi;
         } else {
-            gitLabApi = createGitLabApi(apiVersion, username);
+            gitLabApi = createGitLabApi(apiVersion, userId);
             clientMap.put(key, gitLabApi);
             return gitLabApi;
         }
-    }
-
-    /**
-     * 获取用户上下文用户名 或 指定用户名
-     * 区分 admin
-     *
-     * @param originUsername 用户名
-     * @return String
-     */
-    public String getRealUsername(String originUsername) {
-        CustomUserDetails details = DetailsHelper.getUserDetails();
-        String username = originUsername == null ? details.getUsername() : originUsername;
-        if (ADMIN_USERNAME.equals(username)) {
-            return ADMIN_REAL_USERNAME;
-        }
-        return username;
     }
 }
