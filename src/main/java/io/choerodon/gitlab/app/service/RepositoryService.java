@@ -14,7 +14,7 @@ public interface RepositoryService {
      * @param projectId  项目id
      * @param branchName 分支名
      * @param source     源分支名
-     * @param userId    用户Id
+     * @param userId     用户Id
      * @return Branch
      */
     Branch createBranch(Integer projectId, String branchName, String source, Integer userId);
@@ -23,7 +23,7 @@ public interface RepositoryService {
      * 获取tag列表
      *
      * @param projectId 项目id
-     * @param userId 用户Id
+     * @param userId    用户Id
      * @return List
      */
     List<Tag> listTags(Integer projectId, Integer userId);
@@ -34,7 +34,7 @@ public interface RepositoryService {
      * @param projectId 项目id
      * @param page      页码
      * @param perPage   每页数量
-     * @param userId  用户Id
+     * @param userId    用户Id
      * @return List
      */
     List<Tag> listTagsByPage(Integer projectId, int page, int perPage, Integer userId);
@@ -45,7 +45,7 @@ public interface RepositoryService {
      * @param projectId 项目id
      * @param tagName   标签名
      * @param ref       标签源
-     * @param userId  用户Id
+     * @param userId    用户Id
      * @return Tag
      */
     Tag createTag(Integer projectId, String tagName, String ref, Integer userId);
@@ -55,7 +55,7 @@ public interface RepositoryService {
      *
      * @param projectId  项目id
      * @param branchName 分支名
-     * @param userId   用户Id
+     * @param userId     用户Id
      */
     void deleteBranch(Integer projectId, String branchName, Integer userId);
 
@@ -73,7 +73,7 @@ public interface RepositoryService {
      * 获取项目下所有分支
      *
      * @param projectId 项目id
-     * @param userId   用户Id
+     * @param userId    用户Id
      * @return List
      */
     List<Branch> listBranches(Integer projectId, Integer userId);
@@ -83,8 +83,10 @@ public interface RepositoryService {
      * 项目下创建readme
      *
      * @param projectId 项目id
-     * @param  userId  用户Id
+     * @param userId    用户Id
      * @return boolean
      */
     boolean createFile(Integer projectId, Integer userId);
+
+    String getFile(Integer projectId);
 }

@@ -1,5 +1,9 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 import org.gitlab4j.api.GitLabApi;
@@ -21,14 +25,14 @@ public class RepositoryServiceImpl implements RepositoryService {
     private static final String README = "README.md";
     private static final String README_CONTENT =
             "# To customize a template\n"
-            + "you need to push the template code to this git repository.\n"
-            + "\n"
-            + "Please make sure the following file exists.\n"
-            + "+ **gitlab-ci.yml**. (Refer to [GitLab Documentation](https://docs.gitlab.com/ee/ci/yaml/))\n"
-            + "+ **Dockerfile**. (Refer to [Dockerfile reference](https://docs.docker.com/engine/reference/builder/))\n"
-            + "+ **Chart** setting directory. (Refer to [helm](https://github.com/kubernetes/helm))\n"
-            + "\n"
-            + "Finally, removing or re-editing this **README.md** file to make it useful.";
+                    + "you need to push the template code to this git repository.\n"
+                    + "\n"
+                    + "Please make sure the following file exists.\n"
+                    + "+ **gitlab-ci.yml**. (Refer to [GitLab Documentation](https://docs.gitlab.com/ee/ci/yaml/))\n"
+                    + "+ **Dockerfile**. (Refer to [Dockerfile reference](https://docs.docker.com/engine/reference/builder/))\n"
+                    + "+ **Chart** setting directory. (Refer to [helm](https://github.com/kubernetes/helm))\n"
+                    + "\n"
+                    + "Finally, removing or re-editing this **README.md** file to make it useful.";
 
     private Gitlab4jClient gitlab4jclient;
 
@@ -131,6 +135,28 @@ public class RepositoryServiceImpl implements RepositoryService {
             throw new CommonException("error.file.create");
         }
         return true;
+    }
+
+    @Override
+    public String getFile(Integer projectId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
+        StringBuilder readme = new StringBuilder();
+        try {
+            File file = gitLabApi.getRepositoryFileApi().getRawFile(projectId, "master", README, null);
+            try (FileReader fileReader = new FileReader(file)) {
+                try (BufferedReader reader = new BufferedReader(fileReader)) {
+                    String lineTxt;
+                    while ((lineTxt = reader.readLine()) != null) {
+                        readme.append(lineTxt).append("\n");
+                    }
+                }
+            }
+        } catch (GitLabApiException e) {
+            throw new CommonException("error.file.get");
+        } catch (IOException e) {
+            throw new CommonException("error.file.read");
+        }
+        return readme.toString();
     }
 
 }

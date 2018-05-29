@@ -82,13 +82,13 @@ public class IssueController {
     /**
      * 批量更新issue
      *
-     * @param userId 用户名  optional
+     * @param userId 用户Id  optional
      * @param issueDtos issueDto对象
      */
     @ApiOperation(value = "批量更新issue")
     @PutMapping(value = "/batch_update")
     public ResponseEntity batchUpdate(
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(required = false) Integer userId,
             @ApiParam(value = "issue参数", required = true)
             @RequestBody List<IssueDto> issueDtos) {
@@ -189,7 +189,7 @@ public class IssueController {
      * 批量删除issue
      *
      * @param projectId 项目id
-     * @param userId  用户名  optional
+     * @param userId  用户Id  optional
      * @param issueList issueIid List
      */
     @ApiOperation(value = "批量删除issue")
@@ -197,7 +197,7 @@ public class IssueController {
     public ResponseEntity batchDeleteIssue(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "用户名")
+            @ApiParam(value = "用户Id")
             @RequestParam(required = false) Integer userId,
             @ApiParam(value = "issueIid", required = true)
             @RequestBody List<Integer> issueList) {

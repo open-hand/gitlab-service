@@ -118,7 +118,7 @@ public class PipelineController {
      *
      * @param projectId  项目id
      * @param pipelineId 流水线id
-     * @param userId   用户名
+     * @param userId   用户Id
      * @return Pipeline
      */
     @ApiOperation(value = "Cancel a pipelines jobs ")
