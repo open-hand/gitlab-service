@@ -70,30 +70,27 @@ public class UserServiceImpl implements UserService {
         try {
             return gitlab4jclient.getGitLabApi()
                     .getUserApi()
-                    .getUser(gitlab4jclient.getRealUsername(userName));
+                    .getUser(userName);
         } catch (GitLabApiException e) {
             return null;
         }
     }
 
     @Override
-    public void deleteUserByUsername(String username) {
+    public void deleteUserByUserId(Integer userId) {
         try {
             UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
-            User deleteUser = userApi.getUser(username);
-            userApi.deleteUser(deleteUser.getId());
+            userApi.deleteUser(userId);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
         }
     }
 
     @Override
-    public User updateUserByUsername(String username, User user, Integer projectsLimit) {
+    public User updateUserByUserId(Integer userId, User user, Integer projectsLimit) {
         UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
-        username = gitlab4jclient.getRealUsername(username);
-        user.setUsername(username);
         try {
-            user.setId(userApi.getUser(username).getId());
+            user.setId(userId);
             return userApi.modifyUser(user, null, projectsLimit);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
@@ -101,32 +98,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void enabledUserByUsername(String username) {
+    public void enabledUserByUserId(Integer userId) {
         UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
-        username = gitlab4jclient.getRealUsername(username);
         try {
-            userApi.unblockUser(userApi.getUser(username).getId());
+            userApi.unblockUser(userId);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
         }
     }
 
     @Override
-    public void disEnabledUserByUsername(String username) {
+    public void disEnabledUserByUserId(Integer userId) {
         UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
-        username = gitlab4jclient.getRealUsername(username);
         try {
-            userApi.blockUser(userApi.getUser(username).getId());
+            userApi.blockUser(userId);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
         }
     }
 
     @Override
-    public ImpersonationToken createUserAccessToken(String username) {
+    public ImpersonationToken createUserAccessToken(Integer userId) {
         UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
         try {
-            User user = userApi.getUser(gitlab4jclient.getRealUsername(username));
+            User user = userApi.getUser(userId);
             if (user == null) {
                 throw new CommonException("error.users.get");
             }
@@ -140,10 +135,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ImpersonationToken> listUserAccessToken(String username) {
+    public List<ImpersonationToken> listUserAccessToken(Integer userId) {
         UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
         try {
-            User user = userApi.getUser(gitlab4jclient.getRealUsername(username));
+            User user = userApi.getUser(userId);
             if (user == null) {
                 throw new CommonException("error.users.get");
             }

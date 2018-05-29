@@ -28,7 +28,7 @@ public class MileStoneServiceImpl implements MileStoneService {
         CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
         try {
             return gitlab4jclient
-                    .getGitLabApi(customUserDetails.getUsername())
+                    .getGitLabApi()
                     .getMileStonesApi()
                     .createMilestone(mileStoneDto.getProjectId(),
                             mileStoneDto.getTitle(),
@@ -45,7 +45,7 @@ public class MileStoneServiceImpl implements MileStoneService {
         CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
         try {
             return gitlab4jclient
-                    .getGitLabApi(customUserDetails.getUsername())
+                    .getGitLabApi()
                     .getMileStonesApi()
                     .closeMilestone(projectId, milestoneId);
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class MileStoneServiceImpl implements MileStoneService {
         CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
         try {
             return gitlab4jclient
-                    .getGitLabApi(customUserDetails.getUsername())
+                    .getGitLabApi()
                     .getMileStonesApi()
                     .activateMilestone(projectId, milestoneId);
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class MileStoneServiceImpl implements MileStoneService {
         CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
         try {
             return gitlab4jclient
-                    .getGitLabApi(customUserDetails.getUsername())
+                    .getGitLabApi()
                     .getMileStonesApi()
                     .updateMilestone(mileStoneDto.getProjectId(),
                             mileStoneDto.getMilestoneId(),

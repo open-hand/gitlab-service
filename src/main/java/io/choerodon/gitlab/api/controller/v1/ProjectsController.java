@@ -10,6 +10,7 @@ import org.gitlab4j.api.models.Project;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import scala.Int;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.gitlab.app.service.ProjectService;
@@ -30,7 +31,7 @@ public class ProjectsController {
      *
      * @param groupId     组 Id
      * @param projectName 项目名
-     * @param userName    用户名
+     * @param userId    用户Id
      * @return Project
      */
     @ApiOperation(value = "通过项目名称创建项目")
@@ -40,9 +41,9 @@ public class ProjectsController {
             @RequestParam Integer groupId,
             @ApiParam(value = "项目名称", required = true)
             @RequestParam String projectName,
-            @ApiParam(value = "用户名称")
-            @RequestParam(required = false) String userName) {
-        return Optional.ofNullable(projectService.createProject(groupId, projectName, userName))
+            @ApiParam(value = "用户Id")
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(projectService.createProject(groupId, projectName, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException("error.projects.create.name"));
     }
@@ -52,7 +53,7 @@ public class ProjectsController {
      * 删除项目
      *
      * @param projectId 项目 id
-     * @param userName  用户名
+     * @param userId  用户Id
      */
     @ApiOperation(value = " 删除项目")
     @DeleteMapping(value = "/{projectId}")
@@ -60,8 +61,8 @@ public class ProjectsController {
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "用户名称")
-            @RequestParam(required = false) String userName) {
-        projectService.deleteProject(projectId, userName);
+            @RequestParam(required = false) Integer userId) {
+        projectService.deleteProject(projectId, userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -72,7 +73,7 @@ public class ProjectsController {
      * @param key        变量key
      * @param value      变量值
      * @param protecteds 变量是否保护
-     * @param userName   用户名
+     * @param userId   用户Id
      * @return Map
      */
     @ApiOperation(value = "增加项目ci环境变量")
@@ -87,8 +88,8 @@ public class ProjectsController {
             @ApiParam(value = "变量是否保护", required = true)
             @RequestParam boolean protecteds,
             @ApiParam(value = "用户名称")
-            @RequestParam(required = false) String userName) {
-        return Optional.ofNullable(projectService.createVariable(projectId, key, value, protecteds, userName))
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(projectService.createVariable(projectId, key, value, protecteds, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException("error.projects.variable.create"));
     }
@@ -100,7 +101,7 @@ public class ProjectsController {
      * @param name             分支名
      * @param mergeAccessLevel merge权限
      * @param pushAccessLevel  push权限
-     * @param userName         user name
+     * @param userId      userId
      * @return Map
      */
     @ApiOperation(value = "增加项目保护分支")
@@ -114,10 +115,10 @@ public class ProjectsController {
             @RequestParam String mergeAccessLevel,
             @ApiParam(value = "push权限", required = true)
             @RequestParam String pushAccessLevel,
-            @ApiParam(value = "用户名称")
-            @RequestParam(required = false) String userName) {
+            @ApiParam(value = "用户Id")
+            @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(projectService.createProtectedBranches(projectId,
-                name, mergeAccessLevel, pushAccessLevel, userName))
+                name, mergeAccessLevel, pushAccessLevel, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException("error.projects.protected.branches.create"));
     }
@@ -126,7 +127,7 @@ public class ProjectsController {
      * 更新项目
      *
      * @param projectId  项目对象
-     * @param userName 用户名
+     * @param userId 用户名
      * @return Project
      */
     @ApiOperation(value = "更新项目")
@@ -134,9 +135,9 @@ public class ProjectsController {
     public ResponseEntity<Project> update(
             @ApiParam(value = "项目信息", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "用户名称", required = true)
-            @RequestParam String userName) {
-        return Optional.ofNullable(projectService.updateProject(projectId, userName))
+            @ApiParam(value = "用户Id", required = true)
+            @RequestParam Integer userId) {
+        return Optional.ofNullable(projectService.updateProject(projectId, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.projects.update"));
     }
@@ -146,7 +147,7 @@ public class ProjectsController {
      *
      * @param projectId 项目Id
      * @param name      分支名
-     * @param userName  用户名
+     * @param userId  用户Id
      * @return Map
      */
     @ApiOperation(value = "通过分支名查询保护分支")
@@ -157,8 +158,8 @@ public class ProjectsController {
             @ApiParam(value = "保护分支名", required = true)
             @PathVariable String name,
             @ApiParam(value = "用户名称", required = true)
-            @RequestParam String userName) {
-        return Optional.ofNullable(projectService.queryBranchByBranchName(projectId, name, userName))
+            @RequestParam Integer userId) {
+        return Optional.ofNullable(projectService.queryBranchByBranchName(projectId, name, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.protected.branches.get"));
     }
@@ -167,7 +168,7 @@ public class ProjectsController {
      * 查询保护分支列表
      *
      * @param projectId 项目Id
-     * @param userName  用户名
+     * @param userId  用户名
      * @return List
      */
     @ApiOperation(value = "查询项目下所有的保护分支")
@@ -175,9 +176,9 @@ public class ProjectsController {
     public ResponseEntity<List<Map<String, Object>>> listBranch(
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "用户名称")
-            @RequestParam(required = false) String userName) {
-        return Optional.ofNullable(projectService.listBranch(projectId, userName))
+            @ApiParam(value = "用户Id")
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(projectService.listBranch(projectId, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.protected.branches.get"));
     }
@@ -187,7 +188,7 @@ public class ProjectsController {
      *
      * @param projectId 项目Id
      * @param name      分支名
-     * @param userName  用户名
+     * @param userId  用户Id
      * @return Map
      */
     @ApiOperation(value = "通过分支名删除保护分支")
@@ -198,8 +199,8 @@ public class ProjectsController {
             @ApiParam(value = "保护分支名", required = true)
             @PathVariable String name,
             @ApiParam(value = "用户名称", required = true)
-            @RequestParam String userName) {
-        projectService.deleteByBranchName(projectId, name, userName);
+            @RequestParam Integer userId) {
+        projectService.deleteByBranchName(projectId, name, userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

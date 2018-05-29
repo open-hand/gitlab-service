@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.gitlab4j.api.models.ImpersonationToken;
 import org.gitlab4j.api.models.User;
+import scala.Int;
 
 
 public interface UserService {
@@ -52,48 +53,48 @@ public interface UserService {
     List<User> listUser(Integer perPage, Integer page, Boolean active);
 
     /**
-     * 根据用户名删除用户
+     * 根据用户Id删除用户
      *
-     * @param username 用户名
+     * @param userId 用户Id
      */
-    void deleteUserByUsername(String username);
+    void deleteUserByUserId(Integer userId);
 
     /**
      * 根据用户名更新用户
      *
-     * @param username      用户名
+     * @param userId     用户Id
      * @param projectsLimit 创建项目上限
      * @param user          用户信息
      */
-    User updateUserByUsername(String username, User user, Integer projectsLimit);
+    User updateUserByUserId(Integer userId, User user, Integer projectsLimit);
 
     /**
      * 创建用户的Aceess_Token
      *
-     * @param username 用户名
+     * @param userId 用户Id
      * @return ImpersonationToken
      */
-    ImpersonationToken createUserAccessToken(String username);
+    ImpersonationToken createUserAccessToken(Integer userId);
 
     /**
      * 获取用户的Aceess_Token
      *
-     * @param username 用户名
+     * @param userId 用户Id
      * @return List
      */
-    List<ImpersonationToken> listUserAccessToken(String username);
+    List<ImpersonationToken> listUserAccessToken(Integer userId);
 
     /**
-     * 根据用户名启用用户
+     * 根据用户Id启用用户
      *
-     * @param username 用户名
+     * @param userId 用户Id
      */
-    void enabledUserByUsername(String username);
+    void enabledUserByUserId(Integer userId);
 
     /**
-     * 根据用户名禁用用户
+     * 根据用户Id禁用用户
      *
-     * @param username 用户名
+     * @param userId 用户Id
      */
-    void disEnabledUserByUsername(String username);
+    void disEnabledUserByUserId(Integer userId);
 }

@@ -28,7 +28,7 @@ public class CommitController {
      *
      * @param projectId 项目 ID
      * @param sha       COMMIT SHA
-     * @param userName  用户名
+     * @param userId  用户Id
      * @return commit 信息
      */
     @ApiOperation(value = "查询某个commit的具体信息")
@@ -38,9 +38,9 @@ public class CommitController {
             @PathVariable Integer projectId,
             @ApiParam(value = "sha", required = true)
             @RequestParam String sha,
-            @ApiParam(value = "userName")
-            @RequestParam(required = false) String userName) {
-        return Optional.ofNullable(commitService.getCommit(projectId, sha, userName))
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(commitService.getCommit(projectId, sha, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.commit.get"));
     }

@@ -20,11 +20,11 @@ public interface IssueService {
     /**
      * 批量创建issue
      *
-     * @param userName  用户名
+     * @param userId  用户Id
      * @param issueDtos issueDto对象Map
      * @return Map
      */
-    Map<Long, Issue> batchCreateIssue(Map<Long, IssueDto> issueDtos, String userName);
+    Map<Long, Issue> batchCreateIssue(Map<Long, IssueDto> issueDtos, Integer userId);
 
     /**
      * 更新issue
@@ -37,10 +37,10 @@ public interface IssueService {
     /**
      * 批量更新issue
      *
-     * @param userName  用户名
+     * @param userId  用户Id
      * @param issueDtos issueDto对象
      */
-    void batchUpdateIssue(String userName, List<IssueDto> issueDtos);
+    void batchUpdateIssue(Integer userId, List<IssueDto> issueDtos);
 
     /**
      * 关闭issue
@@ -56,7 +56,7 @@ public interface IssueService {
      * @param projectId 项目id
      * @param issueIds  issueIds
      */
-    void batchCloseIssue(Integer projectId, List<Integer> issueIds, String userName);
+    void batchCloseIssue(Integer projectId, List<Integer> issueIds, Integer userId);
 
     /**
      * 开启issue
@@ -71,9 +71,9 @@ public interface IssueService {
      *
      * @param projectId 项目id
      * @param issueIds  issueIid
-     * @param userName  用户名
+     * @param userId  用户Id
      */
-    void batchOpenIssue(Integer projectId, List<Integer> issueIds, String userName);
+    void batchOpenIssue(Integer projectId, List<Integer> issueIds, Integer userId);
 
     /**
      * 删除issue
@@ -87,10 +87,10 @@ public interface IssueService {
      * 批量删除issue
      *
      * @param projectId 项目id
-     * @param userName  用户名
+     * @param userId  用户Id
      * @param issueList issueIid List
      */
-    void listDeleteIssue(Integer projectId, String userName, List<Integer> issueList);
+    void listDeleteIssue(Integer projectId, Integer userId, List<Integer> issueList);
 
     /**
      * 查询issues

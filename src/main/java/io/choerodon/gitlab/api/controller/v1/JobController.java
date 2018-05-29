@@ -32,7 +32,7 @@ public class JobController {
      *
      * @param projectId  项目id
      * @param pipelineId 流水线id
-     * @param userName   用户名
+     * @param userId  用户Id
      * @return List
      */
     @ApiOperation(value = "查询项目下pipeline的jobs")
@@ -42,9 +42,9 @@ public class JobController {
             @PathVariable Integer projectId,
             @ApiParam(value = "pipelineId", required = true)
             @PathVariable Integer pipelineId,
-            @ApiParam(value = "userName")
-            @RequestParam(required = false) String userName) {
-        return Optional.ofNullable(jobService.listJobs(projectId, pipelineId, userName))
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(jobService.listJobs(projectId, pipelineId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.jobs.get"));
     }

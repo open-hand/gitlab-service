@@ -37,9 +37,9 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Branch createBranch(Integer projectId, String branchName, String source) {
+    public Branch createBranch(Integer projectId, String branchName, String source, Integer userId) {
         try {
-            return this.gitlab4jclient.getGitLabApi(null).getRepositoryApi()
+            return this.gitlab4jclient.getGitLabApi(userId).getRepositoryApi()
                     .createBranch(projectId, branchName, source);
         } catch (GitLabApiException e) {
             if (e.getMessage().equals("Branch already exists")) {
@@ -52,10 +52,9 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<Tag> listTags(Integer projectId, String username) {
-        username = gitlab4jclient.getRealUsername(username);
+    public List<Tag> listTags(Integer projectId, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(username).getRepositoryApi()
+            return gitlab4jclient.getGitLabApi(userId).getRepositoryApi()
                     .getTags(projectId);
         } catch (GitLabApiException e) {
             throw new CommonException("error.tag.get");
@@ -63,9 +62,9 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<Tag> listTagsByPage(Integer projectId, int page, int perPage, String username) {
+    public List<Tag> listTagsByPage(Integer projectId, int page, int perPage, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(username)
+            return gitlab4jclient.getGitLabApi(userId)
                     .getRepositoryApi()
                     .getTags(projectId, page, perPage);
         } catch (GitLabApiException e) {
@@ -74,9 +73,9 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Tag createTag(Integer projectId, String tagName, String ref, String username) {
+    public Tag createTag(Integer projectId, String tagName, String ref, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(username)
+            return gitlab4jclient.getGitLabApi(userId)
                     .getRepositoryApi()
                     .createTag(projectId, tagName, ref, "", "");
         } catch (GitLabApiException e) {
@@ -85,10 +84,10 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public void deleteBranch(Integer projectId, String branchName, String username) {
+    public void deleteBranch(Integer projectId, String branchName, Integer userId) {
         try {
             gitlab4jclient
-                    .getGitLabApi(username)
+                    .getGitLabApi(userId)
                     .getRepositoryApi()
                     .deleteBranch(projectId, branchName);
         } catch (GitLabApiException e) {
@@ -108,9 +107,9 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<Branch> listBranches(Integer projectId) {
+    public List<Branch> listBranches(Integer projectId, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(null)
+            return gitlab4jclient.getGitLabApi(userId)
                     .getRepositoryApi()
                     .getBranches(projectId);
         } catch (GitLabApiException e) {
@@ -119,8 +118,8 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public boolean createFile(Integer projectId, String userName) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userName);
+    public boolean createFile(Integer projectId, Integer userId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             Project project = gitLabApi.getProjectApi().getProject(projectId);
             RepositoryFile repositoryFile = new RepositoryFile();
