@@ -1,6 +1,9 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 import org.gitlab4j.api.GitLabApi;
@@ -140,16 +143,11 @@ public class RepositoryServiceImpl implements RepositoryService {
         StringBuilder readme = new StringBuilder();
         try {
             File file = gitLabApi.getRepositoryFileApi().getRawFile(projectId, "master", README, null);
-            try (FileInputStream inputStream = new FileInputStream(file)) {
-                try (Reader reader = new InputStreamReader(inputStream)) {
-                    int tempChar;
-                    while ((tempChar = reader.read()) != -1) {
-                        // 对于windows下，\r\n这两个字符在一起时，表示一个换行。
-                        // 但如果这两个字符分开显示时，会换两次行。
-                        // 因此，屏蔽掉\r，或者屏蔽\n。否则，将会多出很多空行。
-                        if (((char) tempChar) != '\r') {
-                            readme.append((char) tempChar);
-                        }
+            try (FileReader fileReader = new FileReader(file)) {
+                try (BufferedReader reader = new BufferedReader(fileReader)) {
+                    String lineTxt;
+                    while ((lineTxt = reader.readLine()) != null) {
+                        readme.append(lineTxt).append("\n");
                     }
                 }
             }
