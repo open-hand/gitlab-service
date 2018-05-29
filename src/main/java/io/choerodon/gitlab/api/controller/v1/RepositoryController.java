@@ -44,7 +44,7 @@ public class RepositoryController {
             @RequestParam("source") String source,
             @ApiParam(value = "用户名")
             @RequestParam(value = "userId") Integer userId
-            ) {
+    ) {
         return Optional.ofNullable(repositoryService.createBranch(projectId, name, source, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.branch.create"));
@@ -54,7 +54,7 @@ public class RepositoryController {
      * 获取tag列表
      *
      * @param projectId 项目id
-     * @param userId 用户Id
+     * @param userId    用户Id
      * @return List
      */
     @ApiOperation(value = "获取tag列表")
@@ -75,7 +75,7 @@ public class RepositoryController {
      * @param projectId 项目id
      * @param page      页码
      * @param perPage   每页数量
-     * @param userId  用户Id
+     * @param userId    用户Id
      * @return List
      */
     @ApiOperation(value = "分页获取tag列表")
@@ -99,7 +99,7 @@ public class RepositoryController {
      * @param projectId 项目id
      * @param name      标签名
      * @param ref       标签源
-     * @param userId  用户Id
+     * @param userId    用户Id
      * @return Tag
      */
     @ApiOperation(value = "创建tag")
@@ -124,7 +124,7 @@ public class RepositoryController {
      *
      * @param projectId  项目id
      * @param branchName 分支名
-     * @param userId   用户Id
+     * @param userId     用户Id
      */
     @ApiOperation(value = "根据分支名删除分支")
     @DeleteMapping("/branches")
@@ -162,7 +162,7 @@ public class RepositoryController {
      * 获取项目下所有分支
      *
      * @param projectId 项目id
-     * @param userId   用户Id
+     * @param userId    用户Id
      * @return List
      */
     @ApiOperation(value = "获取工程下所有分支")
@@ -180,7 +180,7 @@ public class RepositoryController {
      * 项目下创建readme
      *
      * @param projectId 项目id
-     * @param  userId  用户Id
+     * @param userId    用户Id
      * @return boolean
      */
     @ApiOperation(value = "项目下创建readme")
@@ -189,6 +189,21 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
             @RequestParam("userId") Integer userId) {
         return Optional.ofNullable(repositoryService.createFile(projectId, userId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new CommonException("error.readme.create"));
+    }
+
+    /**
+     * 项目下获取readme
+     *
+     * @param projectId 项目id
+     * @return file
+     */
+    @ApiOperation(value = "项目下创建readme")
+    @GetMapping("/file/master/readme.md")
+    public ResponseEntity<String> getReadme(
+            @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId) {
+        return Optional.ofNullable(repositoryService.getFile(projectId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.readme.create"));
     }

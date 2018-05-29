@@ -1,5 +1,6 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.io.*;
 import java.util.List;
 
 import org.gitlab4j.api.GitLabApi;
@@ -21,14 +22,14 @@ public class RepositoryServiceImpl implements RepositoryService {
     private static final String README = "README.md";
     private static final String README_CONTENT =
             "# To customize a template\n"
-            + "you need to push the template code to this git repository.\n"
-            + "\n"
-            + "Please make sure the following file exists.\n"
-            + "+ **gitlab-ci.yml**. (Refer to [GitLab Documentation](https://docs.gitlab.com/ee/ci/yaml/))\n"
-            + "+ **Dockerfile**. (Refer to [Dockerfile reference](https://docs.docker.com/engine/reference/builder/))\n"
-            + "+ **Chart** setting directory. (Refer to [helm](https://github.com/kubernetes/helm))\n"
-            + "\n"
-            + "Finally, removing or re-editing this **README.md** file to make it useful.";
+                    + "you need to push the template code to this git repository.\n"
+                    + "\n"
+                    + "Please make sure the following file exists.\n"
+                    + "+ **gitlab-ci.yml**. (Refer to [GitLab Documentation](https://docs.gitlab.com/ee/ci/yaml/))\n"
+                    + "+ **Dockerfile**. (Refer to [Dockerfile reference](https://docs.docker.com/engine/reference/builder/))\n"
+                    + "+ **Chart** setting directory. (Refer to [helm](https://github.com/kubernetes/helm))\n"
+                    + "\n"
+                    + "Finally, removing or re-editing this **README.md** file to make it useful.";
 
     private Gitlab4jClient gitlab4jclient;
 
@@ -131,6 +132,33 @@ public class RepositoryServiceImpl implements RepositoryService {
             throw new CommonException("error.file.create");
         }
         return true;
+    }
+
+    @Override
+    public String getFile(Integer projectId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
+        StringBuilder readme = new StringBuilder();
+        try {
+            File file = gitLabApi.getRepositoryFileApi().getRawFile(projectId, "master", README, null);
+            try (FileInputStream inputStream = new FileInputStream(file)) {
+                try (Reader reader = new InputStreamReader(inputStream)) {
+                    int tempChar;
+                    while ((tempChar = reader.read()) != -1) {
+                        // 对于windows下，\r\n这两个字符在一起时，表示一个换行。
+                        // 但如果这两个字符分开显示时，会换两次行。
+                        // 因此，屏蔽掉\r，或者屏蔽\n。否则，将会多出很多空行。
+                        if (((char) tempChar) != '\r') {
+                            readme.append((char) tempChar);
+                        }
+                    }
+                }
+            }
+        } catch (GitLabApiException e) {
+            throw new CommonException("error.file.get");
+        } catch (IOException e) {
+            throw new CommonException("error.file.read");
+        }
+        return readme.toString();
     }
 
 }
