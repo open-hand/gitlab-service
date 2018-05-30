@@ -88,5 +88,5 @@ public interface RepositoryService {
      */
     boolean createFile(Integer projectId, Integer userId);
 
-    String getFile(Integer projectId);
+    String getFileReadme(Integer projectId, String commit);
 }
