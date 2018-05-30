@@ -199,11 +199,12 @@ public class RepositoryController {
      * @param projectId 项目id
      * @return file
      */
-    @ApiOperation(value = "项目下创建readme")
+    @ApiOperation(value = "项目下获取readme")
     @GetMapping("/file/master/readme.md")
     public ResponseEntity<String> getReadme(
-            @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId) {
-        return Optional.ofNullable(repositoryService.getFile(projectId))
+            @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
+            @ApiParam(value = "commit", required = false) @RequestParam(required = false) String commit) {
+        return Optional.ofNullable(repositoryService.getFileReadme(projectId, commit))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.readme.create"));
     }
