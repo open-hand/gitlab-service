@@ -72,7 +72,7 @@
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-gitlab4j-api</artifactId>
-            <version>0.5.0.RELEASE</version>
+            <version>0.5.1.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
