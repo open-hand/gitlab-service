@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.CommonException;
-import io.choerodon.gitlab.api.dto.PipelineDto;
 import io.choerodon.gitlab.app.service.PipelineService;
 
 @RestController
@@ -79,7 +78,7 @@ public class PipelineController {
      */
     @ApiOperation(value = "查询某个pipelines的具体信息")
     @GetMapping(value = "/{pipelineId}")
-    public ResponseEntity<PipelineDto> query(
+    public ResponseEntity<Pipeline> query(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "pipelineId", required = true)
