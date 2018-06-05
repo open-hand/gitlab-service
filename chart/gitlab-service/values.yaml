@@ -10,10 +10,10 @@ image:
 
 metrics:
   path: /prometheus
-  group: java-spring
+  group: spring-boot
 
 logs:
-  parser: java-spring
+  parser: spring-boot
 
 preJob:
   appname: gitlab-service
