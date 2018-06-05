@@ -16,9 +16,9 @@ logs:
   parser: java-spring
 
 preJob:
+  appname: gitlab-service
   preConfig:
     configFile: application.yml
-    appname: gitlab-service
     mysql:
       host: localhost
       port: 3306
