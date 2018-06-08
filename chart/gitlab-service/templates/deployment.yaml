@@ -1,8 +1,6 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  annotations:
-{{ include "service.annotations.standard" . | indent 4 }}
   name: {{ .Release.Name }}
   labels:
 {{ include "service.labels.standard" . | indent 4 }}
