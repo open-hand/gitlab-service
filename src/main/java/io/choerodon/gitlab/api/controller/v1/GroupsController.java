@@ -45,7 +45,7 @@ public class GroupsController {
      * 创建组
      *
      * @param group    组对象
-     * @param userName 用户名
+     * @param userId 用户Id
      * @return Group
      */
     @ApiOperation(value = "创建组")
@@ -53,31 +53,23 @@ public class GroupsController {
     public ResponseEntity<GroupDTO> create(
             @ApiParam(value = "组对象信息", required = true)
             @RequestBody @Valid GroupDTO group,
-            @ApiParam(value = "用户username")
-            @RequestParam(required = false) String userName) {
-        return Optional.ofNullable(groupService.createGroup(group, userName))
+            @ApiParam(value = "用户userId")
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(groupService.createGroup(group, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException("error.groups.create"));
     }
 
-    /**
-     * 更新组
-     *
-     * @param groupId  组对象Id
-     * @param group    组对象
-     * @param userName 用户名
-     * @return Group
-     */
     @ApiOperation(value = "更新组")
     @PutMapping(value = "/{groupId}")
     public ResponseEntity update(
             @ApiParam(value = "组ID", required = true)
             @PathVariable Integer groupId,
-            @ApiParam(value = "用户username")
-            @RequestParam(required = false) String userName,
+            @ApiParam(value = "用户userId")
+            @RequestParam(required = false) Integer userId,
             @ApiParam(value = "组对象信息", required = true)
             @RequestBody @Valid Group group) {
-        return Optional.ofNullable(groupService.updateGroup(groupId, userName, group))
+        return Optional.ofNullable(groupService.updateGroup(groupId, userId, group))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException("error.groups.update"));
     }
@@ -91,8 +83,10 @@ public class GroupsController {
     @DeleteMapping(value = "/{groupId}")
     public ResponseEntity delete(
             @ApiParam(value = "组ID", required = true)
-            @PathVariable Integer groupId) {
-        groupService.deleteGroup(groupId);
+            @PathVariable Integer groupId,
+            @ApiParam(value = "用户userId")
+            @RequestParam(required = false) Integer userId) {
+        groupService.deleteGroup(groupId, userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -190,7 +184,7 @@ public class GroupsController {
      * 获取项目列表
      *
      * @param groupId  组对象Id
-     * @param userName 用户名
+     * @param userId 用户Id
      * @return List
      */
     @ApiOperation(value = "获取项目列表")
@@ -198,9 +192,9 @@ public class GroupsController {
     public ResponseEntity<List<Project>> listProjects(
             @ApiParam(value = "组ID", required = true)
             @PathVariable Integer groupId,
-            @ApiParam(value = "userName")
-            @RequestParam(required = false) String userName) {
-        return Optional.ofNullable(groupService.listProjects(groupId, userName))
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(groupService.listProjects(groupId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.groups.project.query"));
     }
@@ -209,14 +203,17 @@ public class GroupsController {
      * 根据组名查询组
      *
      * @param groupName 组名
+     * @param userId 用户Id
      * @return group
      */
     @ApiOperation(value = "根据组名查询组")
     @GetMapping(value = "/{groupName}")
     public ResponseEntity<Group> queryGroupByName(
             @ApiParam(value = "组名", required = true)
-            @PathVariable String groupName
+            @PathVariable String groupName,
+            @ApiParam(value = "userId")
+            @RequestParam Integer userId
     ) {
-        return new ResponseEntity<>(groupService.queryGroupByName(groupName), HttpStatus.OK);
+        return new ResponseEntity<>(groupService.queryGroupByName(groupName,userId), HttpStatus.OK);
     }
 }

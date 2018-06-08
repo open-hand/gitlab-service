@@ -13,18 +13,18 @@ public interface ProjectService {
      *
      * @param groupId     组 Id
      * @param projectName 项目名
-     * @param userName    用户名
+     * @param userId   用户Id
      * @return Project
      */
-    Project createProject(Integer groupId, String projectName, String userName);
+    Project createProject(Integer groupId, String projectName, Integer userId);
 
     /**
      * 删除项目
      *
      * @param projectId 项目 id
-     * @param userName  用户名
+     * @param userId  用户名
      */
-    void deleteProject(Integer projectId, String userName);
+    void deleteProject(Integer projectId, Integer userId);
 
     /**
      * 增加项目ci环境变量
@@ -33,14 +33,14 @@ public interface ProjectService {
      * @param key        变量key
      * @param value      变量值
      * @param protecteds 变量是否保护
-     * @param userName   用户名
+     * @param userId   用户Id
      * @return Map
      */
     Map<String, Object> createVariable(Integer projectId,
                                        String key,
                                        String value,
                                        boolean protecteds,
-                                       String userName);
+                                       Integer userId);
 
     /**
      * 增加项目保护分支
@@ -49,50 +49,50 @@ public interface ProjectService {
      * @param name             分支名
      * @param mergeAccessLevel merge权限
      * @param pushAccessLevel  push权限
-     * @param userName         user name
+     * @param userId         userId
      * @return Map
      */
     Map<String, Object> createProtectedBranches(Integer projectId,
                                                 String name,
                                                 String mergeAccessLevel,
                                                 String pushAccessLevel,
-                                                String userName);
+                                                Integer userId);
 
     /**
      * 更新项目
      *
      * @param projectId  项目Id
-     * @param userName 用户名
+     * @param userId 用户Id
      * @return Project
      */
-    Project updateProject(Integer projectId, String userName);
+    Project updateProject(Integer projectId, Integer userId);
 
     /**
      * 通过分支名查询保护分支
      *
      * @param projectId 项目Id
      * @param name      分支名
-     * @param userName  用户名
+     * @param userId  用户名
      * @return Map
      */
-    Map<String, Object> queryBranchByBranchName(Integer projectId, String name, String userName);
+    Map<String, Object> queryBranchByBranchName(Integer projectId, String name, Integer userId);
 
     /**
      * 查询保护分支列表
      *
      * @param projectId project id
-     * @param userName  user name   optional
+     * @param userId  userId   optional
      * @return List
      */
-    List<Map<String, Object>> listBranch(Integer projectId, String userName);
+    List<Map<String, Object>> listBranch(Integer projectId, Integer userId);
 
     /**
      * 通过分支名删除保护分支
      *
      * @param projectId 项目Id
      * @param name      分支名
-     * @param userName  用户名
+     * @param userId  用户名
      */
-    void deleteByBranchName(Integer projectId, String name, String userName);
+    void deleteByBranchName(Integer projectId, String name, Integer userId);
 
 }

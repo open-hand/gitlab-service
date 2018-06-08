@@ -33,7 +33,7 @@ public class MergeRequestController {
      * @param targetBranch 目标分支
      * @param title        标题
      * @param description  描述
-     * @param username     用户名
+     * @param userId   用户Id
      * @return MergeRequest
      */
     @ApiOperation(value = "创建merge请求")
@@ -49,10 +49,10 @@ public class MergeRequestController {
             @RequestParam("title") String title,
             @ApiParam(value = "源分支名", required = true)
             @RequestParam("description") String description,
-            @ApiParam(value = "用户名")
-            @RequestParam(value = "username", required = false) String username) {
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(mergeRequestService.createMergeRequest(projectId,
-                sourceBranch, targetBranch, title, description, username))
+                sourceBranch, targetBranch, title, description, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException(ERROR_MERGE_REQUEST_CREATE));
     }
@@ -62,7 +62,7 @@ public class MergeRequestController {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求id
-     * @param username       用户名
+     * @param userId       用户Id
      */
     @ApiOperation(value = "刷新合并请求merge_status")
     @PutMapping("/{mergeRequestId}")
@@ -71,9 +71,9 @@ public class MergeRequestController {
             @PathVariable Integer projectId,
             @ApiParam(value = "合并请求id", required = true)
             @PathVariable Integer mergeRequestId,
-            @ApiParam(value = "用户名")
-            @RequestParam(value = "username", required = false) String username) {
-        mergeRequestService.updateMergeRequest(projectId, mergeRequestId, username);
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false) Integer userId) {
+        mergeRequestService.updateMergeRequest(projectId, mergeRequestId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -82,7 +82,7 @@ public class MergeRequestController {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求id
-     * @param username       用户名
+     * @param userId     用户Id
      * @return MergeRequest
      */
     @ApiOperation(value = "获取合并请求merge request")
@@ -92,9 +92,9 @@ public class MergeRequestController {
             @PathVariable Integer projectId,
             @ApiParam(value = "合并请求id", required = true)
             @PathVariable("mergeRequestId") Integer mergeRequestId,
-            @ApiParam(value = "用户名")
-            @RequestParam(value = "username", required = false) String username) {
-        return Optional.ofNullable(mergeRequestService.queryMergeRequest(projectId, mergeRequestId, username))
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false) Integer userId) {
+        return Optional.ofNullable(mergeRequestService.queryMergeRequest(projectId, mergeRequestId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException(ERROR_MERGE_REQUEST_CREATE));
     }
@@ -123,7 +123,7 @@ public class MergeRequestController {
      * @param mergeCommitMessage        merge的commit信息
      * @param shouldRemoveSourceBranch  merge后是否删除该分支
      * @param mergeWhenPipelineSucceeds pipeline成功后自动合并分支
-     * @param username                  用户名
+     * @param userId            用户Id
      * @return MergeRequest
      */
     @ApiOperation(value = "执行merge请求")
@@ -139,10 +139,10 @@ public class MergeRequestController {
             @RequestParam("removeSourceBranch") Boolean shouldRemoveSourceBranch,
             @ApiParam(value = "pipeline成功后自动合并分支")
             @RequestParam("mergeWhenPipelineSucceeds") Boolean mergeWhenPipelineSucceeds,
-            @ApiParam(value = "用户名")
-            @RequestParam(value = "username", required = false) String username) {
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(mergeRequestService.acceptMergeRequest(projectId,
-                mergeRequestId, mergeCommitMessage, shouldRemoveSourceBranch, mergeWhenPipelineSucceeds, username))
+                mergeRequestId, mergeCommitMessage, shouldRemoveSourceBranch, mergeWhenPipelineSucceeds, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.mergeRequest.accept"));
     }
@@ -152,6 +152,7 @@ public class MergeRequestController {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求ID
+     * @param userId 用户Id
      * @return List
      */
     @ApiOperation(value = "查询合并请求的commits")
@@ -160,8 +161,10 @@ public class MergeRequestController {
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "合并请求ID", required = true)
-            @PathVariable Integer mergeRequestId) {
-        return Optional.ofNullable(mergeRequestService.listCommits(projectId, mergeRequestId))
+            @PathVariable Integer mergeRequestId,
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId") Integer userId) {
+        return Optional.ofNullable(mergeRequestService.listCommits(projectId, mergeRequestId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.mergeRequest.merge"));
     }
@@ -171,12 +174,14 @@ public class MergeRequestController {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求ID
+     * @param userId 用户Id
      * @return List
      */
     @ApiOperation(value = "删除合并请求")
     @DeleteMapping("{mergeRequestId}")
-    public ResponseEntity delete(@PathVariable Integer projectId, @PathVariable Integer mergeRequestId) {
-        mergeRequestService.deleteMergeRequest(projectId, mergeRequestId);
+    public ResponseEntity delete(@PathVariable Integer projectId, @PathVariable Integer mergeRequestId, @ApiParam(value = "用户Id")
+    @RequestParam(value = "userId") Integer userId) {
+        mergeRequestService.deleteMergeRequest(projectId, mergeRequestId , userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

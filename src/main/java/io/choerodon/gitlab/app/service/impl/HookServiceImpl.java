@@ -17,9 +17,9 @@ public class HookServiceImpl implements HookService {
     }
 
     @Override
-    public ProjectHook createProjectHook(Integer projectId, ProjectHook projectHook, String userName) {
+    public ProjectHook createProjectHook(Integer projectId, ProjectHook projectHook, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userName).getProjectApi()
+            return gitlab4jclient.getGitLabApi(userId).getProjectApi()
                     .addHook(projectId, projectHook.getUrl(), projectHook, true, projectHook.getToken());
         } catch (Exception e) {
             throw new CommonException(e.getMessage());

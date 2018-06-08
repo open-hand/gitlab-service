@@ -30,6 +30,7 @@ public class RepositoryController {
      * @param projectId 项目id
      * @param name      分支名
      * @param source    源分支名
+     * @param userId    用户Id
      * @return Branch
      */
     @ApiOperation(value = "创建新分支")
@@ -40,8 +41,11 @@ public class RepositoryController {
             @ApiParam(value = "分支名", required = true)
             @RequestParam("name") String name,
             @ApiParam(value = "源分支名", required = true)
-            @RequestParam("source") String source) {
-        return Optional.ofNullable(repositoryService.createBranch(projectId, name, source))
+            @RequestParam("source") String source,
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId") Integer userId
+    ) {
+        return Optional.ofNullable(repositoryService.createBranch(projectId, name, source, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.branch.create"));
     }
@@ -50,7 +54,7 @@ public class RepositoryController {
      * 获取tag列表
      *
      * @param projectId 项目id
-     * @param username  用户名
+     * @param userId    用户Id
      * @return List
      */
     @ApiOperation(value = "获取tag列表")
@@ -58,9 +62,9 @@ public class RepositoryController {
     public ResponseEntity<List<Tag>> listTags(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "用户名")
-            @RequestParam(value = "username", required = false) String username) {
-        return Optional.ofNullable(repositoryService.listTags(projectId, username))
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false) Integer userId) {
+        return Optional.ofNullable(repositoryService.listTags(projectId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.tag.get"));
     }
@@ -71,7 +75,7 @@ public class RepositoryController {
      * @param projectId 项目id
      * @param page      页码
      * @param perPage   每页数量
-     * @param username  用户名
+     * @param userId    用户Id
      * @return List
      */
     @ApiOperation(value = "分页获取tag列表")
@@ -81,9 +85,9 @@ public class RepositoryController {
             @PathVariable Integer projectId,
             @RequestParam("page") int page,
             @RequestParam("perPage") int perPage,
-            @ApiParam(value = "用户名")
-            @RequestParam(value = "username", required = false) String username) {
-        return Optional.ofNullable(repositoryService.listTagsByPage(projectId, page, perPage, username))
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false) Integer userId) {
+        return Optional.ofNullable(repositoryService.listTagsByPage(projectId, page, perPage, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.tag.getPage"));
     }
@@ -95,7 +99,7 @@ public class RepositoryController {
      * @param projectId 项目id
      * @param name      标签名
      * @param ref       标签源
-     * @param username  用户名
+     * @param userId    用户Id
      * @return Tag
      */
     @ApiOperation(value = "创建tag")
@@ -107,10 +111,10 @@ public class RepositoryController {
             @RequestParam("name") String name,
             @ApiParam(value = "标签源", required = true)
             @RequestParam("ref") String ref,
-            @ApiParam(value = "用户名")
-            @RequestParam(value = "username", required = false)
-                    String username) {
-        return Optional.ofNullable(repositoryService.createTag(projectId, name, ref, username))
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false)
+                    Integer userId) {
+        return Optional.ofNullable(repositoryService.createTag(projectId, name, ref, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.tag.create"));
     }
@@ -120,7 +124,7 @@ public class RepositoryController {
      *
      * @param projectId  项目id
      * @param branchName 分支名
-     * @param username   用户名
+     * @param userId     用户Id
      */
     @ApiOperation(value = "根据分支名删除分支")
     @DeleteMapping("/branches")
@@ -129,9 +133,9 @@ public class RepositoryController {
             @PathVariable Integer projectId,
             @ApiParam(value = "要删除的分支名", required = true)
             @RequestParam("branchName") String branchName,
-            @ApiParam(value = "用户名")
-            @RequestParam(value = "username", required = false) String username) {
-        repositoryService.deleteBranch(projectId, branchName, username);
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false) Integer userId) {
+        repositoryService.deleteBranch(projectId, branchName, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -158,13 +162,16 @@ public class RepositoryController {
      * 获取项目下所有分支
      *
      * @param projectId 项目id
+     * @param userId    用户Id
      * @return List
      */
     @ApiOperation(value = "获取工程下所有分支")
     @GetMapping("/branches")
     public ResponseEntity<List<Branch>> listBranches(
-            @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId) {
-        return Optional.ofNullable(repositoryService.listBranches(projectId))
+            @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false) Integer userId) {
+        return Optional.ofNullable(repositoryService.listBranches(projectId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.branch.list"));
     }
@@ -173,14 +180,31 @@ public class RepositoryController {
      * 项目下创建readme
      *
      * @param projectId 项目id
+     * @param userId    用户Id
      * @return boolean
      */
     @ApiOperation(value = "项目下创建readme")
     @PostMapping("/file")
     public ResponseEntity<Boolean> createFile(
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
-            @RequestParam("userName") String userName) {
-        return Optional.ofNullable(repositoryService.createFile(projectId, userName))
+            @RequestParam("userId") Integer userId) {
+        return Optional.ofNullable(repositoryService.createFile(projectId, userId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new CommonException("error.readme.create"));
+    }
+
+    /**
+     * 项目下获取readme
+     *
+     * @param projectId 项目id
+     * @return file
+     */
+    @ApiOperation(value = "项目下获取readme")
+    @GetMapping("/file/master/readme.md")
+    public ResponseEntity<String> getReadme(
+            @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
+            @ApiParam(value = "commit", required = false) @RequestParam(required = false) String commit) {
+        return Optional.ofNullable(repositoryService.getFileReadme(projectId, commit))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.readme.create"));
     }

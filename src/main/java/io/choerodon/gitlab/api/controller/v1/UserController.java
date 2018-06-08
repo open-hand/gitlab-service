@@ -99,15 +99,15 @@ public class UserController {
     }
 
     /**
-     * 根据用户名获得用户信息
+     * 根据用户Id获得用户信息
      *
-     * @param username 用户名
+     * @param username 用户Id
      * @return User
      */
-    @ApiOperation(value = "根据用户名获得用户信息")
+    @ApiOperation(value = "根据用户Id获得用户信息")
     @GetMapping(value = "/{username}/details")
     public ResponseEntity<User> queryUserByUsername(
-            @ApiParam(value = "用户名", required = true)
+            @ApiParam(value = "用户Id", required = true)
             @PathVariable String username) {
         return Optional.ofNullable(userService.queryUserByUsername(username))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
@@ -115,78 +115,78 @@ public class UserController {
     }
 
     /**
-     * 根据用户名删除用户
+     * 根据用户Id删除用户
      *
-     * @param username 用户名
+     * @param userId 用户Id
      */
     @ApiOperation(value = "删除用户")
-    @DeleteMapping(value = "{username}")
-    public ResponseEntity deleteUserByUsername(
-            @ApiParam(value = "用户名", required = true)
-            @PathVariable String username) {
-        userService.deleteUserByUsername(username);
+    @DeleteMapping(value = "{userId}")
+    public ResponseEntity deleteUserByUserId(
+            @ApiParam(value = "用户Id", required = true)
+            @PathVariable Integer userId) {
+        userService.deleteUserByUserId(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
-     * 根据用户名更新用户
+     * 根据用户Id更新用户
      *
-     * @param username      用户名
+     * @param userId     用户Id
      * @param projectsLimit 创建项目上限
      * @param user          用户信息
      */
-    @ApiOperation(value = "根据用户名更新用户")
-    @PutMapping(value = "/{username}")
-    public ResponseEntity<User> updateUserByUsername(
-            @ApiParam(value = "用户名", required = true)
-            @PathVariable String username,
+    @ApiOperation(value = "根据用户Id更新用户")
+    @PutMapping(value = "/{userId}")
+    public ResponseEntity<User> updateUserByUserId(
+            @ApiParam(value = "用户Id", required = true)
+            @PathVariable Integer userId,
             @ApiParam(value = "创建项目上限")
             @RequestParam(required = false) Integer projectsLimit,
             @ApiParam(value = "用户信息")
             @RequestBody User user) {
-        return Optional.ofNullable(userService.updateUserByUsername(username, user, projectsLimit))
+        return Optional.ofNullable(userService.updateUserByUserId(userId, user, projectsLimit))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException("error.users.username.update"));
     }
 
     /**
-     * 根据用户名禁用用户
+     * 根据用户Id禁用用户
      *
-     * @param username 用户名
+     * @param userId 用户Id
      */
-    @ApiOperation(value = "根据用户名禁用用户")
-    @PutMapping(value = "/{username}/dis_enabled")
-    public ResponseEntity disEnabledUserByUsername(
-            @ApiParam(value = "用户名", required = true)
-            @PathVariable String username) {
-        userService.disEnabledUserByUsername(username);
+    @ApiOperation(value = "根据用户Id禁用用户")
+    @PutMapping(value = "/{userId}/dis_enabled")
+    public ResponseEntity disEnabledUserByUserId(
+            @ApiParam(value = "用户Id", required = true)
+            @PathVariable Integer userId) {
+        userService.disEnabledUserByUserId(userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
-     * 根据用户名启用用户
+     * 根据用户Id启用用户
      *
-     * @param username 用户名
+     * @param userId 用户Id
      */
-    @ApiOperation(value = "根据用户名启用用户")
-    @PutMapping(value = "/{username}/is_enabled")
-    public ResponseEntity enabledUserByUsername(
-            @ApiParam(value = "用户名", required = true)
-            @PathVariable String username) {
-        userService.enabledUserByUsername(username);
+    @ApiOperation(value = "根据用户Id启用用户")
+    @PutMapping(value = "/{userId}/is_enabled")
+    public ResponseEntity enabledUserByUserId(
+            @ApiParam(value = "用户Id", required = true)
+            @PathVariable Integer userId) {
+        userService.enabledUserByUserId(userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
      * 创建用户的Access_Token
      *
-     * @param username 用户名
+     * @param userId 用户Id
      * @return ImpersonationToken
      */
     @ApiOperation(value = "创建用户的Access_Token")
-    @PostMapping(value = "/{username}/impersonation_tokens")
-    public ResponseEntity<ImpersonationToken> createUserAccessToken(@PathVariable String username) {
-        return Optional.ofNullable(userService.createUserAccessToken(username))
+    @PostMapping(value = "/{userId}/impersonation_tokens")
+    public ResponseEntity<ImpersonationToken> createUserAccessToken(@PathVariable Integer userId) {
+        return Optional.ofNullable(userService.createUserAccessToken(userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.access_token.get"));
     }
@@ -194,13 +194,13 @@ public class UserController {
     /**
      * 获取用户的Access_Token
      *
-     * @param username 用户名
+     * @param userId 用户Id
      * @return List
      */
     @ApiOperation(value = "获取用户的Access_Token")
-    @GetMapping(value = "/{username}/impersonation_tokens")
-    public ResponseEntity<List<ImpersonationToken>> listUserAccessToken(@PathVariable String username) {
-        return Optional.ofNullable(userService.listUserAccessToken(username))
+    @GetMapping(value = "/{userId}/impersonation_tokens")
+    public ResponseEntity<List<ImpersonationToken>> listUserAccessToken(@PathVariable Integer userId) {
+        return Optional.ofNullable(userService.listUserAccessToken(userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.access_token.get"));
     }

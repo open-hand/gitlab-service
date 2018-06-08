@@ -33,9 +33,9 @@ public class MergeRequestServiceImpl implements MergeRequestService {
 
     @Override
     public MergeRequest createMergeRequest(Integer projectId, String sourceBranch, String targetBranch,
-                                           String title, String description, String username) {
+                                           String title, String description, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(username).getMergeRequestApi()
+            return gitlab4jclient.getGitLabApi(userId).getMergeRequestApi()
                     .createMergeRequest(projectId, sourceBranch,
                             targetBranch, title, description, null);
         } catch (GitLabApiException e) {
@@ -44,9 +44,9 @@ public class MergeRequestServiceImpl implements MergeRequestService {
     }
 
     @Override
-    public void updateMergeRequest(Integer projectId, Integer mergeRequestId, String userName) {
+    public void updateMergeRequest(Integer projectId, Integer mergeRequestId, Integer userId) {
         try {
-            String path = StringUtils.deleteWhitespace(gitlab4jclient.getGitLabApi(userName)
+            String path = StringUtils.deleteWhitespace(gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().getProject(projectId)
                     .getPathWithNamespace()).toLowerCase();
             String newUrl = url + "/" + path + "/merge_requests/" + mergeRequestId.toString() + ".json";
@@ -57,9 +57,9 @@ public class MergeRequestServiceImpl implements MergeRequestService {
     }
 
     @Override
-    public MergeRequest queryMergeRequest(Integer projectId, Integer mergeRequestId, String userName) {
+    public MergeRequest queryMergeRequest(Integer projectId, Integer mergeRequestId, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userName).getMergeRequestApi()
+            return gitlab4jclient.getGitLabApi(userId).getMergeRequestApi()
                     .getMergeRequest(projectId, mergeRequestId);
         } catch (GitLabApiException e) {
             throw new CommonException("error.mergeRequest.get");
@@ -79,9 +79,9 @@ public class MergeRequestServiceImpl implements MergeRequestService {
     @Override
     public MergeRequest acceptMergeRequest(Integer projectId, Integer mergeRequestId,
                                            String mergeCommitMessage, Boolean shouldRemoveSourceBranch,
-                                           Boolean mergeWhenPipelineSucceeds, String username) {
+                                           Boolean mergeWhenPipelineSucceeds, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(username)
+            return gitlab4jclient.getGitLabApi(userId)
                     .getMergeRequestApi()
                     .acceptMergeRequest(projectId,
                             mergeRequestId,
@@ -94,9 +94,9 @@ public class MergeRequestServiceImpl implements MergeRequestService {
     }
 
     @Override
-    public List<Commit> listCommits(Integer projectId, Integer mergeRequestId) {
+    public List<Commit> listCommits(Integer projectId, Integer mergeRequestId, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi()
+            return gitlab4jclient.getGitLabApi(userId)
                     .getMergeRequestApi().getCommits(projectId, mergeRequestId);
         } catch (GitLabApiException g) {
             throw new CommonException("error.mergeRequest.commits.list");
@@ -104,9 +104,9 @@ public class MergeRequestServiceImpl implements MergeRequestService {
     }
 
     @Override
-    public void deleteMergeRequest(Integer projectId, Integer mergeRequestId) {
+    public void deleteMergeRequest(Integer projectId, Integer mergeRequestId ,Integer userId) {
         try {
-            gitlab4jclient.getGitLabApi()
+            gitlab4jclient.getGitLabApi(userId)
                     .getMergeRequestApi().deleteMergeRequest(projectId, mergeRequestId);
         } catch (GitLabApiException g) {
             throw new CommonException("error.mergeRequest.delete");

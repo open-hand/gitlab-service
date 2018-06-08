@@ -22,28 +22,28 @@ public interface GroupService {
      * 创建组
      *
      * @param group    组对象
-     * @param userName 用户名
+     * @param userId 用户名
      * @return Group
      */
-    GroupDTO createGroup(GroupDTO group, String userName);
+    GroupDTO createGroup(GroupDTO group, Integer userId);
 
 
     /**
      * 更新组
      *
      * @param groupId  组对象Id
-     * @param userName 用户名
+     * @param userId 用户名
      * @param group    组对象
      * @return Group
      */
-    Group updateGroup(Integer groupId, String userName, Group group);
+    Group updateGroup(Integer groupId, Integer userId, Group group);
 
     /**
      * 删除组
      *
      * @param groupId 组对象Id
      */
-    void deleteGroup(Integer groupId);
+    void deleteGroup(Integer groupId,Integer userId);
 
     /**
      * 查询组中的成员
@@ -92,17 +92,18 @@ public interface GroupService {
      * 获取项目列表
      *
      * @param groupId  组对象Id
-     * @param userName 用户名
+     * @param userId 用户名
      * @return List
      */
-    List<Project> listProjects(Integer groupId, String userName);
+    List<Project> listProjects(Integer groupId, Integer userId);
 
     /**
      * 根据组名查询组
      *
      * @param groupName 组名
+     * @param  userId 用户Id
      * @return group
      */
-    Group queryGroupByName(String groupName);
+    Group queryGroupByName(String groupName, Integer userId);
 
 }

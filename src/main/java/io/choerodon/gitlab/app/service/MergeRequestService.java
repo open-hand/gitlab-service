@@ -16,21 +16,21 @@ public interface MergeRequestService {
      * @param targetBranch 目标分支
      * @param title        标题
      * @param description  描述
-     * @param username     用户名 Optional
+     * @param userId     用户Id Optional
      * @return MergeRequest
      */
     MergeRequest createMergeRequest(Integer projectId, String sourceBranch,
                                     String targetBranch, String title,
-                                    String description, String username);
+                                    String description, Integer userId);
 
     /**
      * 刷新合并请求merge_status
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求id
-     * @param username       用户名 Optional
+     * @param userId       用户Id Optional
      */
-    void updateMergeRequest(Integer projectId, Integer mergeRequestId, String username);
+    void updateMergeRequest(Integer projectId, Integer mergeRequestId, Integer userId);
 
 
     /**
@@ -38,10 +38,10 @@ public interface MergeRequestService {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求id
-     * @param username       用户名 Optional
+     * @param userId       用户Id Optional
      * @return MergeRequest
      */
-    MergeRequest queryMergeRequest(Integer projectId, Integer mergeRequestId, String username);
+    MergeRequest queryMergeRequest(Integer projectId, Integer mergeRequestId, Integer userId);
 
     /**
      * 获取合并请求列表merge request
@@ -60,30 +60,32 @@ public interface MergeRequestService {
      * @param mergeCommitMessage        merge的commit信息
      * @param shouldRemoveSourceBranch  merge后是否删除该分支
      * @param mergeWhenPipelineSucceeds pipeline成功后自动合并分支
-     * @param username                  用户名
+     * @param userId                  用户Id
      * @return MergeRequest
      */
     MergeRequest acceptMergeRequest(
             Integer projectId, Integer mergeRequestId, String mergeCommitMessage,
             Boolean shouldRemoveSourceBranch, Boolean mergeWhenPipelineSucceeds,
-            String username);
+            Integer userId);
 
     /**
      * 查询合并请求的commits
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求ID
+     * @param userId 用户Id
      * @return List
      */
-    List<Commit> listCommits(Integer projectId, Integer mergeRequestId);
+    List<Commit> listCommits(Integer projectId, Integer mergeRequestId, Integer userId);
 
     /**
      * 删除合并请求
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求ID
+     * @param userId 用户Id
      */
-    void deleteMergeRequest(Integer projectId, Integer mergeRequestId);
+    void deleteMergeRequest(Integer projectId, Integer mergeRequestId, Integer userId);
 
 }
 

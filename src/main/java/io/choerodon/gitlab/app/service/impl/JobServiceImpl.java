@@ -21,9 +21,9 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> listJobs(Integer projectId, Integer pipelineId, String userName) {
+    public List<Job> listJobs(Integer projectId, Integer pipelineId, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userName)
+            return gitlab4jclient.getGitLabApi(userId)
                     .getJobApi().getJobsForPipeline(projectId, pipelineId);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());

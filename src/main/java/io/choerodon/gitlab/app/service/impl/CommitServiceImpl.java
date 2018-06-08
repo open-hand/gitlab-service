@@ -19,10 +19,10 @@ public class CommitServiceImpl implements CommitService {
     private Gitlab4jClient gitlab4jclient;
 
     @Override
-    public Commit getCommit(Integer projectId, String sha, String userName) {
+    public Commit getCommit(Integer projectId, String sha, Integer userId) {
 
         try {
-            return gitlab4jclient.getGitLabApi(userName).getCommitsApi().getCommit(projectId, sha);
+            return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, sha);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
         }

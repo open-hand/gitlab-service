@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.models.auth.In;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.IssuesApi;
@@ -48,7 +49,7 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public Map<Long, Issue> batchCreateIssue(Map<Long, IssueDto> issueDtos, String userName) {
+    public Map<Long, Issue> batchCreateIssue(Map<Long, IssueDto> issueDtos, Integer userId) {
         Map<Long, Issue> map = new HashMap<>();
         for (Object o : issueDtos.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
@@ -56,7 +57,7 @@ public class IssueServiceImpl implements IssueService {
             IssueDto issueDto = issueDtos.get(id);
             try {
                 Issue issue = gitlab4jclient
-                        .getGitLabApi(userName)
+                        .getGitLabApi(userId)
                         .getIssuesApi()
                         .createIssue(issueDto.getProjectId(),
                                 issueDto.getTitle(),
@@ -101,9 +102,9 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public void batchUpdateIssue(String userName, List<IssueDto> issueDtos) {
+    public void batchUpdateIssue(Integer userId, List<IssueDto> issueDtos) {
         try {
-            GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(gitlab4jclient.getRealUsername(userName));
+            GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
             for (IssueDto issueDto : issueDtos) {
                 gitLabApi.getIssuesApi().updateIssue(issueDto.getProjectId(),
                         issueDto.getIssueIid(),
@@ -126,7 +127,7 @@ public class IssueServiceImpl implements IssueService {
     public void closeIssue(Integer projectId, Integer issueIid) {
         try {
             gitlab4jclient
-                    .getGitLabApi(null)
+                    .getGitLabApi()
                     .getIssuesApi()
                     .closeIssue(projectId, issueIid);
         } catch (Exception e) {
@@ -136,11 +137,11 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public void batchCloseIssue(Integer projectId, List<Integer> issueIds, String userName) {
+    public void batchCloseIssue(Integer projectId, List<Integer> issueIds, Integer userId) {
         issueIds.stream().forEach(issueId -> {
             try {
                 gitlab4jclient
-                        .getGitLabApi(gitlab4jclient.getRealUsername(userName))
+                        .getGitLabApi(userId)
                         .getIssuesApi()
                         .closeIssue(projectId, issueId);
             } catch (Exception e) {
@@ -153,7 +154,7 @@ public class IssueServiceImpl implements IssueService {
     public void openIssue(Integer projectId, Integer issueIid) {
         try {
             gitlab4jclient
-                    .getGitLabApi(null)
+                    .getGitLabApi()
                     .getIssuesApi()
                     .openIssue(projectId, issueIid);
         } catch (Exception e) {
@@ -162,11 +163,11 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public void batchOpenIssue(Integer projectId, List<Integer> issueIds, String userName) {
+    public void batchOpenIssue(Integer projectId, List<Integer> issueIds, Integer userId) {
         issueIds.stream().forEach(issueId -> {
             try {
                 gitlab4jclient
-                        .getGitLabApi(gitlab4jclient.getRealUsername(userName))
+                        .getGitLabApi(userId)
                         .getIssuesApi()
                         .openIssue(projectId, issueId);
             } catch (Exception e) {
@@ -179,7 +180,7 @@ public class IssueServiceImpl implements IssueService {
     public void deleteIssue(Integer projectId, Integer issueIid) {
         try {
             gitlab4jclient
-                    .getGitLabApi(null)
+                    .getGitLabApi()
                     .getIssuesApi()
                     .deleteIssue(projectId, issueIid);
         } catch (Exception e) {
@@ -188,9 +189,9 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public void listDeleteIssue(Integer projectId, String userName, List<Integer> issueList) {
+    public void listDeleteIssue(Integer projectId, Integer userId, List<Integer> issueList) {
         try {
-            GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userName);
+            GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
             for (Integer issue : issueList) {
                 gitLabApi.getIssuesApi().deleteIssue(projectId, issue);
             }
