@@ -16,7 +16,6 @@ logs:
   parser: spring-boot
 
 preJob:
-  appname: gitlab-service
   preConfig:
     configFile: application.yml
     mysql:
