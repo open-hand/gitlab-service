@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.gitlab4j.api.models.Pipeline;
 
+import io.choerodon.gitlab.api.dto.PipelineDto;
+
 
 /**
  * Created by zzy on 2018/1/9.
@@ -38,7 +40,7 @@ public interface PipelineService {
      * @param userId   用户Id
      * @return Pipeline
      */
-    Pipeline queryPipeline(Integer projectId, Integer pipelineId, Integer userId);
+    PipelineDto queryPipeline(Integer projectId, Integer pipelineId, Integer userId);
 
     /**
      * Retry jobs in a pipeline
