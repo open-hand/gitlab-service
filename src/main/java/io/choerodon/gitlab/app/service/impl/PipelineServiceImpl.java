@@ -1,13 +1,16 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Pipeline;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.gitlab.api.dto.PipelineDto;
 import io.choerodon.gitlab.app.service.PipelineService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -16,6 +19,8 @@ import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 public class PipelineServiceImpl implements PipelineService {
 
     private Gitlab4jClient gitlab4jclient;
+    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
     public PipelineServiceImpl(Gitlab4jClient gitlab4jclient) {
         this.gitlab4jclient = gitlab4jclient;
@@ -43,11 +48,14 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public Pipeline queryPipeline(Integer projectId, Integer pipelineId, Integer userId) {
+    public PipelineDto queryPipeline(Integer projectId, Integer pipelineId, Integer userId) {
         try {
             Pipeline pipeline = gitlab4jclient.getGitLabApi(userId)
                     .getPipelineApi().getPipeline(projectId, pipelineId);
-            return pipeline;
+            PipelineDto pipelineDto = new PipelineDto();
+            BeanUtils.copyProperties(pipeline,pipelineDto);
+            pipelineDto.setCreated_at(formatter.format(pipeline.getCreatedAt()));
+            return pipelineDto;
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
         }
