@@ -42,4 +42,13 @@ eureka:
     registryFetchIntervalSeconds: 1
 feign:
   hystrix:
-    enabled: true
+    shareSecurityContext: true
+    command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 30000
+ribbon:
+  ConnectTimeout: 50000
+  ReadTimeout: 50000
