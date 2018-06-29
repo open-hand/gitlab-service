@@ -33,7 +33,7 @@ public class MergeRequestController {
      * @param targetBranch 目标分支
      * @param title        标题
      * @param description  描述
-     * @param userId   用户Id
+     * @param userId       用户Id
      * @return MergeRequest
      */
     @ApiOperation(value = "创建merge请求")
@@ -62,7 +62,7 @@ public class MergeRequestController {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求id
-     * @param userId       用户Id
+     * @param userId         用户Id
      */
     @ApiOperation(value = "刷新合并请求merge_status")
     @PutMapping("/{mergeRequestId}")
@@ -82,7 +82,7 @@ public class MergeRequestController {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求id
-     * @param userId     用户Id
+     * @param userId         用户Id
      * @return MergeRequest
      */
     @ApiOperation(value = "获取合并请求merge request")
@@ -123,7 +123,7 @@ public class MergeRequestController {
      * @param mergeCommitMessage        merge的commit信息
      * @param shouldRemoveSourceBranch  merge后是否删除该分支
      * @param mergeWhenPipelineSucceeds pipeline成功后自动合并分支
-     * @param userId            用户Id
+     * @param userId                    用户Id
      * @return MergeRequest
      */
     @ApiOperation(value = "执行merge请求")
@@ -152,7 +152,7 @@ public class MergeRequestController {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求ID
-     * @param userId 用户Id
+     * @param userId         用户Id
      * @return List
      */
     @ApiOperation(value = "查询合并请求的commits")
@@ -174,14 +174,12 @@ public class MergeRequestController {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求ID
-     * @param userId 用户Id
      * @return List
      */
     @ApiOperation(value = "删除合并请求")
     @DeleteMapping("{mergeRequestId}")
-    public ResponseEntity delete(@PathVariable Integer projectId, @PathVariable Integer mergeRequestId, @ApiParam(value = "用户Id")
-    @RequestParam(value = "userId") Integer userId) {
-        mergeRequestService.deleteMergeRequest(projectId, mergeRequestId , userId);
+    public ResponseEntity delete(@PathVariable Integer projectId, @PathVariable Integer mergeRequestId) {
+        mergeRequestService.deleteMergeRequest(projectId, mergeRequestId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

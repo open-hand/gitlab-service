@@ -83,9 +83,8 @@ public interface MergeRequestService {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求ID
-     * @param userId 用户Id
      */
-    void deleteMergeRequest(Integer projectId, Integer mergeRequestId, Integer userId);
+    void deleteMergeRequest(Integer projectId, Integer mergeRequestId);
 
 }
 
