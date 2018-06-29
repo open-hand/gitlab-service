@@ -104,9 +104,9 @@ public class MergeRequestServiceImpl implements MergeRequestService {
     }
 
     @Override
-    public void deleteMergeRequest(Integer projectId, Integer mergeRequestId ,Integer userId) {
+    public void deleteMergeRequest(Integer projectId, Integer mergeRequestId) {
         try {
-            gitlab4jclient.getGitLabApi(userId)
+            gitlab4jclient.getGitLabApi()
                     .getMergeRequestApi().deleteMergeRequest(projectId, mergeRequestId);
         } catch (GitLabApiException g) {
             throw new CommonException("error.mergeRequest.delete");
