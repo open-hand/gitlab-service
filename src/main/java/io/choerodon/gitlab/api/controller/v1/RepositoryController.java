@@ -120,6 +120,27 @@ public class RepositoryController {
     }
 
     /**
+     * 根据标签名删除标签
+     *
+     * @param projectId 项目id
+     * @param name      标签名
+     * @param userId    用户Id
+     */
+    @ApiOperation(value = "删除tag")
+    @DeleteMapping("/tags")
+    public ResponseEntity deleteTag(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "标签名", required = true)
+            @RequestParam("name") String name,
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false)
+                    Integer userId){
+        repositoryService.deleteTag(projectId, name, userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
      * 根据分支名删除分支
      *
      * @param projectId  项目id

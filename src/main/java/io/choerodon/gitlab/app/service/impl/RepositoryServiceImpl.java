@@ -88,6 +88,18 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
+    public void deleteTag(Integer projectId, String tagName, Integer userId) {
+        try {
+            gitlab4jclient
+                    .getGitLabApi(userId)
+                    .getRepositoryApi()
+                    .deleteTag(projectId,tagName);
+        } catch (GitLabApiException e) {
+            throw new CommonException("error.tag.delete");
+        }
+    }
+
+    @Override
     public void deleteBranch(Integer projectId, String branchName, Integer userId) {
         try {
             gitlab4jclient
