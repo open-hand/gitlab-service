@@ -1,10 +1,12 @@
 package io.choerodon.gitlab.api.controller.v1;
 
 import java.util.Optional;
+import java.util.List;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
+import org.gitlab4j.api.models.CommitStatuse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,30 @@ public class CommitController {
             @ApiParam(value = "userId")
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(commitService.getCommit(projectId, sha, userId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new CommonException("error.commit.get"));
+    }
+
+
+
+    /**
+     * 查询某个commit的Statuse
+     *
+     * @param projectId 项目 ID
+     * @param sha       COMMIT SHA
+     * @param userId  用户Id
+     * @return List
+     * */
+    @ApiOperation(value = "查询某个commit的Statuse")
+    @GetMapping("/statuse")
+    public ResponseEntity<List<CommitStatuse>> getCommitStatuse(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "sha", required = true)
+            @RequestParam String sha,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(commitService.getCommitStatuse(projectId, sha, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.commit.get"));
     }
