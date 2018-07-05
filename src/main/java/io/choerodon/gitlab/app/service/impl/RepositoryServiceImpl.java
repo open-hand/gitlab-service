@@ -58,8 +58,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public List<Tag> listTags(Integer projectId, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userId).getRepositoryApi()
-                    .getTags(projectId);
+            return gitlab4jclient.getGitLabApi(userId).getRepositoryApi().getTags(projectId);
         } catch (GitLabApiException e) {
             throw new CommonException("error.tag.get");
         }
