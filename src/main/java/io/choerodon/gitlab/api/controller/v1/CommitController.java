@@ -3,7 +3,6 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.List;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
