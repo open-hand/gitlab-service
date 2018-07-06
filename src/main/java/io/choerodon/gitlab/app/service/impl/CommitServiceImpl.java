@@ -1,5 +1,6 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.gitlab4j.api.GitLabApiException;
@@ -23,7 +24,6 @@ public class CommitServiceImpl implements CommitService {
 
     @Override
     public Commit getCommit(Integer projectId, String sha, Integer userId) {
-
         try {
             return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, sha);
         } catch (GitLabApiException e) {
@@ -35,6 +35,16 @@ public class CommitServiceImpl implements CommitService {
     public List<CommitStatuse> getCommitStatuse(Integer projectId, String sha, Integer userId) {
         try {
             return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommitStatus(projectId, sha);
+        } catch (GitLabApiException e) {
+            throw new CommonException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Commit> getCommits(Integer gitLabProjectId, String ref, Date since) {
+        try {
+            return gitlab4jclient.getGitLabApi()
+                    .getCommitsApi().getCommits(gitLabProjectId, ref, since, new Date(), null);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
         }
