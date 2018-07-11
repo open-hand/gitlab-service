@@ -1,5 +1,7 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -41,10 +43,17 @@ public class CommitServiceImpl implements CommitService {
     }
 
     @Override
-    public List<Commit> getCommits(Integer gitLabProjectId, String ref, Date since) {
+    public List<Commit> getCommits(Integer gitLabProjectId, String ref, String since) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz");
+        Date sinceDate = null;
+        try {
+            sinceDate = simpleDateFormat.parse(since);
+        } catch (ParseException e) {
+            throw new CommonException(e.getMessage());
+        }
         try {
             return gitlab4jclient.getGitLabApi()
-                    .getCommitsApi().getCommits(gitLabProjectId, ref, since, new Date(), null);
+                    .getCommitsApi().getCommits(gitLabProjectId, ref, sinceDate, new Date(), null);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
         }

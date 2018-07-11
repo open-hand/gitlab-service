@@ -1,6 +1,5 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,7 +87,7 @@ public class CommitController {
             @ApiParam(value = "分支名称", required = true)
             @RequestParam String branchName,
             @ApiParam(value = "分支创建时间", required = true)
-            @RequestParam Date since) {
+            @RequestParam String since) {
         return Optional.ofNullable(commitService.getCommits(projectId, branchName, since))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.commits.get"));
