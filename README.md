@@ -1,5 +1,5 @@
 # Gitlab Service
-`Gitlab Service` is responsible for establishing communication with GitLab, handling GitLab related logic and forwarding it to other services.
+`Gitlab Service` is responsible for interacting with gitlab by introducing an external java client, this client directly calls the api provided by gitlab,Then gitlab-service handles gitlab logical requests from other services
 
 ## Feature
 `Gitlab Service` contains features as follows:
@@ -10,6 +10,8 @@
 - Branch management
 - Continuous integration
 - Application version management
+- MergeRequest management
+- Webhook management
 
 
 ## Requirements
@@ -28,7 +30,7 @@
     FLUSH PRIVILEGES;
     ```
 1. run command `sh init-local-database.sh`
-1. run command as follow or run `DevopsServiceApplication` in IntelliJ IDEA
+1. run command as follow or run `GitlabServiceApplication` in IntelliJ IDEA
 
     ```bash
     mvn clean spring-boot:run

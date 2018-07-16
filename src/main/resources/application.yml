@@ -29,8 +29,8 @@ choerodon:
       kafka:
         bootstrap-servers: localhost:9092 # kafka地址
 gitlab:
-  url: "http://git.staging.saas.hand-china.com/"
-  privateToken: "kEXZHti27y8zJDyWahaC"
+  url: "git.example.com"
+  privateToken: "xxxxxxxx"
 eureka:
   instance:
     preferIpAddress: true
