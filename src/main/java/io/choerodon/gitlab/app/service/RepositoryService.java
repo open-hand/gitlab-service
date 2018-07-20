@@ -51,6 +51,14 @@ public interface RepositoryService {
     Tag createTag(Integer projectId, String tagName, String ref, Integer userId);
 
     /**
+     * 根据标签名删除tag
+     * @param projectId 项目id
+     * @param tagName   标签名
+     * @param userId    用户Id
+     */
+    void deleteTag(Integer projectId,String tagName,Integer userId);
+
+    /**
      * 根据分支名删除分支
      *
      * @param projectId  项目id

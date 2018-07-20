@@ -1,7 +1,13 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
+import org.gitlab4j.api.models.CommitStatuse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +26,34 @@ public class CommitServiceImpl implements CommitService {
 
     @Override
     public Commit getCommit(Integer projectId, String sha, Integer userId) {
-
         try {
             return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, sha);
+        } catch (GitLabApiException e) {
+            throw new CommonException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<CommitStatuse> getCommitStatuse(Integer projectId, String sha, Integer userId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommitStatus(projectId, sha);
+        } catch (GitLabApiException e) {
+            throw new CommonException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Commit> getCommits(Integer gitLabProjectId, String ref, String since) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz");
+        Date sinceDate = null;
+        try {
+            sinceDate = simpleDateFormat.parse(since);
+        } catch (ParseException e) {
+            throw new CommonException(e.getMessage());
+        }
+        try {
+            return gitlab4jclient.getGitLabApi()
+                    .getCommitsApi().getCommits(gitLabProjectId, ref, sinceDate, new Date(), null);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
         }
