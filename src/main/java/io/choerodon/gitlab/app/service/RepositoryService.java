@@ -96,5 +96,5 @@ public interface RepositoryService {
      */
     boolean createFile(Integer projectId, Integer userId);
 
-    String getFileReadme(Integer projectId, String commit);
+    String getFileReadme(Integer projectId, String commit, String filePath);
 }

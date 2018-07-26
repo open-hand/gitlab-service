@@ -149,17 +149,16 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public String getFileReadme(Integer projectId, String commit) {
-        String commitOrBranchName = commit == null ? "master" : commit;
+    public String getFileReadme(Integer projectId, String commit, String filePath) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
-        StringBuilder readme = new StringBuilder();
+        StringBuilder fileContent = new StringBuilder();
         try {
-            File file = gitLabApi.getRepositoryFileApi().getRawFile(projectId, commitOrBranchName, README, null);
+            File file = gitLabApi.getRepositoryFileApi().getRawFile(projectId, commit, filePath, null);
             try (FileReader fileReader = new FileReader(file)) {
                 try (BufferedReader reader = new BufferedReader(fileReader)) {
                     String lineTxt;
                     while ((lineTxt = reader.readLine()) != null) {
-                        readme.append(lineTxt).append("\n");
+                        fileContent.append(lineTxt).append("\n");
                     }
                 }
             }
@@ -168,7 +167,7 @@ public class RepositoryServiceImpl implements RepositoryService {
         } catch (IOException e) {
             throw new CommonException("error.file.read");
         }
-        return readme.toString();
+        return fileContent.toString();
     }
 
 }
