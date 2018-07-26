@@ -6,6 +6,7 @@ import java.util.Optional;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Branch;
+import org.gitlab4j.api.models.CompareResults;
 import org.gitlab4j.api.models.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -135,7 +136,7 @@ public class RepositoryController {
             @RequestParam("name") String name,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false)
-                    Integer userId){
+                    Integer userId) {
         repositoryService.deleteTag(projectId, name, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -215,20 +216,41 @@ public class RepositoryController {
     }
 
     /**
-     * 项目下获取readme
+     * 项目下获取file
      *
      * @param projectId 项目id
+     * @param commit    the commit SHA or branch name
+     * @param filePath  file path
      * @return file
      */
-    @ApiOperation(value = "项目下获取readme")
+    @ApiOperation(value = "项目下获取file")
     @GetMapping("/{commit}/file")
-    public ResponseEntity<String> getReadme(
+    public ResponseEntity<String> getFile(
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
             @ApiParam(value = "commit", required = true) @PathVariable String commit,
-            @ApiParam(value = "file path", required = true) @RequestParam String filePath) {
-        return Optional.ofNullable(repositoryService.getFileReadme(projectId, commit, filePath))
+            @ApiParam(value = "file path", required = true) @RequestParam(value="file_path") String filePath) {
+        return Optional.ofNullable(repositoryService.getFile(projectId, commit, filePath))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.readme.create"));
     }
 
+
+    /**
+     * 项目下获取diffs
+     *
+     * @param projectId 项目id
+     * @param from      the commit SHA or branch name
+     * @param to        the commit SHA or branch name
+     * @return CompareResults
+     */
+    @ApiOperation(value = "项目下获取diffs")
+    @GetMapping("/file/diffs")
+    public ResponseEntity<CompareResults> getDiffs(
+            @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
+            @ApiParam(value = "from", required = true) @RequestParam String from,
+            @ApiParam(value = "to", required = true) @RequestParam String to) {
+        return Optional.ofNullable(repositoryService.getDiffs(projectId, from, to))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new CommonException("error.diffs.get"));
+    }
 }

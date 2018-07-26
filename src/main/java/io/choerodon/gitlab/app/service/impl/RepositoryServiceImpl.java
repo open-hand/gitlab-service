@@ -8,10 +8,7 @@ import java.util.List;
 
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.models.Branch;
-import org.gitlab4j.api.models.Project;
-import org.gitlab4j.api.models.RepositoryFile;
-import org.gitlab4j.api.models.Tag;
+import org.gitlab4j.api.models.*;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.CommonException;
@@ -92,7 +89,7 @@ public class RepositoryServiceImpl implements RepositoryService {
             gitlab4jclient
                     .getGitLabApi(userId)
                     .getRepositoryApi()
-                    .deleteTag(projectId,tagName);
+                    .deleteTag(projectId, tagName);
         } catch (GitLabApiException e) {
             throw new CommonException("error.tag.delete");
         }
@@ -149,7 +146,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public String getFileReadme(Integer projectId, String commit, String filePath) {
+    public String getFile(Integer projectId, String commit, String filePath) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         StringBuilder fileContent = new StringBuilder();
         try {
@@ -168,6 +165,16 @@ public class RepositoryServiceImpl implements RepositoryService {
             throw new CommonException("error.file.read");
         }
         return fileContent.toString();
+    }
+
+    @Override
+    public CompareResults getDiffs(Integer projectId, String from, String to) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
+        try {
+            return gitLabApi.getRepositoryApi().compare(projectId, from, to);
+        } catch (Exception e) {
+            throw new CommonException(e.getMessage());
+        }
     }
 
 }
