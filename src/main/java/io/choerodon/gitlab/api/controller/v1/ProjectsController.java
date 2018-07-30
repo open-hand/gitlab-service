@@ -10,7 +10,6 @@ import org.gitlab4j.api.models.Project;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import scala.Int;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.gitlab.app.service.ProjectService;
@@ -31,7 +30,7 @@ public class ProjectsController {
      *
      * @param groupId     组 Id
      * @param projectName 项目名
-     * @param userId    用户Id
+     * @param userId      用户Id
      * @return Project
      */
     @ApiOperation(value = "通过项目名称创建项目")
@@ -42,8 +41,10 @@ public class ProjectsController {
             @ApiParam(value = "项目名称", required = true)
             @RequestParam String projectName,
             @ApiParam(value = "用户Id")
-            @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(projectService.createProject(groupId, projectName, userId))
+            @RequestParam(required = false) Integer userId,
+            @ApiParam(value = "visibility")
+            @RequestParam(required = false) boolean visibility) {
+        return Optional.ofNullable(projectService.createProject(groupId, projectName, userId, visibility))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException("error.projects.create.name"));
     }
@@ -53,7 +54,7 @@ public class ProjectsController {
      * 删除项目
      *
      * @param projectId 项目 id
-     * @param userId  用户Id
+     * @param userId    用户Id
      */
     @ApiOperation(value = " 删除项目")
     @DeleteMapping(value = "/{projectId}")
@@ -73,7 +74,7 @@ public class ProjectsController {
      * @param key        变量key
      * @param value      变量值
      * @param protecteds 变量是否保护
-     * @param userId   用户Id
+     * @param userId     用户Id
      * @return Map
      */
     @ApiOperation(value = "增加项目ci环境变量")
@@ -101,7 +102,7 @@ public class ProjectsController {
      * @param name             分支名
      * @param mergeAccessLevel merge权限
      * @param pushAccessLevel  push权限
-     * @param userId      userId
+     * @param userId           userId
      * @return Map
      */
     @ApiOperation(value = "增加项目保护分支")
@@ -126,18 +127,18 @@ public class ProjectsController {
     /**
      * 更新项目
      *
-     * @param projectId  项目对象
-     * @param userId 用户Id
+     * @param project 项目对象
+     * @param userId  用户Id
      * @return Project
      */
     @ApiOperation(value = "更新项目")
-    @PutMapping("/{projectId}")
+    @PutMapping
     public ResponseEntity<Project> update(
             @ApiParam(value = "项目信息", required = true)
-            @PathVariable Integer projectId,
+            @PathVariable Project project,
             @ApiParam(value = "用户Id", required = true)
             @RequestParam Integer userId) {
-        return Optional.ofNullable(projectService.updateProject(projectId, userId))
+        return Optional.ofNullable(projectService.updateProject(project, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.projects.update"));
     }
@@ -147,7 +148,7 @@ public class ProjectsController {
      *
      * @param projectId 项目Id
      * @param name      分支名
-     * @param userId  用户Id
+     * @param userId    用户Id
      * @return Map
      */
     @ApiOperation(value = "通过分支名查询保护分支")
@@ -168,7 +169,7 @@ public class ProjectsController {
      * 查询保护分支列表
      *
      * @param projectId 项目Id
-     * @param userId  用户Id
+     * @param userId    用户Id
      * @return List
      */
     @ApiOperation(value = "查询项目下所有的保护分支")
@@ -188,7 +189,7 @@ public class ProjectsController {
      *
      * @param projectId 项目Id
      * @param name      分支名
-     * @param userId  用户Id
+     * @param userId    用户Id
      * @return Map
      */
     @ApiOperation(value = "通过分支名删除保护分支")
@@ -203,4 +204,32 @@ public class ProjectsController {
         projectService.deleteByBranchName(projectId, name, userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+
+    /**
+     * 新增deploy keys
+     *
+     * @param projectId 项目Id
+     * @param title     标题
+     * @param key
+     * @param canPush   是否可以push代码
+     */
+    @ApiOperation(value = "通过项目名称创建项目")
+    @PostMapping("/deploy_key")
+    public ResponseEntity create(
+            @ApiParam(value = "项目ID", required = true)
+            @RequestParam Integer projectId,
+            @ApiParam(value = "标题", required = true)
+            @RequestParam String title,
+            @ApiParam(value = "ssh key")
+            @RequestParam String key,
+            @ApiParam(value = "canPush")
+            @RequestParam(required = false) boolean canPush,
+            @ApiParam(value = "用户Id")
+            @RequestParam(required = false) Integer userId) {
+        projectService.createDeployKey(projectId, title, key, canPush, userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 }

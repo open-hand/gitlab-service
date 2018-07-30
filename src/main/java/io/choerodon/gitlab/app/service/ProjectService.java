@@ -11,12 +11,12 @@ public interface ProjectService {
     /**
      * 通过项目名称创建项目
      *
-     * @param groupId     组 Id
+     * @param groupId    组 Id
      * @param projectName 项目名
      * @param userId   用户Id
      * @return Project
      */
-    Project createProject(Integer groupId, String projectName, Integer userId);
+    Project createProject(Integer groupId, String projectName, Integer userId, boolean visibility);
 
     /**
      * 删除项目
@@ -61,11 +61,11 @@ public interface ProjectService {
     /**
      * 更新项目
      *
-     * @param projectId  项目Id
+     * @param project  项目Id
      * @param userId 用户Id
      * @return Project
      */
-    Project updateProject(Integer projectId, Integer userId);
+    Project updateProject(Project project, Integer userId);
 
     /**
      * 通过分支名查询保护分支
@@ -95,4 +95,14 @@ public interface ProjectService {
      */
     void deleteByBranchName(Integer projectId, String name, Integer userId);
 
+
+    /**
+     * 新增deploy keys
+     *
+     * @param projectId 项目Id
+     * @param title   标题
+     * @param key
+     * @param canPush  是否可以push代码
+     */
+    void createDeployKey(Integer projectId, String title, String key, boolean canPush, Integer userId);
 }

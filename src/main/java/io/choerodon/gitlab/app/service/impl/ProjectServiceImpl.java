@@ -6,6 +6,7 @@ import java.util.Map;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.Visibility;
 import org.springframework.stereotype.Service;
 import scala.Int;
 
@@ -25,13 +26,15 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public Project createProject(Integer groupId, String projectName, Integer userId) {
+    public Project createProject(Integer groupId, String projectName, Integer userId, boolean visibility) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             Project project = gitLabApi.getProjectApi().createProject(groupId, projectName);
-            gitLabApi.getRepositoryApi().createBranch(project.getId(), "develop", "master");
-            //设置默认分支
-            project.setDefaultBranch("develop");
+            if(visibility) {
+                project.setVisibility(Visibility.PUBLIC);
+            }
+            project.setPublic(true);
+            gitLabApi.getProjectApi().updateProject(project);
             return gitLabApi.getProjectApi().updateProject(project);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
@@ -70,10 +73,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project updateProject(Integer projectId, Integer userId) {
+    public Project updateProject(Project newProject, Integer userId) {
         try {
-            Project project = gitlab4jclient.getGitLabApi().getProjectApi().getProject(projectId);
-            project.setDefaultBranch("develop");
+            Project project = gitlab4jclient.getGitLabApi().getProjectApi().getProject(newProject.getId());
             return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().updateProject(project);
         } catch (GitLabApiException e) {
@@ -109,5 +111,16 @@ public class ProjectServiceImpl implements ProjectService {
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
         }
+    }
+
+    @Override
+    public void createDeployKey(Integer projectId, String title,String key, boolean canPush, Integer userId) {
+        try {
+            gitlab4jclient.getGitLabApi(userId).getDeployKeysApi().addDeployKey(projectId,title,key,canPush);
+        } catch (GitLabApiException e) {
+            throw new CommonException(e.getMessage());
+        }
+
+
     }
 }
