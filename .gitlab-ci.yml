@@ -18,11 +18,6 @@ docker-build:
   script:
     - docker_build
     - chart_build
-  only:
-    - tags
-    - develop
-    - /^release-.*$/
-    - /^hotfix-.*$/
 
 .auto_devops: &auto_devops |
     curl -o .auto_devops.sh \
