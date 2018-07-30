@@ -110,7 +110,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public Branch queryBranchByName(Integer projectId, String branchName) {
         try {
-            return gitlab4jclient.getGitLabApi(null)
+            return gitlab4jclient.getGitLabApi()
                     .getRepositoryApi()
                     .getBranch(projectId, branchName);
         } catch (GitLabApiException e) {
