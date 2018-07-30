@@ -8,10 +8,7 @@ import java.util.List;
 
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.models.Branch;
-import org.gitlab4j.api.models.Project;
-import org.gitlab4j.api.models.RepositoryFile;
-import org.gitlab4j.api.models.Tag;
+import org.gitlab4j.api.models.*;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.CommonException;
@@ -92,7 +89,7 @@ public class RepositoryServiceImpl implements RepositoryService {
             gitlab4jclient
                     .getGitLabApi(userId)
                     .getRepositoryApi()
-                    .deleteTag(projectId,tagName);
+                    .deleteTag(projectId, tagName);
         } catch (GitLabApiException e) {
             throw new CommonException("error.tag.delete");
         }
@@ -113,7 +110,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public Branch queryBranchByName(Integer projectId, String branchName) {
         try {
-            return gitlab4jclient.getGitLabApi(null)
+            return gitlab4jclient.getGitLabApi()
                     .getRepositoryApi()
                     .getBranch(projectId, branchName);
         } catch (GitLabApiException e) {
@@ -149,17 +146,16 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public String getFileReadme(Integer projectId, String commit) {
-        String commitOrBranchName = commit == null ? "master" : commit;
+    public String getFile(Integer projectId, String commit, String filePath) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
-        StringBuilder readme = new StringBuilder();
+        StringBuilder fileContent = new StringBuilder();
         try {
-            File file = gitLabApi.getRepositoryFileApi().getRawFile(projectId, commitOrBranchName, README, null);
+            File file = gitLabApi.getRepositoryFileApi().getRawFile(projectId, commit, filePath, null);
             try (FileReader fileReader = new FileReader(file)) {
                 try (BufferedReader reader = new BufferedReader(fileReader)) {
                     String lineTxt;
                     while ((lineTxt = reader.readLine()) != null) {
-                        readme.append(lineTxt).append("\n");
+                        fileContent.append(lineTxt).append("\n");
                     }
                 }
             }
@@ -168,7 +164,17 @@ public class RepositoryServiceImpl implements RepositoryService {
         } catch (IOException e) {
             throw new CommonException("error.file.read");
         }
-        return readme.toString();
+        return fileContent.toString();
+    }
+
+    @Override
+    public CompareResults getDiffs(Integer projectId, String from, String to) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
+        try {
+            return gitLabApi.getRepositoryApi().compare(projectId, from, to);
+        } catch (Exception e) {
+            throw new CommonException(e.getMessage());
+        }
     }
 
 }

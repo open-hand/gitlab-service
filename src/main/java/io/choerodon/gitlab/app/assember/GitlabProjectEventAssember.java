@@ -15,7 +15,8 @@ import io.choerodon.gitlab.domain.event.GitlabProjectEventPayload;
 public class GitlabProjectEventAssember implements ConvertorI<GitlabProjectEventPayload, Object, GitlabProjectEventDTO> {
 
     @Override
-    public GitlabProjectEventPayload dtoToEntity(GitlabProjectEventDTO gitlabProjectEventDTO) {
+    public GitlabProjectEventPayload dtoToEntity(GitlabProjectEventDTO gitlabProjectEventDTO){
+
         GitlabProjectEventPayload gitlabProjectEventPayload = new GitlabProjectEventPayload();
         BeanUtils.copyProperties(gitlabProjectEventDTO, gitlabProjectEventPayload);
         return gitlabProjectEventPayload;

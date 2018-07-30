@@ -3,6 +3,7 @@ package io.choerodon.gitlab.app.service;
 import java.util.List;
 
 import org.gitlab4j.api.models.Branch;
+import org.gitlab4j.api.models.CompareResults;
 import org.gitlab4j.api.models.Tag;
 
 
@@ -52,11 +53,12 @@ public interface RepositoryService {
 
     /**
      * 根据标签名删除tag
+     *
      * @param projectId 项目id
      * @param tagName   标签名
      * @param userId    用户Id
      */
-    void deleteTag(Integer projectId,String tagName,Integer userId);
+    void deleteTag(Integer projectId, String tagName, Integer userId);
 
     /**
      * 根据分支名删除分支
@@ -96,5 +98,25 @@ public interface RepositoryService {
      */
     boolean createFile(Integer projectId, Integer userId);
 
-    String getFileReadme(Integer projectId, String commit);
+
+    /**
+     * 项目下获取file
+     *
+     * @param projectId 项目id
+     * @param commit    the commit SHA or branch name
+     * @param filePath  file path
+     * @return file
+     */
+    String getFile(Integer projectId, String commit, String filePath);
+
+
+    /**
+     * 项目下获取diffs
+     *
+     * @param projectId 项目id
+     * @param from      the commit SHA or branch name
+     * @param to        the commit SHA or branch name
+     * @return CompareResults
+     */
+    CompareResults getDiffs(Integer projectId, String from, String to);
 }
