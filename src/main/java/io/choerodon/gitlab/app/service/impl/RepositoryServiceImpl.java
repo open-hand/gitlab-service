@@ -8,7 +8,10 @@ import java.util.List;
 
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.models.*;
+import org.gitlab4j.api.models.Branch;
+import org.gitlab4j.api.models.CompareResults;
+import org.gitlab4j.api.models.RepositoryFile;
+import org.gitlab4j.api.models.Tag;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.CommonException;
@@ -18,18 +21,6 @@ import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
 @Service
 public class RepositoryServiceImpl implements RepositoryService {
-
-    private static final String README = "README.md";
-    private static final String README_CONTENT =
-            "# To customize a template\n"
-                    + "you need to push the template code to this git repository.\n"
-                    + "\n"
-                    + "Please make sure the following file exists.\n"
-                    + "+ **gitlab-ci.yml**. (Refer to [GitLab Documentation](https://docs.gitlab.com/ee/ci/yaml/))\n"
-                    + "+ **Dockerfile**. (Refer to [Dockerfile reference](https://docs.docker.com/engine/reference/builder/))\n"
-                    + "+ **Chart** setting directory. (Refer to [helm](https://github.com/kubernetes/helm))\n"
-                    + "\n"
-                    + "Finally, removing or re-editing this **README.md** file to make it useful.";
 
     private Gitlab4jClient gitlab4jclient;
 
@@ -130,22 +121,6 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public boolean createFile(Integer projectId, Integer userId) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
-        try {
-            Project project = gitLabApi.getProjectApi().getProject(projectId);
-            RepositoryFile repositoryFile = new RepositoryFile();
-            repositoryFile.setContent(README_CONTENT);
-            repositoryFile.setFilePath(README);
-            gitLabApi.getRepositoryFileApi().createFile(
-                    repositoryFile, project.getId(), "master", "ADD README.md");
-        } catch (GitLabApiException e) {
-            throw new CommonException("error.file.create");
-        }
-        return true;
-    }
-
-    @Override
     public String getFile(Integer projectId, String commit, String filePath) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         StringBuilder fileContent = new StringBuilder();
@@ -177,4 +152,41 @@ public class RepositoryServiceImpl implements RepositoryService {
         }
     }
 
+    @Override
+    public void createFile(Integer projectId, String path, String content, String commitMessage, Integer userId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            RepositoryFile repositoryFile = new RepositoryFile();
+            repositoryFile.setContent(content);
+            repositoryFile.setFilePath(path);
+            gitLabApi.getRepositoryFileApi().createFile(
+                    repositoryFile, projectId, "master", "ADD FILE");
+        } catch (GitLabApiException e) {
+            throw new CommonException("error.file.create");
+        }
+    }
+
+    @Override
+    public void updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            RepositoryFile repositoryFile = new RepositoryFile();
+            repositoryFile.setContent(content);
+            repositoryFile.setFilePath(path);
+            gitLabApi.getRepositoryFileApi().updateFile(repositoryFile, projectId, "master", commitMessage);
+        } catch (GitLabApiException e) {
+            throw new CommonException("error.file.update");
+        }
+
+    }
+
+    @Override
+    public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, "master", "DELETE FILE");
+        } catch (GitLabApiException e) {
+            throw new CommonException("error.file.delete");
+        }
+    }
 }
