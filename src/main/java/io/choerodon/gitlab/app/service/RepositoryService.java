@@ -89,14 +89,13 @@ public interface RepositoryService {
     List<Branch> listBranches(Integer projectId, Integer userId);
 
 
-    /**
-     * 项目下创建readme
-     *
-     * @param projectId 项目id
-     * @param userId    用户Id
-     * @return boolean
-     */
-    boolean createFile(Integer projectId, Integer userId);
+//    /**
+//     * 项目下创建readme
+//     *
+//     * @param projectId 项目id
+//     * @param userId    用户Id
+//     */
+//    boolean createFile(Integer projectId, Integer userId);
 
 
     /**
@@ -119,4 +118,10 @@ public interface RepositoryService {
      * @return CompareResults
      */
     CompareResults getDiffs(Integer projectId, String from, String to);
+
+    void createFile(Integer projectId, String path, String content, String commitMessage, Integer userId);
+
+    void updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId);
+
+    void deleteFile(Integer projectId, String path, String commitMessage, Integer userId);
 }
