@@ -1,9 +1,5 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.List;
 
 import org.gitlab4j.api.GitLabApi;
@@ -123,23 +119,13 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public String getFile(Integer projectId, String commit, String filePath) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
-        StringBuilder fileContent = new StringBuilder();
+        RepositoryFile file = new RepositoryFile();
         try {
-            File file = gitLabApi.getRepositoryFileApi().getRawFile(projectId, commit, filePath, null);
-            try (FileReader fileReader = new FileReader(file)) {
-                try (BufferedReader reader = new BufferedReader(fileReader)) {
-                    String lineTxt;
-                    while ((lineTxt = reader.readLine()) != null) {
-                        fileContent.append(lineTxt).append("\n");
-                    }
-                }
-            }
+            file = gitLabApi.getRepositoryFileApi().getFile(filePath, projectId, commit);
         } catch (GitLabApiException e) {
-            throw new CommonException("error.file.get");
-        } catch (IOException e) {
-            throw new CommonException("error.file.read");
+            return null;
         }
-        return fileContent.toString();
+        return file.getFileName();
     }
 
     @Override
@@ -189,4 +175,7 @@ public class RepositoryServiceImpl implements RepositoryService {
             throw new CommonException("error.file.delete");
         }
     }
+
+
+//    public void getFile
 }

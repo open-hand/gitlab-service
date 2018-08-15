@@ -230,7 +230,7 @@ public class RepositoryController {
             @ApiParam(value = "file path", required = true) @RequestParam(value = "file_path") String filePath) {
         return Optional.ofNullable(repositoryService.getFile(projectId, commit, filePath))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.readme.create"));
+                .orElseThrow(() -> new CommonException("error.file.get"));
     }
 
 
