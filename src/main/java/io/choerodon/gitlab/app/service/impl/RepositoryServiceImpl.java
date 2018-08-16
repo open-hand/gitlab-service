@@ -11,6 +11,7 @@ import org.gitlab4j.api.models.Tag;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.RepositoryService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -117,15 +118,15 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public String getFile(Integer projectId, String commit, String filePath) {
+    public RepositoryFile getFile(Integer projectId, String commit, String filePath) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
-        RepositoryFile file = new RepositoryFile();
+        RepositoryFile file;
         try {
             file = gitLabApi.getRepositoryFileApi().getFile(filePath, projectId, commit);
         } catch (GitLabApiException e) {
             return null;
         }
-        return file.getFileName();
+        return file;
     }
 
     @Override
@@ -139,31 +140,32 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public void createFile(Integer projectId, String path, String content, String commitMessage, Integer userId) {
+    public RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        RepositoryFile repositoryFile = new RepositoryFile();
         try {
-            RepositoryFile repositoryFile = new RepositoryFile();
             repositoryFile.setContent(content);
             repositoryFile.setFilePath(path);
             gitLabApi.getRepositoryFileApi().createFile(
                     repositoryFile, projectId, "master", "ADD FILE");
         } catch (GitLabApiException e) {
-            throw new CommonException("error.file.create");
+            return null;
         }
+        return repositoryFile;
     }
 
     @Override
-    public void updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId) {
+    public RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        RepositoryFile repositoryFile = new RepositoryFile();
         try {
-            RepositoryFile repositoryFile = new RepositoryFile();
             repositoryFile.setContent(content);
             repositoryFile.setFilePath(path);
             gitLabApi.getRepositoryFileApi().updateFile(repositoryFile, projectId, "master", commitMessage);
         } catch (GitLabApiException e) {
-            throw new CommonException("error.file.update");
+            return null;
         }
-
+        return repositoryFile;
     }
 
     @Override
@@ -172,10 +174,8 @@ public class RepositoryServiceImpl implements RepositoryService {
         try {
             gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, "master", "DELETE FILE");
         } catch (GitLabApiException e) {
-            throw new CommonException("error.file.delete");
+            throw new FeignException("error.file.delete", e);
         }
     }
 
-
-//    public void getFile
 }

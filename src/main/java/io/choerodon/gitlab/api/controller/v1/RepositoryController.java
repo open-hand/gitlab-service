@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Branch;
 import org.gitlab4j.api.models.CompareResults;
+import org.gitlab4j.api.models.RepositoryFile;
 import org.gitlab4j.api.models.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -198,21 +199,6 @@ public class RepositoryController {
                 .orElseThrow(() -> new CommonException("error.branch.list"));
     }
 
-//    /**
-//     * 项目下创建readme
-//     *
-//     * @param projectId 项目id
-//     * @param userId    用户Id
-//     */
-//    @ApiOperation(value = "项目下创建readme")
-//    @PostMapping("/file")
-//    public ResponseEntity<Boolean> createFile(
-//            @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
-//            @RequestParam("userId") Integer userId) {
-//        return Optional.ofNullable(repositoryService.createFile(projectId, userId))
-//                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-//                .orElseThrow(() -> new CommonException("error.readme.create"));
-//    }
 
     /**
      * 项目下获取file
@@ -224,7 +210,7 @@ public class RepositoryController {
      */
     @ApiOperation(value = "项目下获取file")
     @GetMapping("/{commit}/file")
-    public ResponseEntity<String> getFile(
+    public ResponseEntity<RepositoryFile> getFile(
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
             @ApiParam(value = "commit", required = true) @PathVariable String commit,
             @ApiParam(value = "file path", required = true) @RequestParam(value = "file_path") String filePath) {
@@ -262,7 +248,7 @@ public class RepositoryController {
      */
     @ApiOperation(value = "项目下创建File")
     @PostMapping("/file")
-    public ResponseEntity createFile(
+    public ResponseEntity<RepositoryFile> createFile(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "path", required = true)
@@ -273,8 +259,9 @@ public class RepositoryController {
             @RequestParam("commitMessage") String commitMessage,
             @ApiParam(value = "userId", required = true)
             @RequestParam("userId") Integer userId) {
-        repositoryService.createFile(projectId, path, content, commitMessage, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return Optional.ofNullable(repositoryService.createFile(projectId, path, content, commitMessage, userId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new CommonException("error.file.create"));
     }
 
 
@@ -286,7 +273,7 @@ public class RepositoryController {
      */
     @ApiOperation(value = "项目下创建File")
     @PutMapping("/file")
-    public ResponseEntity updateFile(
+    public ResponseEntity<RepositoryFile> updateFile(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "path", required = true)
@@ -297,8 +284,9 @@ public class RepositoryController {
             @RequestParam("commitMessage") String commitMessage,
             @ApiParam(value = "userId", required = true)
             @RequestParam("userId") Integer userId) {
-        repositoryService.updateFile(projectId, path, content, commitMessage, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return Optional.ofNullable(repositoryService.updateFile(projectId, path, content, commitMessage, userId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new CommonException("error.file.update"));
     }
 
 
