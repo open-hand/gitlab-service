@@ -146,7 +146,7 @@ public class RepositoryServiceImpl implements RepositoryService {
         try {
             repositoryFile.setContent(content);
             repositoryFile.setFilePath(path);
-            gitLabApi.getRepositoryFileApi().createFile(
+            repositoryFile = gitLabApi.getRepositoryFileApi().createFile(
                     repositoryFile, projectId, "master", "ADD FILE");
         } catch (GitLabApiException e) {
             return null;
@@ -161,9 +161,13 @@ public class RepositoryServiceImpl implements RepositoryService {
         try {
             repositoryFile.setContent(content);
             repositoryFile.setFilePath(path);
-            gitLabApi.getRepositoryFileApi().updateFile(repositoryFile, projectId, "master", commitMessage);
+            repositoryFile = gitLabApi.getRepositoryFileApi().updateFile(repositoryFile, projectId, "master", commitMessage);
         } catch (GitLabApiException e) {
-            return null;
+            if(e.getHttpStatus()==200) {
+                return repositoryFile;
+            }else {
+                return null;
+            }
         }
         return repositoryFile;
     }
