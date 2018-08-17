@@ -40,7 +40,6 @@ public class GroupServiceImpl implements GroupService {
             } else {
                 GroupDTO groupDTO = new GroupDTO();
                 BeanUtils.copyProperties(group1, groupDTO);
-                gitLabApi.getProjectApi().createProject(group1.getId(), "issue");
                 return groupDTO;
             }
         } catch (GitLabApiException e) {

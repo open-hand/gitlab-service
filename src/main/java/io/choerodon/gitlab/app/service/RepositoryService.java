@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.gitlab4j.api.models.Branch;
 import org.gitlab4j.api.models.CompareResults;
+import org.gitlab4j.api.models.RepositoryFile;
 import org.gitlab4j.api.models.Tag;
 
 
@@ -106,7 +107,7 @@ public interface RepositoryService {
      * @param filePath  file path
      * @return file
      */
-    String getFile(Integer projectId, String commit, String filePath);
+    RepositoryFile getFile(Integer projectId, String commit, String filePath);
 
 
     /**
@@ -119,9 +120,9 @@ public interface RepositoryService {
      */
     CompareResults getDiffs(Integer projectId, String from, String to);
 
-    void createFile(Integer projectId, String path, String content, String commitMessage, Integer userId);
+    RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId);
 
-    void updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId);
+    RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId);
 
     void deleteFile(Integer projectId, String path, String commitMessage, Integer userId);
 }
