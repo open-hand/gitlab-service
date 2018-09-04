@@ -45,7 +45,7 @@ public class RepositoryServiceImpl implements RepositoryService {
         try {
             return gitlab4jclient.getGitLabApi(userId).getRepositoryApi().getTags(projectId);
         } catch (GitLabApiException e) {
-            throw new CommonException("error.tag.get");
+            throw new FeignException("error.tag.get");
         }
     }
 
@@ -67,7 +67,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                     .getRepositoryApi()
                     .createTag(projectId, tagName, ref, "", "");
         } catch (GitLabApiException e) {
-            throw new CommonException("error.tag.create");
+            throw new FeignException("error.tag.create", e);
         }
     }
 
@@ -79,7 +79,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                     .getRepositoryApi()
                     .deleteTag(projectId, tagName);
         } catch (GitLabApiException e) {
-            throw new CommonException("error.tag.delete");
+            throw new FeignException("error.tag.delete", e);
         }
     }
 
@@ -134,8 +134,8 @@ public class RepositoryServiceImpl implements RepositoryService {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         try {
             return gitLabApi.getRepositoryApi().compare(projectId, from, to);
-        } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+        } catch (GitLabApiException e) {
+            throw new FeignException("error.diffs.get");
         }
     }
 
