@@ -113,10 +113,13 @@ public class RepositoryController {
             @RequestParam("name") String name,
             @ApiParam(value = "标签源", required = true)
             @RequestParam("ref") String ref,
+            @ApiParam(value = "标签描述")
+            @RequestParam(value = "message", required = false, defaultValue = "") String msg,
+            @ApiParam(value = "发布日志")
+            @RequestParam(value = "release_notes", required = false, defaultValue = "") String releaseNotes,
             @ApiParam(value = "用户Id")
-            @RequestParam(value = "userId", required = false)
-                    Integer userId) {
-        return Optional.ofNullable(repositoryService.createTag(projectId, name, ref, userId))
+            @RequestParam(value = "userId", required = false) Integer userId) {
+        return Optional.ofNullable(repositoryService.createTag(projectId, name, ref, msg, releaseNotes, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.tag.create"));
     }

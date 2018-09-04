@@ -44,13 +44,15 @@ public interface RepositoryService {
     /**
      * 创建tag
      *
-     * @param projectId 项目id
-     * @param tagName   标签名
-     * @param ref       标签源
-     * @param userId    用户Id
+     * @param projectId    项目id
+     * @param tagName      标签名
+     * @param ref          标签源
+     * @param userId       用户Id
+     * @param msg          描述
+     * @param releaseNotes 发布日志
      * @return Tag
      */
-    Tag createTag(Integer projectId, String tagName, String ref, Integer userId);
+    Tag createTag(Integer projectId, String tagName, String ref, String msg, String releaseNotes, Integer userId);
 
     /**
      * 根据标签名删除tag
