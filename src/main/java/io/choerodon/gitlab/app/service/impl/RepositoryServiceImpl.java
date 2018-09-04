@@ -61,11 +61,11 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Tag createTag(Integer projectId, String tagName, String ref, Integer userId) {
+    public Tag createTag(Integer projectId, String tagName, String ref, String msg, String releaseNotes, Integer userId) {
         try {
             return gitlab4jclient.getGitLabApi(userId)
                     .getRepositoryApi()
-                    .createTag(projectId, tagName, ref, "", "");
+                    .createTag(projectId, tagName, ref, msg, releaseNotes);
         } catch (GitLabApiException e) {
             throw new FeignException("error.tag.create", e);
         }
