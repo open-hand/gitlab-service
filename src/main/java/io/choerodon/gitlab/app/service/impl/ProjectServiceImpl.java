@@ -34,7 +34,6 @@ public class ProjectServiceImpl implements ProjectService {
                 project.setVisibility(Visibility.PUBLIC);
             }
             project.setPublic(true);
-            gitLabApi.getProjectApi().updateProject(project);
             return gitLabApi.getProjectApi().updateProject(project);
         } catch (GitLabApiException e) {
             throw new CommonException(e.getMessage());
