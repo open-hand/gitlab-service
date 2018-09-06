@@ -116,7 +116,7 @@ public class RepositoryController {
             @ApiParam(value = "标签描述")
             @RequestParam(value = "message", required = false, defaultValue = "") String msg,
             @ApiParam(value = "发布日志")
-            @RequestParam(value = "release_notes", required = false, defaultValue = "") String releaseNotes,
+            @RequestBody(required = false) String releaseNotes,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(repositoryService.createTag(projectId, name, ref, msg, releaseNotes, userId))
