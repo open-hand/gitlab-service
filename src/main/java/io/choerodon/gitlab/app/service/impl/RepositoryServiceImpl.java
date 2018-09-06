@@ -67,7 +67,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                     .getRepositoryApi()
                     .createTag(projectId, tagName, ref, msg, releaseNotes);
         } catch (GitLabApiException e) {
-            throw new FeignException("error.tag.create", e);
+            throw new FeignException("error.tag.create: " + e.getMessage(), e);
         }
     }
 
