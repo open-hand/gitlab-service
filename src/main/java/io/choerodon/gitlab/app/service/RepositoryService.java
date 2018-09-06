@@ -64,6 +64,16 @@ public interface RepositoryService {
     void deleteTag(Integer projectId, String tagName, Integer userId);
 
     /**
+     * 更新 tag
+     *
+     * @param projectId    项目id
+     * @param name         标签名
+     * @param releaseNotes 发布日志
+     * @return Tag
+     */
+    Tag updateTagRelease(Integer projectId, String name, String releaseNotes, Integer userId);
+
+    /**
      * 根据分支名删除分支
      *
      * @param projectId  项目id

@@ -125,6 +125,30 @@ public class RepositoryController {
     }
 
     /**
+     * 更新 tag
+     *
+     * @param projectId    项目id
+     * @param name         标签名
+     * @param releaseNotes 发布日志
+     * @return Tag
+     */
+    @ApiOperation(value = "更新tag")
+    @PutMapping("/tags")
+    public ResponseEntity<Tag> updateTagRelease(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "标签名", required = true)
+            @RequestParam("name") String name,
+            @ApiParam(value = "发布日志")
+            @RequestBody(required = false) String releaseNotes,
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId", required = false) Integer userId) {
+        return Optional.ofNullable(repositoryService.updateTagRelease(projectId, name, releaseNotes, userId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new CommonException("error.tag.create"));
+    }
+
+    /**
      * 根据标签名删除标签
      *
      * @param projectId 项目id

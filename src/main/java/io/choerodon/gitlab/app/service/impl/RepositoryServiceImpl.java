@@ -84,6 +84,17 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
+    public Tag updateTagRelease(Integer projectId, String name, String releaseNotes, Integer userId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId)
+                    .getRepositoryApi()
+                    .updateTagRelease(projectId, name, releaseNotes);
+        } catch (GitLabApiException e) {
+            throw new FeignException("error.tag.update", e);
+        }
+    }
+
+    @Override
     public void deleteBranch(Integer projectId, String branchName, Integer userId) {
         try {
             gitlab4jclient
