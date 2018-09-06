@@ -79,7 +79,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                     .getRepositoryApi()
                     .deleteTag(projectId, tagName);
         } catch (GitLabApiException e) {
-            throw new FeignException("error.tag.delete", e);
+            throw new FeignException("error.tag.delete: " + e.getMessage(), e);
         }
     }
 
@@ -90,7 +90,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                     .getRepositoryApi()
                     .updateTagRelease(projectId, name, releaseNotes);
         } catch (GitLabApiException e) {
-            throw new FeignException("error.tag.update", e);
+            throw new FeignException("error.tag.update: " + e.getMessage(), e);
         }
     }
 
