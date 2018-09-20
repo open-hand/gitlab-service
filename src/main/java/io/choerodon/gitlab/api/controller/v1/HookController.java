@@ -44,4 +44,27 @@ public class HookController {
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new CommonException("error.projects.add.hook"));
     }
+
+
+    /**
+     * 更新ProjectHook对象
+     *
+     * @param projectId   项目id
+     * @param userId    用户Id
+     * @param hookId hookId
+     * @return ProjectHook
+     */
+    @ApiOperation(value = "更新ProjectHook对象")
+    @PutMapping
+    public ResponseEntity<ProjectHook> create(
+            @ApiParam(value = "项目ID", required = true)
+            @RequestParam Integer projectId,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId,
+            @ApiParam(value = "hookId", required = true)
+            @RequestParam Integer hookId) {
+        return Optional.ofNullable(hookService.updateProjectHook(projectId, hookId, userId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.NO_CONTENT))
+                .orElseThrow(() -> new CommonException("error.projects.update.hook"));
+    }
 }

@@ -2,16 +2,20 @@ package io.choerodon.gitlab.app.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.CommitStatuse;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.dto.CommitStatuseDTO;
 import io.choerodon.gitlab.app.service.CommitService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -20,6 +24,8 @@ import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
  */
 @Service
 public class CommitServiceImpl implements CommitService {
+
+    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private Gitlab4jClient gitlab4jclient;
@@ -34,11 +40,23 @@ public class CommitServiceImpl implements CommitService {
     }
 
     @Override
-    public List<CommitStatuse> getCommitStatuse(Integer projectId, String sha, Integer userId) {
+    public List<CommitStatuseDTO> getCommitStatuse(Integer projectId, String sha, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommitStatus(projectId, sha);
+            List<CommitStatuse> commitStatuses = gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommitStatus(projectId, sha);
+            List<CommitStatuseDTO> commmitStatuseDTOS = new ArrayList<>();
+            commitStatuses.stream().forEach(commitStatuse -> {
+                CommitStatuseDTO commitStatuseDTO = new CommitStatuseDTO();
+                BeanUtils.copyProperties(commitStatuse, commitStatuseDTO);
+                if (commitStatuse.getCreated_at() != null && commitStatuse.getStarted_at() != null) {
+                    commitStatuseDTO.setCreated_at(formatter.format(commitStatuse.getCreated_at()));
+                    commitStatuseDTO.setStarted_at(formatter.format(commitStatuse.getStarted_at()));
+                }
+                commmitStatuseDTOS.add(commitStatuseDTO);
+            });
+            return commmitStatuseDTOS;
+
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 

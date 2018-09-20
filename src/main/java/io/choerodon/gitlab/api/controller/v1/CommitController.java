@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.gitlab.api.dto.CommitStatuseDTO;
 import io.choerodon.gitlab.app.service.CommitService;
 
 /**
@@ -58,7 +59,7 @@ public class CommitController {
      */
     @ApiOperation(value = "查询某个commit的Statuse")
     @GetMapping("/statuse")
-    public ResponseEntity<List<CommitStatuse>> getCommitStatuse(
+    public ResponseEntity<List<CommitStatuseDTO>> getCommitStatuse(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "sha", required = true)

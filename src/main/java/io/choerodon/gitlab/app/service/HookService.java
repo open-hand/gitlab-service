@@ -1,5 +1,6 @@
 package io.choerodon.gitlab.app.service;
 
+import org.gitlab4j.api.models.CommitStatuse;
 import org.gitlab4j.api.models.ProjectHook;
 
 
@@ -15,4 +16,7 @@ public interface HookService {
      */
 
     ProjectHook createProjectHook(Integer projectId, ProjectHook projectHook, Integer userId);
+
+
+    ProjectHook updateProjectHook(Integer projectId,Integer hookId, Integer userId);
 }
