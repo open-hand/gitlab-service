@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.NotesService;
 
 @RestController
@@ -47,7 +47,7 @@ public class NotesController {
             @RequestParam int size) {
         return Optional.ofNullable(notesService.listIssueNotes(projectId, issueIid, page, size))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.notes.query"));
+                .orElseThrow(() -> new FeignException("error.notes.query"));
     }
 
     /**
@@ -69,7 +69,7 @@ public class NotesController {
             @PathVariable int noteId) {
         return Optional.ofNullable(notesService.queryIssueNote(projectId, issueIid, noteId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.note.query"));
+                .orElseThrow(() -> new FeignException("error.note.query"));
     }
 
     /**
@@ -94,7 +94,7 @@ public class NotesController {
             @RequestParam Date createdAt) {
         return Optional.ofNullable(notesService.createIssueNote(projectId, issueIid, body, createdAt))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.note.create"));
+                .orElseThrow(() -> new FeignException("error.note.create"));
     }
 
     /**
@@ -119,7 +119,7 @@ public class NotesController {
             @RequestParam String body) {
         return Optional.ofNullable(notesService.updateIssueNote(projectId, issueIid, noteId, body))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.note.update"));
+                .orElseThrow(() -> new FeignException("error.note.update"));
     }
 
     /**

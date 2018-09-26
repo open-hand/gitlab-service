@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.IssueDto;
 import io.choerodon.gitlab.app.service.IssueService;
 
@@ -39,13 +39,13 @@ public class IssueController {
             @RequestBody IssueDto issueDto) {
         return Optional.ofNullable(issueService.createIssue(issueDto))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.issue.add"));
+                .orElseThrow(() -> new FeignException("error.issue.add"));
     }
 
     /**
      * 批量创建issue
      *
-     * @param userId  用户Id  optional
+     * @param userId    用户Id  optional
      * @param issueDtos issueDto对象Map
      * @return Map
      */
@@ -59,7 +59,7 @@ public class IssueController {
 
         return Optional.ofNullable(issueService.batchCreateIssue(issueDtos, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.issue.add"));
+                .orElseThrow(() -> new FeignException("error.issue.add"));
     }
 
     /**
@@ -76,13 +76,13 @@ public class IssueController {
 
         return Optional.ofNullable(issueService.updateIssue(issueDto))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.issue.update"));
+                .orElseThrow(() -> new FeignException("error.issue.update"));
     }
 
     /**
      * 批量更新issue
      *
-     * @param userId 用户Id  optional
+     * @param userId    用户Id  optional
      * @param issueDtos issueDto对象
      */
     @ApiOperation(value = "批量更新issue")
@@ -189,7 +189,7 @@ public class IssueController {
      * 批量删除issue
      *
      * @param projectId 项目id
-     * @param userId  用户Id  optional
+     * @param userId    用户Id  optional
      * @param issueList issueIid List
      */
     @ApiOperation(value = "批量删除issue")
@@ -224,7 +224,7 @@ public class IssueController {
             @RequestParam Integer pageSize) {
         return Optional.ofNullable(issueService.listIssues(projectId, page, pageSize))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.issues.get"));
+                .orElseThrow(() -> new FeignException("error.issues.get"));
     }
 
     /**
@@ -244,7 +244,7 @@ public class IssueController {
 
         return Optional.ofNullable(issueService.getIssue(projectId, issueIid))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.issue.get"));
+                .orElseThrow(() -> new FeignException("error.issue.get"));
     }
 
 

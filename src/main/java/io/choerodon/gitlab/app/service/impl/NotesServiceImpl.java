@@ -8,7 +8,7 @@ import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Note;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.NotesService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -28,7 +28,7 @@ public class NotesServiceImpl implements NotesService {
             return gitlab4jclient.getGitLabApi(null)
                     .getNotesApi().getIssueNotes(projectId, issueIid, page, size);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -38,7 +38,7 @@ public class NotesServiceImpl implements NotesService {
             return gitlab4jclient.getGitLabApi(null)
                     .getNotesApi().getIssueNote(projectId, issueIid, noteId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -50,7 +50,7 @@ public class NotesServiceImpl implements NotesService {
                     ? gitLabApi.getNotesApi().createIssueNote(projectId, issueIid, body)
                     : gitLabApi.getNotesApi().createIssueNote(projectId, issueIid, body, createdAt);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -60,7 +60,7 @@ public class NotesServiceImpl implements NotesService {
             return gitlab4jclient.getGitLabApi(null)
                     .getNotesApi().updateIssueNote(projectId, issueIid, noteId, body);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -69,8 +69,8 @@ public class NotesServiceImpl implements NotesService {
         try {
             gitlab4jclient.getGitLabApi(null)
                     .getNotesApi().deleteIssueNote(projectId, issueIid, noteId);
-        } catch (Exception e) {
-            throw new CommonException("error.note.delete");
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
         }
     }
 }

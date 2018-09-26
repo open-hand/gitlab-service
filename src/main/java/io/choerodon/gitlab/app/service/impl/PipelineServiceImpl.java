@@ -9,7 +9,7 @@ import org.gitlab4j.api.models.Pipeline;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.PipelineDto;
 import io.choerodon.gitlab.app.service.PipelineService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
@@ -32,7 +32,7 @@ public class PipelineServiceImpl implements PipelineService {
         try {
             return gitLabApi.getPipelineApi().getPipelines(projectId, page, size == 0 ? 40 : size);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage());
         }
     }
 
@@ -42,7 +42,7 @@ public class PipelineServiceImpl implements PipelineService {
         try {
             return gitLabApi.getPipelineApi().getPipelines(projectId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
 
         }
     }
@@ -53,11 +53,11 @@ public class PipelineServiceImpl implements PipelineService {
             Pipeline pipeline = gitlab4jclient.getGitLabApi(userId)
                     .getPipelineApi().getPipeline(projectId, pipelineId);
             PipelineDto pipelineDto = new PipelineDto();
-            BeanUtils.copyProperties(pipeline,pipelineDto);
+            BeanUtils.copyProperties(pipeline, pipelineDto);
             pipelineDto.setCreated_at(formatter.format(pipeline.getCreatedAt()));
             return pipelineDto;
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -77,7 +77,7 @@ public class PipelineServiceImpl implements PipelineService {
             return gitlab4jclient.getGitLabApi(userId)
                     .getPipelineApi().cancelPipelineJobs(projectId, pipelineId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 }

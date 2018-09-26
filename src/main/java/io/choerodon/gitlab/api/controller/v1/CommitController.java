@@ -6,13 +6,12 @@ import java.util.Optional;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
-import org.gitlab4j.api.models.CommitStatuse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.CommitStatuseDTO;
 import io.choerodon.gitlab.app.service.CommitService;
 
@@ -45,7 +44,7 @@ public class CommitController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(commitService.getCommit(projectId, sha, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.commit.get"));
+                .orElseThrow(() -> new FeignException("error.commit.get"));
     }
 
 
@@ -68,7 +67,7 @@ public class CommitController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(commitService.getCommitStatuse(projectId, sha, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.commit.get"));
+                .orElseThrow(() -> new FeignException("error.commit.get"));
     }
 
     /**
@@ -91,7 +90,7 @@ public class CommitController {
             @RequestParam String since) {
         return Optional.ofNullable(commitService.getCommits(projectId, branchName, since))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.commits.get"));
+                .orElseThrow(() -> new FeignException("error.commits.get"));
     }
 }
 

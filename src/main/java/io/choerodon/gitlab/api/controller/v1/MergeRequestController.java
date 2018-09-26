@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.MergeRequestService;
 
 @RestController
@@ -54,7 +54,7 @@ public class MergeRequestController {
         return Optional.ofNullable(mergeRequestService.createMergeRequest(projectId,
                 sourceBranch, targetBranch, title, description, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException(ERROR_MERGE_REQUEST_CREATE));
+                .orElseThrow(() -> new FeignException(ERROR_MERGE_REQUEST_CREATE));
     }
 
     /**
@@ -96,7 +96,7 @@ public class MergeRequestController {
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(mergeRequestService.queryMergeRequest(projectId, mergeRequestId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException(ERROR_MERGE_REQUEST_CREATE));
+                .orElseThrow(() -> new FeignException(ERROR_MERGE_REQUEST_CREATE));
     }
 
     /**
@@ -112,7 +112,7 @@ public class MergeRequestController {
             @PathVariable Integer projectId) {
         return Optional.ofNullable(mergeRequestService.listMergeRequests(projectId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException(ERROR_MERGE_REQUEST_CREATE));
+                .orElseThrow(() -> new FeignException(ERROR_MERGE_REQUEST_CREATE));
     }
 
     /**
@@ -144,7 +144,7 @@ public class MergeRequestController {
         return Optional.ofNullable(mergeRequestService.acceptMergeRequest(projectId,
                 mergeRequestId, mergeCommitMessage, shouldRemoveSourceBranch, mergeWhenPipelineSucceeds, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.mergeRequest.accept"));
+                .orElseThrow(() -> new FeignException("error.mergeRequest.accept"));
     }
 
     /**
@@ -166,7 +166,7 @@ public class MergeRequestController {
             @RequestParam(value = "userId") Integer userId) {
         return Optional.ofNullable(mergeRequestService.listCommits(projectId, mergeRequestId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.mergeRequest.merge"));
+                .orElseThrow(() -> new FeignException("error.mergeRequest.merge"));
     }
 
     /**

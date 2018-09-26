@@ -7,9 +7,7 @@ import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import io.choerodon.core.exception.CommonException;
-import io.choerodon.core.oauth.CustomUserDetails;
-import io.choerodon.core.oauth.DetailsHelper;
+import io.choerodon.core.exception.FeignException;
 
 
 /**
@@ -35,7 +33,7 @@ public class Gitlab4jClient {
             }
             return newGitLabApi;
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 

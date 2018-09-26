@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.GroupDTO;
 import io.choerodon.gitlab.api.dto.MemberDto;
@@ -39,13 +38,13 @@ public class GroupsController {
     public ResponseEntity<List<Group>> list() {
         return Optional.ofNullable(groupService.listGroups())
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.groups.list"));
+                .orElseThrow(() -> new FeignException("error.groups.list"));
     }
 
     /**
      * 创建组
      *
-     * @param group    组对象
+     * @param group  组对象
      * @param userId 用户Id
      * @return Group
      */
@@ -104,7 +103,7 @@ public class GroupsController {
             @PathVariable Integer groupId) {
         return Optional.ofNullable(groupService.listMember(groupId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.groups.members.get"));
+                .orElseThrow(() -> new FeignException("error.groups.members.get"));
     }
 
     /**
@@ -123,7 +122,7 @@ public class GroupsController {
             @PathVariable Integer userId) {
         return Optional.ofNullable(groupService.queryMemberByUserId(groupId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.groups.member.get"));
+                .orElseThrow(() -> new FeignException("error.groups.member.get"));
     }
 
     /**
@@ -142,7 +141,7 @@ public class GroupsController {
             @RequestBody @Valid MemberDto member) {
         return Optional.ofNullable(groupService.createMember(groupId, member))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.groups.member.create"));
+                .orElseThrow(() -> new FeignException("error.groups.member.create"));
     }
 
     /**
@@ -161,7 +160,7 @@ public class GroupsController {
             @RequestBody @Valid io.choerodon.gitlab.api.dto.MemberDto member) {
         return Optional.ofNullable(groupService.updateMember(groupId, member))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.groups.member.update"));
+                .orElseThrow(() -> new FeignException("error.groups.member.update"));
     }
 
     /**
@@ -184,8 +183,8 @@ public class GroupsController {
     /**
      * 获取项目列表
      *
-     * @param groupId  组对象Id
-     * @param userId 用户Id
+     * @param groupId 组对象Id
+     * @param userId  用户Id
      * @return List
      */
     @ApiOperation(value = "获取项目列表")
@@ -197,14 +196,14 @@ public class GroupsController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(groupService.listProjects(groupId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.groups.project.query"));
+                .orElseThrow(() -> new FeignException("error.groups.project.query"));
     }
 
     /**
      * 根据组名查询组
      *
      * @param groupName 组名
-     * @param userId 用户Id
+     * @param userId    用户Id
      * @return group
      */
     @ApiOperation(value = "根据组名查询组")
@@ -215,6 +214,6 @@ public class GroupsController {
             @ApiParam(value = "userId")
             @RequestParam Integer userId
     ) {
-        return new ResponseEntity<>(groupService.queryGroupByName(groupName,userId), HttpStatus.OK);
+        return new ResponseEntity<>(groupService.queryGroupByName(groupName, userId), HttpStatus.OK);
     }
 }

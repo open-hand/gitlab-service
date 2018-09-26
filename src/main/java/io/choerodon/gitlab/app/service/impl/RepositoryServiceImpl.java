@@ -10,7 +10,6 @@ import org.gitlab4j.api.models.RepositoryFile;
 import org.gitlab4j.api.models.Tag;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.RepositoryService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
@@ -36,7 +35,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                 branch.setName("create branch message:Branch already exists");
                 return branch;
             }
-            throw new CommonException("error.branch.insert");
+            throw new FeignException("error.branch.insert");
         }
     }
 
@@ -56,7 +55,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                     .getRepositoryApi()
                     .getTags(projectId, page, perPage);
         } catch (GitLabApiException e) {
-            throw new CommonException("error.tag.getPage");
+            throw new FeignException("error.tag.getPage");
         }
     }
 
@@ -102,7 +101,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                     .getRepositoryApi()
                     .deleteBranch(projectId, branchName);
         } catch (GitLabApiException e) {
-            throw new CommonException("error.branch.delete");
+            throw new FeignException("error.branch.delete");
         }
     }
 
@@ -124,7 +123,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                     .getRepositoryApi()
                     .getBranches(projectId);
         } catch (GitLabApiException e) {
-            throw new CommonException("error.branch.get");
+            throw new FeignException("error.branch.get");
         }
     }
 
@@ -146,7 +145,7 @@ public class RepositoryServiceImpl implements RepositoryService {
         try {
             return gitLabApi.getRepositoryApi().compare(projectId, from, to);
         } catch (GitLabApiException e) {
-            throw new FeignException("error.diffs.get");
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -174,9 +173,9 @@ public class RepositoryServiceImpl implements RepositoryService {
             repositoryFile.setFilePath(path);
             repositoryFile = gitLabApi.getRepositoryFileApi().updateFile(repositoryFile, projectId, "master", commitMessage);
         } catch (GitLabApiException e) {
-            if(e.getHttpStatus()==200) {
+            if (e.getHttpStatus() == 200) {
                 return repositoryFile;
-            }else {
+            } else {
                 return null;
             }
         }
@@ -189,7 +188,7 @@ public class RepositoryServiceImpl implements RepositoryService {
         try {
             gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, "master", "DELETE FILE");
         } catch (GitLabApiException e) {
-            throw new FeignException("error.file.delete", e);
+            throw new FeignException(e.getMessage(), e);
         }
     }
 

@@ -13,7 +13,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.CommitStatuseDTO;
 import io.choerodon.gitlab.app.service.CommitService;
@@ -35,7 +34,7 @@ public class CommitServiceImpl implements CommitService {
         try {
             return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, sha);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -67,13 +66,13 @@ public class CommitServiceImpl implements CommitService {
         try {
             sinceDate = simpleDateFormat.parse(since);
         } catch (ParseException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
         try {
             return gitlab4jclient.getGitLabApi()
                     .getCommitsApi().getCommits(gitLabProjectId, ref, sinceDate, new Date(), null);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 }

@@ -9,7 +9,7 @@ import org.gitlab4j.api.models.ImpersonationToken;
 import org.gitlab4j.api.models.User;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.UserService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
                     .getUserApi()
                     .createUser(user, password, projectsLimit);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
                     ? userApi.getActiveUsers(page, perPage)
                     : userApi.getUsers(page, perPage);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         try {
             return gitlab4jclient.getGitLabApi().getUserApi().getCurrentUser();
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
             return gitlab4jclient.getGitLabApi()
                     .getUserApi().getUser(userId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
             UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
             userApi.deleteUser(userId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
             user.setId(userId);
             return userApi.modifyUser(user, null, projectsLimit);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
         try {
             userApi.unblockUser(userId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
         try {
             userApi.blockUser(userId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -123,14 +123,14 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userApi.getUser(userId);
             if (user == null) {
-                throw new CommonException("error.users.get");
+                throw new FeignException("error.users.get");
             }
             return userApi.createImpersonationToken(
                     user.getId(),
                     "myToken",
                     ImpersonationToken.Scope.values());
-        } catch (GitLabApiException g) {
-            throw new CommonException(g.getMessage());
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -140,11 +140,11 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userApi.getUser(userId);
             if (user == null) {
-                throw new CommonException("error.users.get");
+                throw new FeignException("error.users.get");
             }
             return userApi.getImpersonationTokens(user.getId(), Constants.ImpersonationState.ACTIVE);
-        } catch (GitLabApiException g) {
-            throw new CommonException(g.getMessage());
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
         }
     }
 }
