@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.GroupDTO;
 import io.choerodon.gitlab.api.dto.MemberDto;
 import io.choerodon.gitlab.app.service.GroupService;
@@ -57,7 +58,7 @@ public class GroupsController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(groupService.createGroup(group, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.groups.create"));
+                .orElseThrow(() -> new FeignException("error.groups.create"));
     }
 
     @ApiOperation(value = "更新组")
@@ -71,7 +72,7 @@ public class GroupsController {
             @RequestBody @Valid Group group) {
         return Optional.ofNullable(groupService.updateGroup(groupId, userId, group))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.groups.update"));
+                .orElseThrow(() -> new FeignException("error.groups.update"));
     }
 
     /**

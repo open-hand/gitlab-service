@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.GroupDTO;
 import io.choerodon.gitlab.api.dto.MemberDto;
 import io.choerodon.gitlab.app.service.GroupService;
@@ -43,7 +44,7 @@ public class GroupServiceImpl implements GroupService {
                 return groupDTO;
             }
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -55,12 +56,12 @@ public class GroupServiceImpl implements GroupService {
                     group.getDescription(), null, null, group.getVisibility(), null,
                     group.getRequestAccessEnabled(), group.getParentId(), group.getSharedRunnersMinutesLimit());
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(),e);
         }
     }
 
     @Override
-    public void deleteGroup(Integer groupId,Integer userId) {
+    public void deleteGroup(Integer groupId, Integer userId) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         GroupApi groupApi = gitLabApi.getGroupApi();
         try {
@@ -89,7 +90,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group queryGroupByName(String groupName,Integer userId) {
+    public Group queryGroupByName(String groupName, Integer userId) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             return gitLabApi.getGroupApi().getGroup(groupName);
