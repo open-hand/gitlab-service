@@ -1,7 +1,5 @@
 package io.choerodon.gitlab.api.dto;
 
-import java.util.Date;
-
 import org.gitlab4j.api.models.Author;
 
 public class CommitStatuseDTO {
