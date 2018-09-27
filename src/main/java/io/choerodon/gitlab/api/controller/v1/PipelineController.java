@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.PipelineDto;
 import io.choerodon.gitlab.app.service.PipelineService;
 
@@ -47,7 +47,7 @@ public class PipelineController {
     ) {
         return Optional.ofNullable(pipelineService.listPipelinesByPage(projectId, page, size, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.pipeline.page"));
+                .orElseThrow(() -> new FeignException("error.pipeline.page"));
     }
 
     /**
@@ -64,9 +64,9 @@ public class PipelineController {
             @PathVariable Integer projectId,
             @ApiParam(value = "用户Id")
             @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(pipelineService.listPipelines(projectId,userId))
+        return Optional.ofNullable(pipelineService.listPipelines(projectId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.pipeline.list"));
+                .orElseThrow(() -> new FeignException("error.pipeline.list"));
     }
 
     /**
@@ -74,7 +74,7 @@ public class PipelineController {
      *
      * @param projectId  项目 Id
      * @param pipelineId 流水线 Id
-     * @param userId   用户Id
+     * @param userId     用户Id
      * @return Pipeline
      */
     @ApiOperation(value = "查询某个pipelines的具体信息")
@@ -88,7 +88,7 @@ public class PipelineController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(pipelineService.queryPipeline(projectId, pipelineId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.pipeline.query"));
+                .orElseThrow(() -> new FeignException("error.pipeline.query"));
     }
 
     /**
@@ -96,7 +96,7 @@ public class PipelineController {
      *
      * @param projectId  项目id
      * @param pipelineId 流水线id
-     * @param userId   用户Id
+     * @param userId     用户Id
      * @return Pipeline
      */
     @ApiOperation(value = "Retry jobs in a pipeline")
@@ -110,7 +110,7 @@ public class PipelineController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(pipelineService.retryPipeline(projectId, pipelineId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.pipeline.retry"));
+                .orElseThrow(() -> new FeignException("error.pipeline.retry"));
     }
 
     /**
@@ -118,7 +118,7 @@ public class PipelineController {
      *
      * @param projectId  项目id
      * @param pipelineId 流水线id
-     * @param userId   用户Id
+     * @param userId     用户Id
      * @return Pipeline
      */
     @ApiOperation(value = "Cancel a pipelines jobs ")
@@ -132,7 +132,7 @@ public class PipelineController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(pipelineService.cancelPipeline(projectId, pipelineId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.pipeline.cancel"));
+                .orElseThrow(() -> new FeignException("error.pipeline.cancel"));
     }
 
 }

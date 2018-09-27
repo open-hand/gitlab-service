@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.MileStoneDto;
 import io.choerodon.gitlab.app.service.MileStoneService;
 
@@ -38,7 +38,7 @@ public class MileStoneController {
     ) {
         return Optional.ofNullable(mileStoneService.createMilestone(mileStoneDto))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.milestone.create"));
+                .orElseThrow(() -> new FeignException("error.milestone.create"));
     }
 
     /**
@@ -57,7 +57,7 @@ public class MileStoneController {
             @PathVariable Integer milestoneId) {
         return Optional.ofNullable(mileStoneService.closeMilestone(projectId, milestoneId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.milestone.close"));
+                .orElseThrow(() -> new FeignException("error.milestone.close"));
     }
 
     /**
@@ -76,7 +76,7 @@ public class MileStoneController {
             @PathVariable Integer milestoneId) {
         return Optional.ofNullable(mileStoneService.activeMilestone(projectId, milestoneId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.milestone.activate"));
+                .orElseThrow(() -> new FeignException("error.milestone.activate"));
     }
 
 
@@ -93,7 +93,7 @@ public class MileStoneController {
             @RequestBody MileStoneDto mileStoneDto) {
         return Optional.ofNullable(mileStoneService.updateMilestone(mileStoneDto))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.milestone.update"));
+                .orElseThrow(() -> new FeignException("error.milestone.update"));
     }
 
     /**
@@ -115,7 +115,7 @@ public class MileStoneController {
             @RequestBody Integer projectId) {
         return Optional.ofNullable(mileStoneService.listMilestones(projectId, page, perPage))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.milestones.query"));
+                .orElseThrow(() -> new FeignException("error.milestones.query"));
 
     }
 
@@ -132,7 +132,7 @@ public class MileStoneController {
             @RequestBody MileStoneDto mileStoneDto) {
         return Optional.ofNullable(mileStoneService.listMileStoneByOptions(mileStoneDto))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.milestones.query"));
+                .orElseThrow(() -> new FeignException("error.milestones.query"));
 
     }
 
@@ -152,6 +152,6 @@ public class MileStoneController {
             @PathVariable Integer milestoneId) {
         return Optional.ofNullable(mileStoneService.queryMilestone(projectId, milestoneId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.milestone.query"));
+                .orElseThrow(() -> new FeignException("error.milestone.query"));
     }
 }

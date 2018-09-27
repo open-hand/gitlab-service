@@ -6,7 +6,7 @@ import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Job;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.JobService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -26,7 +26,7 @@ public class JobServiceImpl implements JobService {
             return gitlab4jclient.getGitLabApi(userId)
                     .getJobApi().getJobsForPipeline(projectId, pipelineId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -36,7 +36,7 @@ public class JobServiceImpl implements JobService {
             return gitlab4jclient.getGitLabApi(null)
                     .getJobApi().getJob(projectId, jobId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 }

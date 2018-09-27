@@ -6,13 +6,13 @@ import java.util.Optional;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
-import org.gitlab4j.api.models.CommitStatuse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.dto.CommitStatuseDTO;
 import io.choerodon.gitlab.app.service.CommitService;
 
 /**
@@ -44,7 +44,7 @@ public class CommitController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(commitService.getCommit(projectId, sha, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.commit.get"));
+                .orElseThrow(() -> new FeignException("error.commit.get"));
     }
 
 
@@ -58,7 +58,7 @@ public class CommitController {
      */
     @ApiOperation(value = "查询某个commit的Statuse")
     @GetMapping("/statuse")
-    public ResponseEntity<List<CommitStatuse>> getCommitStatuse(
+    public ResponseEntity<List<CommitStatuseDTO>> getCommitStatuse(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "sha", required = true)
@@ -67,7 +67,7 @@ public class CommitController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(commitService.getCommitStatuse(projectId, sha, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.commit.get"));
+                .orElseThrow(() -> new FeignException("error.commit.get"));
     }
 
     /**
@@ -90,7 +90,30 @@ public class CommitController {
             @RequestParam String since) {
         return Optional.ofNullable(commitService.getCommits(projectId, branchName, since))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.commits.get"));
+                .orElseThrow(() -> new FeignException("error.commits.get"));
+    }
+
+
+    /**
+     * 查询某个项目的所有commit
+     *
+     * @param projectId  项目ID
+     * @param  ref 用户名
+     * @return commit列表
+     */
+
+    @ApiOperation(value = "查询某个项目的所有commit")
+    @GetMapping("/project")
+    public ResponseEntity<List<Commit>> listCommits(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "ref")
+                    @RequestParam String ref,
+            @ApiParam(value = "用户名", required = true)
+            @RequestParam Integer userId) {
+        return Optional.ofNullable(commitService.listCommits(projectId, ref, userId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.commits.get"));
     }
 }
 

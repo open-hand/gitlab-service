@@ -8,9 +8,8 @@ import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Visibility;
 import org.springframework.stereotype.Service;
-import scala.Int;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.ProjectService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -30,13 +29,13 @@ public class ProjectServiceImpl implements ProjectService {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             Project project = gitLabApi.getProjectApi().createProject(groupId, projectName);
-            if(visibility) {
+            if (visibility) {
                 project.setVisibility(Visibility.PUBLIC);
             }
             project.setPublic(true);
             return gitLabApi.getProjectApi().updateProject(project);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -47,7 +46,7 @@ public class ProjectServiceImpl implements ProjectService {
                     .getGitLabApi(userId)
                     .getProjectApi().deleteProject(projectId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -57,7 +56,7 @@ public class ProjectServiceImpl implements ProjectService {
             return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().addVariable(projectId, key, value, protecteds);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -67,7 +66,7 @@ public class ProjectServiceImpl implements ProjectService {
             return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().protectedBranches(projectId, name, mergeAccessLevel, pushAccessLevel);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -78,7 +77,7 @@ public class ProjectServiceImpl implements ProjectService {
             return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().updateProject(project);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -88,7 +87,7 @@ public class ProjectServiceImpl implements ProjectService {
             return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().getBranch(id, name);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -98,7 +97,7 @@ public class ProjectServiceImpl implements ProjectService {
             return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().getBranchs(id);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -108,16 +107,16 @@ public class ProjectServiceImpl implements ProjectService {
             gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().deleteBranch(id, name);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
     @Override
-    public void createDeployKey(Integer projectId, String title,String key, boolean canPush, Integer userId) {
+    public void createDeployKey(Integer projectId, String title, String key, boolean canPush, Integer userId) {
         try {
-            gitlab4jclient.getGitLabApi(userId).getDeployKeysApi().addDeployKey(projectId,title,key,canPush);
+            gitlab4jclient.getGitLabApi(userId).getDeployKeysApi().addDeployKey(projectId, title, key, canPush);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
 
 

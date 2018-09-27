@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.JobService;
 
 
@@ -32,7 +32,7 @@ public class JobController {
      *
      * @param projectId  项目id
      * @param pipelineId 流水线id
-     * @param userId  用户Id
+     * @param userId     用户Id
      * @return List
      */
     @ApiOperation(value = "查询项目下pipeline的jobs")
@@ -46,7 +46,7 @@ public class JobController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(jobService.listJobs(projectId, pipelineId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.jobs.get"));
+                .orElseThrow(() -> new FeignException("error.jobs.get"));
     }
 
     /**
@@ -65,6 +65,6 @@ public class JobController {
             @PathVariable Integer jobId) {
         return Optional.ofNullable(jobService.queryJob(projectId, jobId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.jobs.get"));
+                .orElseThrow(() -> new FeignException("error.jobs.get"));
     }
 }

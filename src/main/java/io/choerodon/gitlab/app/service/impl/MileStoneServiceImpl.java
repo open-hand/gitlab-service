@@ -6,9 +6,7 @@ import org.gitlab4j.api.MileStonesApi;
 import org.gitlab4j.api.models.Milestone;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
-import io.choerodon.core.oauth.CustomUserDetails;
-import io.choerodon.core.oauth.DetailsHelper;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.MileStoneDto;
 import io.choerodon.gitlab.app.service.MileStoneService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
@@ -25,7 +23,6 @@ public class MileStoneServiceImpl implements MileStoneService {
 
     @Override
     public Milestone createMilestone(MileStoneDto mileStoneDto) {
-        CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
         try {
             return gitlab4jclient
                     .getGitLabApi()
@@ -36,41 +33,38 @@ public class MileStoneServiceImpl implements MileStoneService {
                             mileStoneDto.getDueDate(),
                             mileStoneDto.getStartDate());
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
     @Override
     public Milestone closeMilestone(Integer projectId, Integer milestoneId) {
-        CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
         try {
             return gitlab4jclient
                     .getGitLabApi()
                     .getMileStonesApi()
                     .closeMilestone(projectId, milestoneId);
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
 
         }
     }
 
     @Override
     public Milestone activeMilestone(Integer projectId, Integer milestoneId) {
-        CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
         try {
             return gitlab4jclient
                     .getGitLabApi()
                     .getMileStonesApi()
                     .activateMilestone(projectId, milestoneId);
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
 
         }
     }
 
     @Override
     public Milestone updateMilestone(MileStoneDto mileStoneDto) {
-        CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
         try {
             return gitlab4jclient
                     .getGitLabApi()
@@ -83,7 +77,7 @@ public class MileStoneServiceImpl implements MileStoneService {
                             mileStoneDto.getStartDate(),
                             mileStoneDto.getMilestoneState());
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -96,10 +90,10 @@ public class MileStoneServiceImpl implements MileStoneService {
                         ? mileStonesApi.getMilestones(projectId)
                         : mileStonesApi.getMilestones(projectId, page, perPage);
             } else {
-                throw new CommonException("error.milestones.query");
+                throw new FeignException("error.milestones.query");
             }
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
 
     }
@@ -129,10 +123,10 @@ public class MileStoneServiceImpl implements MileStoneService {
                 }
                 return listMilestones(mileStoneDto.getProjectId(), null, null);
             } else {
-                throw new CommonException("error.milestones.query");
+                throw new FeignException("error.milestones.query");
             }
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -144,7 +138,7 @@ public class MileStoneServiceImpl implements MileStoneService {
                     .getMileStonesApi()
                     .getMilestone(projectId, milestoneId);
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
 
         }
     }

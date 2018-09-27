@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.RepositoryService;
 
 @RestController
@@ -49,7 +49,7 @@ public class RepositoryController {
     ) {
         return Optional.ofNullable(repositoryService.createBranch(projectId, name, source, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.branch.create"));
+                .orElseThrow(() -> new FeignException("error.branch.create"));
     }
 
     /**
@@ -68,7 +68,7 @@ public class RepositoryController {
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(repositoryService.listTags(projectId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.tag.get"));
+                .orElseThrow(() -> new FeignException("error.tag.get"));
     }
 
     /**
@@ -91,7 +91,7 @@ public class RepositoryController {
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(repositoryService.listTagsByPage(projectId, page, perPage, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.tag.getPage"));
+                .orElseThrow(() -> new FeignException("error.tag.getPage"));
     }
 
 
@@ -121,7 +121,7 @@ public class RepositoryController {
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(repositoryService.createTag(projectId, name, ref, msg, releaseNotes, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.tag.create"));
+                .orElseThrow(() -> new FeignException("error.tag.create"));
     }
 
     /**
@@ -145,7 +145,7 @@ public class RepositoryController {
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(repositoryService.updateTagRelease(projectId, name, releaseNotes, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.tag.create"));
+                .orElseThrow(() -> new FeignException("error.tag.create"));
     }
 
     /**
@@ -205,7 +205,7 @@ public class RepositoryController {
             @PathVariable("branchName") String branchName) {
         return Optional.ofNullable(repositoryService.queryBranchByName(projectId, branchName))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.branch.query"));
+                .orElseThrow(() -> new FeignException("error.branch.query"));
     }
 
     /**
@@ -223,7 +223,7 @@ public class RepositoryController {
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(repositoryService.listBranches(projectId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.branch.list"));
+                .orElseThrow(() -> new FeignException("error.branch.list"));
     }
 
 
@@ -243,7 +243,7 @@ public class RepositoryController {
             @ApiParam(value = "file path", required = true) @RequestParam(value = "file_path") String filePath) {
         return Optional.ofNullable(repositoryService.getFile(projectId, commit, filePath))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.file.get"));
+                .orElseThrow(() -> new FeignException("error.file.get"));
     }
 
 
@@ -263,7 +263,7 @@ public class RepositoryController {
             @ApiParam(value = "to", required = true) @RequestParam String to) {
         return Optional.ofNullable(repositoryService.getDiffs(projectId, from, to))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.diffs.get"));
+                .orElseThrow(() -> new FeignException("error.diffs.get"));
     }
 
 
@@ -288,7 +288,7 @@ public class RepositoryController {
             @RequestParam("userId") Integer userId) {
         return Optional.ofNullable(repositoryService.createFile(projectId, path, content, commitMessage, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.file.create"));
+                .orElseThrow(() -> new FeignException("error.file.create"));
     }
 
 
@@ -313,7 +313,7 @@ public class RepositoryController {
             @RequestParam("userId") Integer userId) {
         return Optional.ofNullable(repositoryService.updateFile(projectId, path, content, commitMessage, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.file.update"));
+                .orElseThrow(() -> new FeignException("error.file.update"));
     }
 
 

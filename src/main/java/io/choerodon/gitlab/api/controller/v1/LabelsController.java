@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.LabelDto;
 import io.choerodon.gitlab.app.service.LabelsService;
 
@@ -43,7 +43,7 @@ public class LabelsController {
             @RequestParam Integer perPage) {
         return Optional.ofNullable(labelsService.listLabels(projectId, page, perPage))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.label.query"));
+                .orElseThrow(() -> new FeignException("error.label.query"));
 
     }
 
@@ -60,7 +60,7 @@ public class LabelsController {
             @RequestBody LabelDto labelDto) {
         return Optional.ofNullable(labelsService.createLabel(labelDto))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.label.create"));
+                .orElseThrow(() -> new FeignException("error.label.create"));
 
 
     }
@@ -78,7 +78,7 @@ public class LabelsController {
             @RequestBody LabelDto labelDto) {
         return Optional.ofNullable(labelsService.updateLabel(labelDto))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.label.update"));
+                .orElseThrow(() -> new FeignException("error.label.update"));
     }
 
     /**
@@ -115,7 +115,7 @@ public class LabelsController {
             @RequestParam Integer labelId) {
         return Optional.ofNullable(labelsService.subscribeLabel(projectId, labelId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.NOT_MODIFIED))
-                .orElseThrow(() -> new CommonException("error.label.subscribe"));
+                .orElseThrow(() -> new FeignException("error.label.subscribe"));
 
     }
 
@@ -135,7 +135,7 @@ public class LabelsController {
             @RequestParam Integer labelId) {
         return Optional.ofNullable(labelsService.unSubscribeLabel(projectId, labelId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.NOT_MODIFIED))
-                .orElseThrow(() -> new CommonException("error.label.unsubscribe"));
+                .orElseThrow(() -> new FeignException("error.label.unsubscribe"));
 
     }
 }

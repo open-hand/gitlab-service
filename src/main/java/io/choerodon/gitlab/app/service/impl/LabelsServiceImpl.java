@@ -6,7 +6,7 @@ import org.gitlab4j.api.LabelsApi;
 import org.gitlab4j.api.models.Label;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.LabelDto;
 import io.choerodon.gitlab.app.service.LabelsService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
@@ -31,10 +31,10 @@ public class LabelsServiceImpl implements LabelsService {
                         ? labelsApi.getLabels(projectId)
                         : labelsApi.getLabels(projectId, page, perPage);
             } else {
-                throw new CommonException("error.label.query");
+                throw new FeignException("error.label.query");
             }
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -50,7 +50,7 @@ public class LabelsServiceImpl implements LabelsService {
                             labelDto.getDescription(),
                             labelDto.getPriority());
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -67,7 +67,7 @@ public class LabelsServiceImpl implements LabelsService {
                             labelDto.getDescription(),
                             labelDto.getPriority());
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -79,7 +79,7 @@ public class LabelsServiceImpl implements LabelsService {
                     .getLabelsApi()
                     .deleteLabel(projectId, name);
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -91,7 +91,7 @@ public class LabelsServiceImpl implements LabelsService {
                     .getLabelsApi()
                     .subscribeLabel(projectId, labelId);
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -103,7 +103,7 @@ public class LabelsServiceImpl implements LabelsService {
                     .getLabelsApi()
                     .unsubscribeLabel(projectId, labelId);
         } catch (Exception e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 }

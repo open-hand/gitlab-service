@@ -10,7 +10,7 @@ import org.gitlab4j.api.models.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.GroupDTO;
 import io.choerodon.gitlab.api.dto.MemberDto;
 import io.choerodon.gitlab.app.service.GroupService;
@@ -43,7 +43,7 @@ public class GroupServiceImpl implements GroupService {
                 return groupDTO;
             }
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -55,12 +55,12 @@ public class GroupServiceImpl implements GroupService {
                     group.getDescription(), null, null, group.getVisibility(), null,
                     group.getRequestAccessEnabled(), group.getParentId(), group.getSharedRunnersMinutesLimit());
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
     @Override
-    public void deleteGroup(Integer groupId,Integer userId) {
+    public void deleteGroup(Integer groupId, Integer userId) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         GroupApi groupApi = gitLabApi.getGroupApi();
         try {
@@ -70,10 +70,10 @@ public class GroupServiceImpl implements GroupService {
             if (members != null && AccessLevel.OWNER.value.equals(members.get(0).getAccessLevel().value)) {
                 groupApi.deleteGroup(groupId);
             } else {
-                throw new CommonException("error.groups.deleteGroup.Owner");
+                throw new FeignException("error.groups.deleteGroup.Owner");
             }
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -84,12 +84,12 @@ public class GroupServiceImpl implements GroupService {
         try {
             return gitLabApi.getGroupApi().getProjects(groupId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
     @Override
-    public Group queryGroupByName(String groupName,Integer userId) {
+    public Group queryGroupByName(String groupName, Integer userId) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             return gitLabApi.getGroupApi().getGroup(groupName);
@@ -104,7 +104,7 @@ public class GroupServiceImpl implements GroupService {
         try {
             return gitLabApi.getGroupApi().getGroups();
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -114,7 +114,7 @@ public class GroupServiceImpl implements GroupService {
         try {
             return gitLabApi.getGroupApi().getMembers(groupId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -135,7 +135,7 @@ public class GroupServiceImpl implements GroupService {
             return gitLabApi.getGroupApi().addMember(groupId, member.getUserId(), member.getAccessLevel(),
                     member.getExpiresAt());
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -146,7 +146,7 @@ public class GroupServiceImpl implements GroupService {
             return gitLabApi.getGroupApi().updateMember(groupId, member.getUserId(), member.getAccessLevel(),
                     member.getExpiresAt());
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -156,7 +156,7 @@ public class GroupServiceImpl implements GroupService {
         try {
             gitLabApi.getGroupApi().removeMember(groupId, userId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage());
+            throw new FeignException(e.getMessage(), e);
         }
     }
 }

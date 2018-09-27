@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.ProjectService;
 
 
@@ -46,7 +46,7 @@ public class ProjectsController {
             @RequestParam(required = false) boolean visibility) {
         return Optional.ofNullable(projectService.createProject(groupId, projectName, userId, visibility))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.projects.create.name"));
+                .orElseThrow(() -> new FeignException("error.projects.create.name"));
     }
 
 
@@ -92,7 +92,7 @@ public class ProjectsController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(projectService.createVariable(projectId, key, value, protecteds, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.projects.variable.create"));
+                .orElseThrow(() -> new FeignException("error.projects.variable.create"));
     }
 
     /**
@@ -121,7 +121,7 @@ public class ProjectsController {
         return Optional.ofNullable(projectService.createProtectedBranches(projectId,
                 name, mergeAccessLevel, pushAccessLevel, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
-                .orElseThrow(() -> new CommonException("error.projects.protected.branches.create"));
+                .orElseThrow(() -> new FeignException("error.projects.protected.branches.create"));
     }
 
     /**
@@ -140,7 +140,7 @@ public class ProjectsController {
             @RequestParam Integer userId) {
         return Optional.ofNullable(projectService.updateProject(project, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.projects.update"));
+                .orElseThrow(() -> new FeignException("error.projects.update"));
     }
 
     /**
@@ -162,7 +162,7 @@ public class ProjectsController {
             @RequestParam Integer userId) {
         return Optional.ofNullable(projectService.queryBranchByBranchName(projectId, name, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.protected.branches.get"));
+                .orElseThrow(() -> new FeignException("error.protected.branches.get"));
     }
 
     /**
@@ -181,7 +181,7 @@ public class ProjectsController {
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(projectService.listBranch(projectId, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.protected.branches.get"));
+                .orElseThrow(() -> new FeignException("error.protected.branches.get"));
     }
 
     /**
