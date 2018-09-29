@@ -10,6 +10,7 @@ import org.gitlab4j.api.models.Variable;
 import org.gitlab4j.api.models.Visibility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.CommonException;
@@ -64,7 +65,11 @@ public class ProjectServiceImpl implements ProjectService {
                         .getGitLabApi(userId)
                         .getProjectApi().getProject(groupName, projectName);
             } catch (GitLabApiException e) {
-                logger.info("delete not exist project: {}", e.getMessage());
+                if (e.getHttpStatus() == 404) {
+                    logger.info("delete not exist project: {}", e.getMessage());
+                } else {
+                    throw e;
+                }
             }
             if (project != null) {
                 gitlab4jclient
