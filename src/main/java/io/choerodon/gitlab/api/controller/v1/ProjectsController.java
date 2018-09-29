@@ -68,6 +68,26 @@ public class ProjectsController {
     }
 
     /**
+     * 通过group name project name删除项目
+     *
+     * @param groupName 组名
+     * @param projectName 项目名
+     * @param userId    用户Id
+     */
+    @ApiOperation(value = " 删除项目")
+    @DeleteMapping(value = "/{groupName}/{projectName}")
+    public ResponseEntity delete(
+            @ApiParam(value = "gitlab group name", required = true)
+            @PathVariable String groupName,
+            @ApiParam(value = "项目名", required = true)
+            @PathVariable String projectName,
+            @ApiParam(value = "用户Id称")
+            @RequestParam(required = false) Integer userId) {
+        projectService.deleteProjectByName(groupName,projectName, userId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    /**
      * 增加项目ci环境变量
      *
      * @param projectId  项目Id

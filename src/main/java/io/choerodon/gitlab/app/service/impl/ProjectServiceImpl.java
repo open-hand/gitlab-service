@@ -7,6 +7,8 @@ import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Visibility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.FeignException;
@@ -18,6 +20,7 @@ import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 public class ProjectServiceImpl implements ProjectService {
 
     private Gitlab4jClient gitlab4jclient;
+    public static final Logger logger = LoggerFactory.getLogger(ProjectServiceImpl.class);
 
     public ProjectServiceImpl(Gitlab4jClient gitlab4jclient) {
         this.gitlab4jclient = gitlab4jclient;
@@ -45,6 +48,27 @@ public class ProjectServiceImpl implements ProjectService {
             gitlab4jclient
                     .getGitLabApi(userId)
                     .getProjectApi().deleteProject(projectId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void deleteProjectByName(String groupName, String projectName, Integer userId) {
+        try {
+            Project project = null;
+            try {
+                 project = gitlab4jclient
+                        .getGitLabApi(userId)
+                        .getProjectApi().getProject(groupName, projectName);
+            } catch (GitLabApiException e) {
+                logger.info("delete not exist project: {}", e.getMessage());
+            }
+            if (project != null) {
+                gitlab4jclient
+                        .getGitLabApi(userId)
+                        .getProjectApi().deleteProject(project.getId());
+            }
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }

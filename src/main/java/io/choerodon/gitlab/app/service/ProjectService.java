@@ -26,6 +26,16 @@ public interface ProjectService {
      */
     void deleteProject(Integer projectId, Integer userId);
 
+
+    /**
+     * 通过group名和项目名删除项目
+     *
+     * @param groupName 项目 id
+     * @param userId  用户名
+     * @param projectName 项目名
+     */
+    void deleteProjectByName(String groupName, String projectName, Integer userId);
+
     /**
      * 增加项目ci环境变量
      *
