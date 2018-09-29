@@ -77,9 +77,9 @@ public class CommitServiceImpl implements CommitService {
     }
 
     @Override
-    public List<Commit> listCommits(Integer gilabProjectId, String ref, Integer userId) {
+    public List<Commit> listCommits(Integer gilabProjectId, int page, int size, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommits(gilabProjectId, ref,null);
+            return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommits(gilabProjectId, page, size);
         } catch (GitLabApiException e) {
             throw new FeignException(e);
         }

@@ -98,8 +98,10 @@ public class CommitController {
      * 查询某个项目的所有commit
      *
      * @param projectId  项目ID
-     * @param  ref 用户名
-     * @return commit列表
+     * @param  userId 用户名
+     * @param page page
+     * @param size size
+     ** @return commit列表
      */
 
     @ApiOperation(value = "查询某个项目的所有commit")
@@ -107,11 +109,13 @@ public class CommitController {
     public ResponseEntity<List<Commit>> listCommits(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "projectId") Integer projectId,
-            @ApiParam(value = "ref")
-                    @RequestParam String ref,
+            @ApiParam(value = "page")
+                    @RequestParam Integer page,
+            @ApiParam(value = "size")
+            @RequestParam Integer size,
             @ApiParam(value = "用户名", required = true)
             @RequestParam Integer userId) {
-        return Optional.ofNullable(commitService.listCommits(projectId, ref, userId))
+        return Optional.ofNullable(commitService.listCommits(projectId, page, size, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.commits.get"));
     }
