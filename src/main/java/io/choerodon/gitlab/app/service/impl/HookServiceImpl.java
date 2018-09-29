@@ -3,7 +3,9 @@ package io.choerodon.gitlab.app.service.impl;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.ProjectHook;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.HookService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
@@ -38,5 +40,16 @@ public class HookServiceImpl implements HookService {
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<ProjectHook> listProjectHook(Integer projectId,Integer userId) {
+
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getProjectApi().getHooks(projectId);
+        } catch (GitLabApiException e) {
+         throw new CommonException(e.getMessage(),e);
+        }
+
     }
 }

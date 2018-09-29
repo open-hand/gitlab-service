@@ -6,11 +6,13 @@ import java.util.Map;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.Variable;
 import org.gitlab4j.api.models.Visibility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.ProjectService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
@@ -58,7 +60,7 @@ public class ProjectServiceImpl implements ProjectService {
         try {
             Project project = null;
             try {
-                 project = gitlab4jclient
+                project = gitlab4jclient
                         .getGitLabApi(userId)
                         .getProjectApi().getProject(groupName, projectName);
             } catch (GitLabApiException e) {
@@ -71,6 +73,26 @@ public class ProjectServiceImpl implements ProjectService {
             }
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
+
+        }
+    }
+
+    @Override
+    public Project getProject(Integer userId ,String groupCode,String projectCode) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProject(groupCode,projectCode);
+        } catch (GitLabApiException e) {
+            throw new CommonException(e.getMessage(),e);
+        }
+    }
+
+
+    @Override
+    public  List<Variable> getVarible(Integer projectId, Integer userId){
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getProjectApi().getVariable(projectId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(),e);
         }
     }
 
@@ -93,6 +115,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
 
     @Override
     public Project updateProject(Project newProject, Integer userId) {
