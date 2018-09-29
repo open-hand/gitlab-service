@@ -16,5 +16,5 @@ public interface CommitService {
 
     List<Commit> getCommits(Integer gitLabProjectId, String ref, String since);
 
-    List<Commit> listCommits(Integer gilabProjectId , String ref , Integer userId);
+    List<Commit> listCommits(Integer gilabProjectId , int page, int size, Integer userId);
 }

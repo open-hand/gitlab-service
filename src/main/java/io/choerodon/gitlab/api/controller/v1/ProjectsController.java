@@ -7,6 +7,7 @@ import java.util.Optional;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.Variable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +65,26 @@ public class ProjectsController {
             @ApiParam(value = "用户Id称")
             @RequestParam(required = false) Integer userId) {
         projectService.deleteProject(projectId, userId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * 通过group name project name删除项目
+     *
+     * @param groupName 组名
+     * @param projectName 项目名
+     * @param userId    用户Id
+     */
+    @ApiOperation(value = " 删除项目")
+    @DeleteMapping(value = "/{groupName}/{projectName}")
+    public ResponseEntity delete(
+            @ApiParam(value = "gitlab group name", required = true)
+            @PathVariable String groupName,
+            @ApiParam(value = "项目名", required = true)
+            @PathVariable String projectName,
+            @ApiParam(value = "用户Id称")
+            @RequestParam(required = false) Integer userId) {
+        projectService.deleteProjectByName(groupName,projectName, userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -231,5 +252,48 @@ public class ProjectsController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+
+    /**
+     * 通过组名项目名查询项目
+     *
+     * @param userId 项目Id
+     * @param groupName 组名　
+     * @param projectName  项目名
+     * @return Project
+     */
+    @ApiOperation(value = "通过组名项目名查询项目")
+    @GetMapping(value = "/queryByName")
+    public ResponseEntity<Project> queryByName(
+            @ApiParam(value = "用户", required = true)
+            @RequestParam Integer userId,
+            @ApiParam(value = "组名", required = true)
+            @RequestParam String groupName,
+            @ApiParam(value = "项目名", required = true)
+            @RequestParam String projectName) {
+        return Optional.ofNullable(projectService.getProject(userId, groupName, projectName))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.project.get"));
+    }
+
+
+    /**
+     * 查询Variable
+     *
+     * @param projectId 项目Id
+     * @param userId 组名　
+     * @return List
+     */
+    @ApiOperation(value = "查询Variable")
+    @GetMapping(value = "/{projectId}/variable")
+    public ResponseEntity<List<Variable>> listVariable(
+            @ApiParam(value = "用户", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "组名", required = true)
+            @RequestParam Integer userId) {
+        return Optional.ofNullable(projectService.getVarible(projectId, userId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.Variable.get"));
+    }
 
 }

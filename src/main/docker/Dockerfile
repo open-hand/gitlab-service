@@ -1,3 +1,3 @@
-FROM registry.cn-hangzhou.aliyuncs.com/choerodon-tools/javabase:0.5.0
+FROM registry.cn-hangzhou.aliyuncs.com/choerodon-tools/javabase:0.6.0
 COPY app.jar /gitlab-service.jar
-ENTRYPOINT [ "java", "-jar", "/gitlab-service.jar" ]
+ENTRYPOINT exec java $JAVA_OPTS  -jar /gitlab-service.jar

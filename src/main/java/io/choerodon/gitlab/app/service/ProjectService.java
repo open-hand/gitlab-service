@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.Variable;
 
 
 public interface ProjectService {
@@ -25,6 +26,16 @@ public interface ProjectService {
      * @param userId  用户名
      */
     void deleteProject(Integer projectId, Integer userId);
+
+
+    /**
+     * 通过group名和项目名删除项目
+     *
+     * @param groupName 项目 id
+     * @param userId  用户名
+     * @param projectName 项目名
+     */
+    void deleteProjectByName(String groupName, String projectName, Integer userId);
 
     /**
      * 增加项目ci环境变量
@@ -105,4 +116,18 @@ public interface ProjectService {
      * @param canPush  是否可以push代码
      */
     void createDeployKey(Integer projectId, String title, String key, boolean canPush, Integer userId);
+
+
+    /**
+     * 通过组名项目名查询项目
+     *
+     * @param userId 项目Id
+     * @param groupCode 组名　
+     * @param projectCode  项目名
+     * @return Project
+     */
+    Project getProject(Integer userId ,String groupCode,String projectCode);
+
+
+    List<Variable> getVarible(Integer projectId, Integer userId);
 }

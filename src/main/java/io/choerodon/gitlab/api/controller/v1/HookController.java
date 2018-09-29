@@ -1,6 +1,7 @@
 package io.choerodon.gitlab.api.controller.v1;
 
 import java.util.Optional;
+import java.util.List;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -66,5 +67,25 @@ public class HookController {
         return Optional.ofNullable(hookService.updateProjectHook(projectId, hookId, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.NO_CONTENT))
                 .orElseThrow(() -> new FeignException("error.projects.update.hook"));
+    }
+
+
+    /**
+     * 获取ProjectHook对象
+     *
+     * @param projectId 项目id
+     * @param userId    用户Id
+     * @return List
+     */
+    @ApiOperation(value = "获取ProjectHook对象")
+    @GetMapping
+    public ResponseEntity<List<ProjectHook>> list(
+            @ApiParam(value = "项目ID", required = true)
+            @RequestParam Integer projectId,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(hookService.listProjectHook(projectId, userId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.NO_CONTENT))
+                .orElseThrow(() -> new FeignException("error.projects.get.hook"));
     }
 }
