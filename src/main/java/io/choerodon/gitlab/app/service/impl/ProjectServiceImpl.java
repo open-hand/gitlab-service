@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.DeployKey;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Variable;
 import org.gitlab4j.api.models.Visibility;
@@ -173,4 +174,15 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     }
+
+    @Override
+    public List<DeployKey> getDeployKeys(Integer projectId,Integer userId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getDeployKeysApi().getProjectDeployKeys(projectId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(),e);
+        }
+
+    }
+
 }

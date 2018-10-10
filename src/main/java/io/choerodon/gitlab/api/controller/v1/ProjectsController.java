@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.gitlab4j.api.models.DeployKey;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Variable;
 import org.springframework.http.HttpStatus;
@@ -252,6 +253,25 @@ public class ProjectsController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    /**
+     * 查询deployKeys
+     *
+     * @param projectId 项目Id
+     * @param userId   用户Id
+     * @Return List
+     */
+    @ApiOperation(value = "查询deployKeys")
+    @GetMapping("/deploy_key")
+    public ResponseEntity<List<DeployKey>> getDeployKeys(
+            @ApiParam(value = "项目ID", required = true)
+            @RequestParam Integer projectId,
+            @ApiParam(value = "用户Id")
+            @RequestParam Integer userId) {
+        return Optional.ofNullable(projectService.getDeployKeys(projectId, userId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.project.deploy.key.get"));
+    }
 
 
     /**

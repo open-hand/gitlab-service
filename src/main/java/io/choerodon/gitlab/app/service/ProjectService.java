@@ -3,6 +3,7 @@ package io.choerodon.gitlab.app.service;
 import java.util.List;
 import java.util.Map;
 
+import org.gitlab4j.api.models.DeployKey;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Variable;
 
@@ -130,4 +131,7 @@ public interface ProjectService {
 
 
     List<Variable> getVarible(Integer projectId, Integer userId);
+
+
+    List<DeployKey> getDeployKeys(Integer projectId, Integer userId);
 }
