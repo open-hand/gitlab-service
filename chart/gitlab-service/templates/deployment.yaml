@@ -45,6 +45,6 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 10
             successThreshold: 1
-            timeoutSeconds: 60
+            timeoutSeconds: 120
           resources:
 {{ toYaml .Values.resources | indent 12 }}
