@@ -3,10 +3,12 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.validation.Valid;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.DeployKey;
+import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Variable;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.dto.MemberDto;
 import io.choerodon.gitlab.app.service.ProjectService;
 
 
@@ -51,7 +54,6 @@ public class ProjectsController {
                 .orElseThrow(() -> new FeignException("error.projects.create.name"));
     }
 
-
     /**
      * 删除项目
      *
@@ -72,9 +74,9 @@ public class ProjectsController {
     /**
      * 通过group name project name删除项目
      *
-     * @param groupName 组名
+     * @param groupName   组名
      * @param projectName 项目名
-     * @param userId    用户Id
+     * @param userId      用户Id
      */
     @ApiOperation(value = " 删除项目")
     @DeleteMapping(value = "/{groupName}/{projectName}")
@@ -85,7 +87,7 @@ public class ProjectsController {
             @PathVariable String projectName,
             @ApiParam(value = "用户Id称")
             @RequestParam(required = false) Integer userId) {
-        projectService.deleteProjectByName(groupName,projectName, userId);
+        projectService.deleteProjectByName(groupName, projectName, userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -141,7 +143,8 @@ public class ProjectsController {
             @ApiParam(value = "用户Id")
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(projectService.createProtectedBranches(projectId,
-                name, mergeAccessLevel, pushAccessLevel, userId))
+                                                                          name, mergeAccessLevel, pushAccessLevel,
+                                                                          userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.protected.branches.create"));
     }
@@ -227,7 +230,6 @@ public class ProjectsController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-
     /**
      * 新增deploy keys
      *
@@ -253,12 +255,11 @@ public class ProjectsController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     /**
      * 查询deployKeys
      *
      * @param projectId 项目Id
-     * @param userId   用户Id
+     * @param userId    用户Id
      * @Return List
      */
     @ApiOperation(value = "查询deployKeys")
@@ -273,13 +274,12 @@ public class ProjectsController {
                 .orElseThrow(() -> new FeignException("error.project.deploy.key.get"));
     }
 
-
     /**
      * 通过组名项目名查询项目
      *
-     * @param userId 项目Id
-     * @param groupName 组名　
-     * @param projectName  项目名
+     * @param userId      项目Id
+     * @param groupName   组名
+     * @param projectName 项目名
      * @return Project
      */
     @ApiOperation(value = "通过组名项目名查询项目")
@@ -296,12 +296,11 @@ public class ProjectsController {
                 .orElseThrow(() -> new FeignException("error.project.get"));
     }
 
-
     /**
      * 查询Variable
      *
      * @param projectId 项目Id
-     * @param userId 组名　
+     * @param userId    组名
      * @return List
      */
     @ApiOperation(value = "查询Variable")
@@ -316,4 +315,39 @@ public class ProjectsController {
                 .orElseThrow(() -> new FeignException("error.Variable.get"));
     }
 
+    /**
+     * 添加项目成员
+     *
+     * @param projectId 项目id
+     * @param member    成员信息
+     * @return Member
+     */
+    @ApiOperation(value = "添加项目成员")
+    @PostMapping(value = "/{projectId}/members")
+    public ResponseEntity<Member> createMember(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "成员信息", required = true)
+            @RequestBody @Valid MemberDto member) {
+        return Optional.ofNullable(projectService.createMember(projectId, member))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
+                .orElseThrow(() -> new FeignException("error.groups.member.create"));
+    }
+
+    /**
+     * 移除项目成员
+     *
+     * @param projectId 项目id
+     * @param userId    用户id
+     */
+    @ApiOperation(value = "移除项目成员")
+    @DeleteMapping(value = "/{projectId}/members/{userId}")
+    public ResponseEntity deleteMember(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "用户ID", required = true)
+            @PathVariable(value = "userId") Integer userId) {
+        projectService.deleteMember(projectId, userId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }

@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.gitlab4j.api.models.DeployKey;
+import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Variable;
+
+import io.choerodon.gitlab.api.dto.MemberDto;
 
 
 public interface ProjectService {
@@ -13,9 +16,9 @@ public interface ProjectService {
     /**
      * 通过项目名称创建项目
      *
-     * @param groupId    组 Id
+     * @param groupId     组 Id
      * @param projectName 项目名
-     * @param userId   用户Id
+     * @param userId      用户Id
      * @return Project
      */
     Project createProject(Integer groupId, String projectName, Integer userId, boolean visibility);
@@ -24,7 +27,7 @@ public interface ProjectService {
      * 删除项目
      *
      * @param projectId 项目 id
-     * @param userId  用户名
+     * @param userId    用户名
      */
     void deleteProject(Integer projectId, Integer userId);
 
@@ -32,8 +35,8 @@ public interface ProjectService {
     /**
      * 通过group名和项目名删除项目
      *
-     * @param groupName 项目 id
-     * @param userId  用户名
+     * @param groupName   项目 id
+     * @param userId      用户名
      * @param projectName 项目名
      */
     void deleteProjectByName(String groupName, String projectName, Integer userId);
@@ -45,7 +48,7 @@ public interface ProjectService {
      * @param key        变量key
      * @param value      变量值
      * @param protecteds 变量是否保护
-     * @param userId   用户Id
+     * @param userId     用户Id
      * @return Map
      */
     Map<String, Object> createVariable(Integer projectId,
@@ -61,7 +64,7 @@ public interface ProjectService {
      * @param name             分支名
      * @param mergeAccessLevel merge权限
      * @param pushAccessLevel  push权限
-     * @param userId         userId
+     * @param userId           userId
      * @return Map
      */
     Map<String, Object> createProtectedBranches(Integer projectId,
@@ -73,8 +76,8 @@ public interface ProjectService {
     /**
      * 更新项目
      *
-     * @param project  项目Id
-     * @param userId 用户Id
+     * @param project 项目Id
+     * @param userId  用户Id
      * @return Project
      */
     Project updateProject(Project project, Integer userId);
@@ -84,7 +87,7 @@ public interface ProjectService {
      *
      * @param projectId 项目Id
      * @param name      分支名
-     * @param userId  用户名
+     * @param userId    用户名
      * @return Map
      */
     Map<String, Object> queryBranchByBranchName(Integer projectId, String name, Integer userId);
@@ -93,7 +96,7 @@ public interface ProjectService {
      * 查询保护分支列表
      *
      * @param projectId project id
-     * @param userId  userId   optional
+     * @param userId    userId   optional
      * @return List
      */
     List<Map<String, Object>> listBranch(Integer projectId, Integer userId);
@@ -103,7 +106,7 @@ public interface ProjectService {
      *
      * @param projectId 项目Id
      * @param name      分支名
-     * @param userId  用户名
+     * @param userId    用户名
      */
     void deleteByBranchName(Integer projectId, String name, Integer userId);
 
@@ -112,9 +115,9 @@ public interface ProjectService {
      * 新增deploy keys
      *
      * @param projectId 项目Id
-     * @param title   标题
+     * @param title     标题
      * @param key
-     * @param canPush  是否可以push代码
+     * @param canPush   是否可以push代码
      */
     void createDeployKey(Integer projectId, String title, String key, boolean canPush, Integer userId);
 
@@ -122,16 +125,46 @@ public interface ProjectService {
     /**
      * 通过组名项目名查询项目
      *
-     * @param userId 项目Id
-     * @param groupCode 组名　
-     * @param projectCode  项目名
+     * @param userId      项目Id
+     * @param groupCode   组名
+     * @param projectCode 项目名
      * @return Project
      */
-    Project getProject(Integer userId ,String groupCode,String projectCode);
+    Project getProject(Integer userId, String groupCode, String projectCode);
 
 
+    /**
+     * 查询Variable
+     *
+     * @param projectId 项目id
+     * @param userId    用户id
+     * @return list
+     */
     List<Variable> getVarible(Integer projectId, Integer userId);
 
+    /**
+     * 添加项目成员
+     *
+     * @param projectId 项目id
+     * @param member    成员信息
+     * @return Member
+     */
+    Member createMember(Integer projectId, MemberDto member);
 
+    /**
+     * 移除项目成员
+     *
+     * @param projectId 项目id
+     * @param userId    用户id
+     */
+    void deleteMember(Integer projectId, Integer userId);
+
+    /**
+     * 查询deployKeys
+     *
+     * @param projectId 项目Id
+     * @param userId    用户Id
+     * @Return List
+     */
     List<DeployKey> getDeployKeys(Integer projectId, Integer userId);
 }
