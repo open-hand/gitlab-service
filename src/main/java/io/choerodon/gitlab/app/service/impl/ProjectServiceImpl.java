@@ -19,7 +19,7 @@ import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProjectServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectServiceImpl.class);
     private Gitlab4jClient gitlab4jclient;
 
     public ProjectServiceImpl(Gitlab4jClient gitlab4jclient) {
@@ -63,7 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
                         .getProjectApi().getProject(groupName, projectName);
             } catch (GitLabApiException e) {
                 if (e.getHttpStatus() == 404) {
-                    logger.info("delete not exist project: {}", e.getMessage());
+                    LOGGER.info("delete not exist project: {}", e.getMessage());
                 } else {
                     throw e;
                 }
@@ -201,7 +201,8 @@ public class ProjectServiceImpl implements ProjectService {
         try {
             return gitlab4jclient.getGitLabApi().getProjectApi().getMember(projectId,userId);
         } catch (GitLabApiException e) {
-            throw new FeignException(e.getMessage(), e);
+            LOGGER.error("no member found");
+            return new Member();
         }
     }
 }

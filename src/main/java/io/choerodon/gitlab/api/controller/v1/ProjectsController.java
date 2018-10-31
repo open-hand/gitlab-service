@@ -353,13 +353,13 @@ public class ProjectsController {
 
 
     /**
-     * 添加项目成员
+     * 查询项目角色
      *
      * @param projectId 项目id
      * @param userId    用户Id
      * @return Member
      */
-    @ApiOperation(value = "添加项目成员")
+    @ApiOperation(value = "查询项目角色")
     @GetMapping(value = "/{projectId}/members/{userId}")
     public ResponseEntity<Member> getMember(
             @ApiParam(value = "项目id", required = true)
