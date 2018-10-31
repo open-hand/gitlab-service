@@ -195,4 +195,13 @@ public class ProjectServiceImpl implements ProjectService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public Member getMember(Integer projectId, Integer userId) {
+        try {
+            return gitlab4jclient.getGitLabApi().getProjectApi().getMember(projectId,userId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }

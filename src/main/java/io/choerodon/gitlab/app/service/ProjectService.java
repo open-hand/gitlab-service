@@ -167,4 +167,13 @@ public interface ProjectService {
      * @Return List
      */
     List<DeployKey> getDeployKeys(Integer projectId, Integer userId);
+
+    /**
+     * 查询项目角色
+     *
+     * @param projectId 项目id
+     * @param userId    用户Id
+     * @return Member
+     */
+    Member getMember(Integer projectId, Integer userId);
 }

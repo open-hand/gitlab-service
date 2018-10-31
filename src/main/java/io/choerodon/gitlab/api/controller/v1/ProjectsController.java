@@ -350,4 +350,24 @@ public class ProjectsController {
         projectService.deleteMember(projectId, userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+
+    /**
+     * 添加项目成员
+     *
+     * @param projectId 项目id
+     * @param userId    用户Id
+     * @return Member
+     */
+    @ApiOperation(value = "添加项目成员")
+    @GetMapping(value = "/{projectId}/members/{userId}")
+    public ResponseEntity<Member> getMember(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "成员信息", required = true)
+            @PathVariable(value = "userId") Integer userId) {
+        return Optional.ofNullable(projectService.getMember(projectId, userId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
+                .orElseThrow(() -> new FeignException("error.groups.member.create"));
+    }
 }
