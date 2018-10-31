@@ -202,7 +202,9 @@ public class ProjectServiceImpl implements ProjectService {
             return gitlab4jclient.getGitLabApi().getProjectApi().getMember(projectId,userId);
         } catch (GitLabApiException e) {
             LOGGER.error("no member found");
-            return new Member();
+            Member member = new Member();
+            member.setAccessLevel(AccessLevel.NONE);
+            return member;
         }
     }
 }
