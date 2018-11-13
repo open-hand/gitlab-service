@@ -77,7 +77,7 @@
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-gitlab4j-api</artifactId>
-            <version>0.6.4.RELEASE</version>
+            <version>0.7.0.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -122,17 +122,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bus-kafka</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-bus</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-bus</artifactId>
-            <version>${choerodon.starters.version}</version>
         </dependency>
         <!-- test -->
         <dependency>

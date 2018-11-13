@@ -17,18 +17,12 @@ logs:
 
 preJob:
   preConfig:
+    enable: true
     configFile: application.yml
     mysql:
       host: localhost
       port: 3306
       database: manager_service
-      username: root
-      password: choerodon
-  preInitDB:
-    mysql:
-      host: localhost
-      port: 3306
-      database: gitlab_service
       username: root
       password: choerodon
 
