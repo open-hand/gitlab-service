@@ -36,6 +36,7 @@ public class HookServiceImpl implements HookService {
             ProjectHook projectHook = gitlab4jclient.getGitLabApi(userId).getProjectApi().getHook(projectId, hookId);
             projectHook.setPipelineEvents(true);
             projectHook.setJobEvents(true);
+            projectHook.setTagPushEvents(true);
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().modifyHook(projectHook);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
