@@ -18,7 +18,7 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "pom.xml" }}
           - v1-dependencies-
-      - run: mvn integration-test
+      - run: mvn -s .circleci.settings.xml integration-test
 
 
   maven_build:
@@ -38,12 +38,12 @@ jobs:
           - v1-dependencies-
       - run: |
           export CI_COMMIT_TAG=$(GetVersion)
-          mvn versions:set -DnewVersion=${CI_COMMIT_TAG} || \
+          mvn -s .circleci.settings.xml versions:set -DnewVersion=${CI_COMMIT_TAG} || \
           find . -name pom.xml | xargs xml ed -L \
             -N x=http://maven.apache.org/POM/4.0.0 \
             -u '/x:project/x:version' -v "${CI_COMMIT_TAG}"
-          mvn versions:commit
-          mvn package -U -DskipTests=true
+          mvn -s .circleci.settings.xml versions:commit
+          mvn -s .circleci.settings.xml package -U -DskipTests=true
       - save_cache:
           paths:
             - ~/.m2
