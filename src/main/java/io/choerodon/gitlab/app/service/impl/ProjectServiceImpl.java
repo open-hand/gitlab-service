@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.MemberDto;
 import io.choerodon.gitlab.app.service.ProjectService;
@@ -83,7 +82,7 @@ public class ProjectServiceImpl implements ProjectService {
         try {
             return gitlab4jclient.getGitLabApi().getProjectApi().getProject(projectId);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage(), e);
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -92,7 +91,7 @@ public class ProjectServiceImpl implements ProjectService {
         try {
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProject(groupCode, projectCode);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage(), e);
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
