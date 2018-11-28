@@ -17,7 +17,7 @@ import io.choerodon.gitlab.app.service.IssueService;
 
 
 @RestController
-@RequestMapping("/v1/issues")
+@RequestMapping(value = "/v1/issues")
 public class IssueController {
 
     private IssueService issueService;
@@ -214,7 +214,7 @@ public class IssueController {
      * @return List
      */
     @ApiOperation(value = "查询issues")
-    @GetMapping("/project/{projectId}")
+    @GetMapping(value = "/project/{projectId}")
     public ResponseEntity<List<Issue>> list(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,

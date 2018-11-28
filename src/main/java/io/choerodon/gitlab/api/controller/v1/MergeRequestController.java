@@ -15,7 +15,7 @@ import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.MergeRequestService;
 
 @RestController
-@RequestMapping("/v1/projects/{projectId}/merge_requests")
+@RequestMapping(value = "/v1/projects/{projectId}/merge_requests")
 public class MergeRequestController {
 
     private static final String ERROR_MERGE_REQUEST_CREATE = "error.mergeRequest.create";
@@ -57,25 +57,7 @@ public class MergeRequestController {
                 .orElseThrow(() -> new FeignException(ERROR_MERGE_REQUEST_CREATE));
     }
 
-    /**
-     * 刷新合并请求merge_status
-     *
-     * @param projectId      项目id
-     * @param mergeRequestId 合并请求id
-     * @param userId         用户Id
-     */
-    @ApiOperation(value = "刷新合并请求merge_status")
-    @PutMapping("/{mergeRequestId}")
-    public ResponseEntity update(
-            @ApiParam(value = "项目id", required = true)
-            @PathVariable Integer projectId,
-            @ApiParam(value = "合并请求id", required = true)
-            @PathVariable Integer mergeRequestId,
-            @ApiParam(value = "用户Id")
-            @RequestParam(value = "userId", required = false) Integer userId) {
-        mergeRequestService.updateMergeRequest(projectId, mergeRequestId, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+
 
     /**
      * 获取合并请求merge request
@@ -86,7 +68,7 @@ public class MergeRequestController {
      * @return MergeRequest
      */
     @ApiOperation(value = "获取合并请求merge request")
-    @GetMapping("/{mergeRequestId}")
+    @GetMapping(value = "/{mergeRequestId}")
     public ResponseEntity<MergeRequest> query(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -127,7 +109,7 @@ public class MergeRequestController {
      * @return MergeRequest
      */
     @ApiOperation(value = "执行merge请求")
-    @PutMapping("/{mergeRequestId}/merge")
+    @PutMapping(value = "/{mergeRequestId}/merge")
     public ResponseEntity<MergeRequest> acceptMergeRequest(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -156,7 +138,7 @@ public class MergeRequestController {
      * @return List
      */
     @ApiOperation(value = "查询合并请求的commits")
-    @GetMapping("/{mergeRequestId}/commit")
+    @GetMapping(value = "/{mergeRequestId}/commit")
     public ResponseEntity<List<Commit>> listCommits(
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
@@ -177,7 +159,7 @@ public class MergeRequestController {
      * @return List
      */
     @ApiOperation(value = "删除合并请求")
-    @DeleteMapping("{mergeRequestId}")
+    @DeleteMapping(value = "{mergeRequestId}")
     public ResponseEntity delete(@PathVariable Integer projectId, @PathVariable Integer mergeRequestId) {
         mergeRequestService.deleteMergeRequest(projectId, mergeRequestId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

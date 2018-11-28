@@ -15,7 +15,7 @@ import io.choerodon.gitlab.api.dto.PipelineDto;
 import io.choerodon.gitlab.app.service.PipelineService;
 
 @RestController
-@RequestMapping("/v1/projects/{projectId}/pipelines")
+@RequestMapping(value = "/v1/projects/{projectId}/pipelines")
 public class PipelineController {
 
     private PipelineService pipelineService;

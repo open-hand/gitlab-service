@@ -18,7 +18,7 @@ import io.choerodon.gitlab.app.service.JobService;
  * Created by zzy on 2018/1/9.
  */
 @RestController
-@RequestMapping("/v1/projects/{projectId}")
+@RequestMapping(value = "/v1/projects/{projectId}")
 public class JobController {
 
     private JobService jobService;

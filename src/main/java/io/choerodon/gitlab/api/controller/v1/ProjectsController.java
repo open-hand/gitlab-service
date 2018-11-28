@@ -21,7 +21,7 @@ import io.choerodon.gitlab.app.service.ProjectService;
 
 
 @RestController
-@RequestMapping("/v1/projects")
+@RequestMapping(value = "/v1/projects")
 public class ProjectsController {
 
     private ProjectService projectService;
@@ -240,7 +240,7 @@ public class ProjectsController {
      * @param userId    用户Id
      */
     @ApiOperation(value = "通过项目名称创建项目")
-    @PostMapping("/deploy_key")
+    @PostMapping(value = "/deploy_key")
     public ResponseEntity create(
             @ApiParam(value = "项目ID", required = true)
             @RequestParam Integer projectId,
@@ -264,7 +264,7 @@ public class ProjectsController {
      * @Return List
      */
     @ApiOperation(value = "查询deployKeys")
-    @GetMapping("/deploy_key")
+    @GetMapping(value = "/deploy_key")
     public ResponseEntity<List<DeployKey>> getDeployKeys(
             @ApiParam(value = "项目ID", required = true)
             @RequestParam Integer projectId,

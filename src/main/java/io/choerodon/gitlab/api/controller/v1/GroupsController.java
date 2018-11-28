@@ -19,7 +19,7 @@ import io.choerodon.gitlab.api.dto.MemberDto;
 import io.choerodon.gitlab.app.service.GroupService;
 
 @RestController
-@RequestMapping("/v1/groups")
+@RequestMapping(value = "/v1/groups")
 public class GroupsController {
 
     private GroupService groupService;

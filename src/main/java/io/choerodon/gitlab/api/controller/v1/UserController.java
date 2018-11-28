@@ -16,7 +16,7 @@ import io.choerodon.gitlab.app.service.UserService;
 
 
 @RestController
-@RequestMapping("/v1/users")
+@RequestMapping(value = "/v1/users")
 public class UserController {
 
     private UserService userService;
@@ -31,7 +31,7 @@ public class UserController {
      * @return User
      */
     @ApiOperation(value = "获得当前用户信息")
-    @GetMapping("/currentUser")
+    @GetMapping(value = "/currentUser")
     public ResponseEntity<User> queryCurrentUser() {
         return Optional.ofNullable(userService.queryCurrentUser())
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
@@ -69,7 +69,7 @@ public class UserController {
      * @return List
      */
     @ApiOperation(value = "查找所有用户")
-    @GetMapping("/list")
+    @GetMapping(value = "/list")
     public ResponseEntity<List<User>> list(
             @ApiParam(value = "每页大小", required = true)
             @RequestParam(defaultValue = "5") Integer perPage,

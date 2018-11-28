@@ -23,15 +23,6 @@ public interface MergeRequestService {
                                     String targetBranch, String title,
                                     String description, Integer userId);
 
-    /**
-     * 刷新合并请求merge_status
-     *
-     * @param projectId      项目id
-     * @param mergeRequestId 合并请求id
-     * @param userId       用户Id Optional
-     */
-    void updateMergeRequest(Integer projectId, Integer mergeRequestId, Integer userId);
-
 
     /**
      * 获取合并请求merge request

@@ -19,7 +19,7 @@ import io.choerodon.gitlab.app.service.CommitService;
  * Created by zzy on 2018/1/14.
  */
 @RestController
-@RequestMapping("/v1/projects/{projectId}/repository/commits")
+@RequestMapping(value = "/v1/projects/{projectId}/repository/commits")
 public class CommitController {
 
     @Autowired
@@ -57,7 +57,7 @@ public class CommitController {
      * @return List
      */
     @ApiOperation(value = "查询某个commit的Statuse")
-    @GetMapping("/statuse")
+    @GetMapping(value = "/statuse")
     public ResponseEntity<List<CommitStatuseDTO>> getCommitStatuse(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -80,7 +80,7 @@ public class CommitController {
      */
 
     @ApiOperation(value = "查询某个项目的某个分支的所有commit")
-    @GetMapping("/branch")
+    @GetMapping(value = "/branch")
     public ResponseEntity<List<Commit>> getCommits(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "projectId") Integer projectId,
@@ -105,7 +105,7 @@ public class CommitController {
      */
 
     @ApiOperation(value = "查询某个项目的所有commit")
-    @GetMapping("/project")
+    @GetMapping(value = "/project")
     public ResponseEntity<List<Commit>> listCommits(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "projectId") Integer projectId,
