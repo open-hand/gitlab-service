@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.MemberDto;
 import io.choerodon.gitlab.app.service.ProjectService;
@@ -79,11 +78,20 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public Project getProjectById(Integer projectId) {
+        try {
+            return gitlab4jclient.getGitLabApi().getProjectApi().getProject(projectId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public Project getProject(Integer userId, String groupCode, String projectCode) {
         try {
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProject(groupCode, projectCode);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage(), e);
+            throw new FeignException(e.getMessage(), e);
         }
     }
 
@@ -205,6 +213,24 @@ public class ProjectServiceImpl implements ProjectService {
             Member member = new Member();
             member.setAccessLevel(AccessLevel.NONE);
             return member;
+        }
+    }
+
+    @Override
+    public List<Member> getAllMemberByProjectId(Integer projectId) {
+        try {
+            return gitlab4jclient.getGitLabApi().getProjectApi().getMembers(projectId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Project> getMemberProjects(Integer userId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getProjectApi().getMemberProjects();
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
         }
     }
 }

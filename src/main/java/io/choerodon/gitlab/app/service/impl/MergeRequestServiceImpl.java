@@ -1,7 +1,5 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import static org.toilelibre.libe.curl.Curl.$;
-
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -43,18 +41,6 @@ public class MergeRequestServiceImpl implements MergeRequestService {
         }
     }
 
-    @Override
-    public void updateMergeRequest(Integer projectId, Integer mergeRequestId, Integer userId) {
-        try {
-            String path = StringUtils.deleteWhitespace(gitlab4jclient.getGitLabApi(userId)
-                    .getProjectApi().getProject(projectId)
-                    .getPathWithNamespace()).toLowerCase();
-            String newUrl = url + "/" + path + "/merge_requests/" + mergeRequestId.toString() + ".json";
-            $("curl -X GET " + newUrl + "  -H 'Private-Token: " + privateToken + "'");
-        } catch (GitLabApiException e) {
-            throw new FeignException("error.mergeRequest.update");
-        }
-    }
 
     @Override
     public MergeRequest queryMergeRequest(Integer projectId, Integer mergeRequestId, Integer userId) {

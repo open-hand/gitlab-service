@@ -17,7 +17,7 @@ import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.RepositoryService;
 
 @RestController
-@RequestMapping("/v1/projects/{projectId}/repository")
+@RequestMapping(value = "/v1/projects/{projectId}/repository")
 public class RepositoryController {
 
     private RepositoryService repositoryService;
@@ -36,7 +36,7 @@ public class RepositoryController {
      * @return Branch
      */
     @ApiOperation(value = "创建新分支")
-    @PostMapping("/branches")
+    @PostMapping(value = "/branches")
     public ResponseEntity<Branch> createBranch(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -60,7 +60,7 @@ public class RepositoryController {
      * @return List
      */
     @ApiOperation(value = "获取tag列表")
-    @GetMapping("/tags")
+    @GetMapping(value = "/tags")
     public ResponseEntity<List<Tag>> listTags(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -81,7 +81,7 @@ public class RepositoryController {
      * @return List
      */
     @ApiOperation(value = "分页获取tag列表")
-    @GetMapping("/tags/page")
+    @GetMapping(value = "/tags/page")
     public ResponseEntity<List<Tag>> listTagsByPage(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -105,7 +105,7 @@ public class RepositoryController {
      * @return Tag
      */
     @ApiOperation(value = "创建tag")
-    @PostMapping("/tags")
+    @PostMapping(value = "/tags")
     public ResponseEntity<Tag> createTag(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -133,7 +133,7 @@ public class RepositoryController {
      * @return Tag
      */
     @ApiOperation(value = "更新tag")
-    @PutMapping("/tags")
+    @PutMapping(value = "/tags")
     public ResponseEntity<Tag> updateTagRelease(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -156,7 +156,7 @@ public class RepositoryController {
      * @param userId    用户Id
      */
     @ApiOperation(value = "删除tag")
-    @DeleteMapping("/tags")
+    @DeleteMapping(value = "/tags")
     public ResponseEntity deleteTag(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -177,7 +177,7 @@ public class RepositoryController {
      * @param userId     用户Id
      */
     @ApiOperation(value = "根据分支名删除分支")
-    @DeleteMapping("/branches")
+    @DeleteMapping(value = "/branches")
     public ResponseEntity deleteBranch(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -197,7 +197,7 @@ public class RepositoryController {
      * @return Branch
      */
     @ApiOperation(value = "根据分支名查询分支")
-    @GetMapping("/branches/{branchName}")
+    @GetMapping(value = "/branches/{branchName}")
     public ResponseEntity<Branch> queryBranchByName(
             @ApiParam(value = "工程id", required = true)
             @PathVariable Integer projectId,
@@ -216,7 +216,7 @@ public class RepositoryController {
      * @return List
      */
     @ApiOperation(value = "获取工程下所有分支")
-    @GetMapping("/branches")
+    @GetMapping(value = "/branches")
     public ResponseEntity<List<Branch>> listBranches(
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
             @ApiParam(value = "用户Id")
@@ -236,7 +236,7 @@ public class RepositoryController {
      * @return file
      */
     @ApiOperation(value = "项目下获取file")
-    @GetMapping("/{commit}/file")
+    @GetMapping(value = "/{commit}/file")
     public ResponseEntity<RepositoryFile> getFile(
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
             @ApiParam(value = "commit", required = true) @PathVariable String commit,
@@ -256,7 +256,7 @@ public class RepositoryController {
      * @return CompareResults
      */
     @ApiOperation(value = "项目下获取diffs")
-    @GetMapping("/file/diffs")
+    @GetMapping(value = "/file/diffs")
     public ResponseEntity<CompareResults> getDiffs(
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
             @ApiParam(value = "from", required = true) @RequestParam String from,
@@ -274,7 +274,7 @@ public class RepositoryController {
      * @param userId    用户Id
      */
     @ApiOperation(value = "项目下创建File")
-    @PostMapping("/file")
+    @PostMapping(value = "/file")
     public ResponseEntity<RepositoryFile> createFile(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -299,7 +299,7 @@ public class RepositoryController {
      * @param userId    用户Id
      */
     @ApiOperation(value = "项目下创建File")
-    @PutMapping("/file")
+    @PutMapping(value = "/file")
     public ResponseEntity<RepositoryFile> updateFile(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
@@ -324,7 +324,7 @@ public class RepositoryController {
      * @param userId    用户Id
      */
     @ApiOperation(value = "项目下删除File")
-    @DeleteMapping("/file")
+    @DeleteMapping(value = "/file")
     public ResponseEntity deleteFile(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,

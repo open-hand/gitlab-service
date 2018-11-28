@@ -21,7 +21,7 @@ import io.choerodon.gitlab.app.service.ProjectService;
 
 
 @RestController
-@RequestMapping("/v1/projects")
+@RequestMapping(value = "/v1/projects")
 public class ProjectsController {
 
     private ProjectService projectService;
@@ -231,15 +231,16 @@ public class ProjectsController {
     }
 
     /**
-     * 新增deploy keys
+     * 通过项目名称创建项目
      *
      * @param projectId 项目Id
      * @param title     标题
-     * @param key
-     * @param canPush   是否可以push代码
+     * @param key       ssh key
+     * @param canPush   canPush
+     * @param userId    用户Id
      */
     @ApiOperation(value = "通过项目名称创建项目")
-    @PostMapping("/deploy_key")
+    @PostMapping(value = "/deploy_key")
     public ResponseEntity create(
             @ApiParam(value = "项目ID", required = true)
             @RequestParam Integer projectId,
@@ -263,7 +264,7 @@ public class ProjectsController {
      * @Return List
      */
     @ApiOperation(value = "查询deployKeys")
-    @GetMapping("/deploy_key")
+    @GetMapping(value = "/deploy_key")
     public ResponseEntity<List<DeployKey>> getDeployKeys(
             @ApiParam(value = "项目ID", required = true)
             @RequestParam Integer projectId,
@@ -272,6 +273,22 @@ public class ProjectsController {
         return Optional.ofNullable(projectService.getDeployKeys(projectId, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.project.deploy.key.get"));
+    }
+
+    /**
+     * 通过项目id查询项目
+     *
+     * @param projectId 项目id
+     * @return Project
+     */
+    @ApiOperation(value = "通过项目id查询项目")
+    @GetMapping(value = "/{project_id}")
+    public ResponseEntity<Project> queryProjectById(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "project_id") Integer projectId){
+        return Optional.ofNullable(projectService.getProjectById(projectId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.project.get"));
     }
 
     /**
@@ -351,7 +368,6 @@ public class ProjectsController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-
     /**
      * 查询项目角色
      *
@@ -369,5 +385,37 @@ public class ProjectsController {
         return Optional.ofNullable(projectService.getMember(projectId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.groups.member.create"));
+    }
+
+    /**
+     * 获取项目下所有成员
+     *
+     * @param projectId 项目id
+     * @return List
+     */
+    @ApiOperation(value = "获取项目下所有成员")
+    @GetMapping(value = "/{project_id}/members/list")
+    public ResponseEntity<List<Member>> getAllMemberByProjectId(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "project_id") Integer projectId) {
+        return Optional.ofNullable(projectService.getAllMemberByProjectId(projectId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.project.member.list"));
+    }
+
+    /**
+     * 获取用户的gitlab项目列表
+     *
+     * @param userId 用户id
+     * @return List
+     */
+    @ApiParam(value = "获取用户的gitlab项目列表")
+    @GetMapping(value = "/{user_id}/projects")
+    public ResponseEntity<List<Project>> getMemberProjects(
+            @ApiParam(value = "用户id", required = true)
+            @PathVariable(value = "user_id") Integer userId) {
+        return Optional.ofNullable(projectService.getMemberProjects(userId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.member.projects.list"));
     }
 }

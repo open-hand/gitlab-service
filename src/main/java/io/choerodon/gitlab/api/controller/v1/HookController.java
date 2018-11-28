@@ -15,7 +15,7 @@ import io.choerodon.gitlab.app.service.HookService;
 
 
 @RestController
-@RequestMapping("/v1/hook")
+@RequestMapping(value = "/v1/hook")
 public class HookController {
 
     private HookService hookService;

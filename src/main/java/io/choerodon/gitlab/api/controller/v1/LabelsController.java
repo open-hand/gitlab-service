@@ -15,7 +15,7 @@ import io.choerodon.gitlab.api.dto.LabelDto;
 import io.choerodon.gitlab.app.service.LabelsService;
 
 @RestController
-@RequestMapping("/v1/labels")
+@RequestMapping(value = "/v1/labels")
 public class LabelsController {
 
     private LabelsService labelsService;

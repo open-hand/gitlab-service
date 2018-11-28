@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.gitlab4j.api.models.ImpersonationToken;
 import org.gitlab4j.api.models.User;
-import scala.Int;
-
 
 public interface UserService {
 

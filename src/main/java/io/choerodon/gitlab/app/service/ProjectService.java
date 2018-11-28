@@ -112,15 +112,23 @@ public interface ProjectService {
 
 
     /**
-     * 新增deploy keys
+     * 通过项目名称创建项目
      *
      * @param projectId 项目Id
      * @param title     标题
-     * @param key
-     * @param canPush   是否可以push代码
+     * @param key       ssh key
+     * @param canPush   canPush
+     * @param userId    用户Id
      */
     void createDeployKey(Integer projectId, String title, String key, boolean canPush, Integer userId);
 
+    /**
+     * 通过项目id查询项目
+     *
+     * @param projectId 项目id
+     * @return Project
+     */
+    Project getProjectById(Integer projectId);
 
     /**
      * 通过组名项目名查询项目
@@ -176,4 +184,21 @@ public interface ProjectService {
      * @return Member
      */
     Member getMember(Integer projectId, Integer userId);
+
+    /**
+     * 获取项目下所有成员
+     *
+     * @param projectId 项目id
+     * @return List
+     */
+    List<Member> getAllMemberByProjectId(Integer projectId);
+
+
+    /**
+     * 获取用户的gitlab项目列表
+     *
+     * @param userId 用户id
+     * @return List
+     */
+    List<Project> getMemberProjects(Integer userId);
 }

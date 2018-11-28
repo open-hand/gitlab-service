@@ -15,7 +15,7 @@ import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.NotesService;
 
 @RestController
-@RequestMapping("/v1/notes")
+@RequestMapping(value = "/v1/notes")
 public class NotesController {
 
 

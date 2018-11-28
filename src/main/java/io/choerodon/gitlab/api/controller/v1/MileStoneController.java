@@ -15,7 +15,7 @@ import io.choerodon.gitlab.api.dto.MileStoneDto;
 import io.choerodon.gitlab.app.service.MileStoneService;
 
 @RestController
-@RequestMapping("/v1/milestones")
+@RequestMapping(value = "/v1/milestones")
 public class MileStoneController {
 
     private MileStoneService mileStoneService;
@@ -126,7 +126,7 @@ public class MileStoneController {
      * @return List
      */
     @ApiOperation(value = "通过projectId,milestoneState和search查询milestones列表")
-    @GetMapping("/options")
+    @GetMapping(value = "/options")
     public ResponseEntity<List<Milestone>> listByOptions(
             @ApiParam(value = "mileStoneDto", required = true)
             @RequestBody MileStoneDto mileStoneDto) {
