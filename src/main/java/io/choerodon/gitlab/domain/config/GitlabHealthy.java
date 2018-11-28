@@ -23,7 +23,7 @@ public class GitlabHealthy implements HealthIndicator {
         GitLabApi gitLabApi = new GitLabApi(url, privateToken);
         int errorCode = 0;
         try {
-            gitLabApi.getProjectApi().getProjects();
+            gitLabApi.getUserApi().getCurrentUser();
         } catch (GitLabApiException e) {
             if (e.getHttpStatus() == 401) {
                 errorCode = 401;
