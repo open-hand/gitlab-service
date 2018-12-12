@@ -2,6 +2,7 @@ package io.choerodon.gitlab.app.service;
 
 import java.util.List;
 
+import io.choerodon.gitlab.api.dto.CommitDTO;
 import org.gitlab4j.api.models.Commit;
 
 import io.choerodon.gitlab.api.dto.CommitStatuseDTO;
@@ -10,7 +11,7 @@ import io.choerodon.gitlab.api.dto.CommitStatuseDTO;
  * Created by zzy on 2018/1/14.
  */
 public interface CommitService {
-    Commit getCommit(Integer projectId, String sha, Integer userId);
+    CommitDTO getCommit(Integer projectId, String sha, Integer userId);
 
     List<CommitStatuseDTO> getCommitStatuse(Integer projectId, String sha, Integer userId);
 
