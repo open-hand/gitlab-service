@@ -3,6 +3,7 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Optional;
 
+import io.choerodon.gitlab.api.dto.CommitDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
@@ -35,7 +36,7 @@ public class CommitController {
      */
     @ApiOperation(value = "查询某个commit的具体信息")
     @GetMapping
-    public ResponseEntity<Commit> getPipeline(
+    public ResponseEntity<CommitDTO> getPipeline(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "sha", required = true)

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.choerodon.gitlab.api.dto.CommitDTO;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.CommitStatuse;
@@ -30,9 +31,18 @@ public class CommitServiceImpl implements CommitService {
     private Gitlab4jClient gitlab4jclient;
 
     @Override
-    public Commit getCommit(Integer projectId, String sha, Integer userId) {
+    public CommitDTO getCommit(Integer projectId, String sha, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, sha);
+            Commit commit = gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, sha);
+            CommitDTO commitDTO = new CommitDTO();
+            BeanUtils.copyProperties(commit, commitDTO, "createdAt", "committedDate");
+            if (commit.getCreatedAt() != null) {
+                commitDTO.setCreatedAt(formatter.format(commit.getCreatedAt()));
+            }
+            if (commit.getCommittedDate() != null) {
+                commitDTO.setCommittedDate(formatter.format(commit.getCommittedDate()));
+            }
+            return commitDTO;
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
