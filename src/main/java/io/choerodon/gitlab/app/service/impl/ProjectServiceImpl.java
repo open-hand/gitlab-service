@@ -94,7 +94,7 @@ public class ProjectServiceImpl implements ProjectService {
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProject(groupCode, projectCode);
         } catch (GitLabApiException e) {
             if ("404 Project Not Found".equals(e.getMessage())) {
-                return null;
+                return new Project();
             } else {
                throw new FeignException(e.getMessage(),e);
             }
