@@ -3,6 +3,7 @@ package io.choerodon.gitlab.app.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.*;
@@ -25,7 +26,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectServiceImpl(Gitlab4jClient gitlab4jclient) {
         this.gitlab4jclient = gitlab4jclient;
     }
-
+    Gson gson =  new Gson();
 
     @Override
     public Project createProject(Integer groupId, String projectName, Integer userId, boolean visibility) {
@@ -92,7 +93,16 @@ public class ProjectServiceImpl implements ProjectService {
         try {
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProject(groupCode, projectCode);
         } catch (GitLabApiException e) {
-            throw new CommonException(e.getMessage(), e);
+            String errorMessage = e.getMessage();
+            int subStartPos = errorMessage.indexOf('{');
+            int subEndPos = errorMessage.indexOf('}') + 1;
+            String subErrorMessage = errorMessage.substring(subStartPos, subEndPos);
+            Map maps = gson.fromJson(subErrorMessage, Map.class);
+            if ("404 Project Not Found".equals(e.getMessage())) {
+                return null;
+            } else {
+               throw new FeignException(e.getMessage(),e);
+            }
         }
     }
 

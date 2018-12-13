@@ -39,11 +39,11 @@ env:
     SPRING_CLOUD_CONFIG_ENABLED: true
     GITLAB_URL: http://gitlab.choerodon.com.com
     GITLAB_PRIVATETOKEN: sw1W4jywyxsvkHYRGBBp
-    SKYWALKING_OPTS: >-
-          -javaagent:/agent/skywalking-agent.jar
-          -Dskywalking.agent.application_code=gitlab-service
-          -Dskywalking.agent.sample_n_per_3_secs=10
-          -Dskywalking.collector.backend_service=oap.skywalking:11800
+#    SKYWALKING_OPTS: >-
+#          -javaagent:/agent/skywalking-agent.jar
+#          -Dskywalking.agent.application_code=gitlab-service
+#          -Dskywalking.agent.sample_n_per_3_secs=10
+#          -Dskywalking.collector.backend_service=oap.skywalking:11800
 
 service:
   type: ClusterIP
