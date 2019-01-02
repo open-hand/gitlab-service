@@ -3,6 +3,7 @@ package io.choerodon.gitlab.app.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.*;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.MemberDto;
 import io.choerodon.gitlab.app.service.ProjectService;
@@ -24,7 +26,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectServiceImpl(Gitlab4jClient gitlab4jclient) {
         this.gitlab4jclient = gitlab4jclient;
     }
-
+    Gson gson =  new Gson();
 
     @Override
     public Project createProject(Integer groupId, String projectName, Integer userId, boolean visibility) {
@@ -91,7 +93,11 @@ public class ProjectServiceImpl implements ProjectService {
         try {
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProject(groupCode, projectCode);
         } catch (GitLabApiException e) {
-            throw new FeignException(e.getMessage(), e);
+            if ("404 Project Not Found".equals(e.getMessage())) {
+                return new Project();
+            } else {
+               throw new FeignException(e.getMessage(),e);
+            }
         }
     }
 
