@@ -1,13 +1,13 @@
 package io.choerodon.gitlab.domain.config;
 
+import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
-
-import io.choerodon.core.exception.FeignException;
 
 @Component
 public class GitlabHealthy implements HealthIndicator {
@@ -27,9 +27,13 @@ public class GitlabHealthy implements HealthIndicator {
         } catch (GitLabApiException e) {
             if (e.getHttpStatus() == 401) {
                 errorCode = 401;
+            } else if (e.getHttpStatus() == 404) {
+                errorCode = 404;
+            } else {
+                throw new CommonException(e);
             }
         }
-        if (errorCode == 401) {
+        if (errorCode == 401 || errorCode == 404) {
             return Health.down().withDetail("Error Code", "the token or the url is error").build();
         } else {
             try {
