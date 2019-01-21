@@ -1,6 +1,5 @@
 package io.choerodon.gitlab.domain.config;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -21,27 +20,15 @@ public class GitlabHealthy implements HealthIndicator {
     @Override
     public Health health() {
         GitLabApi gitLabApi = new GitLabApi(url, privateToken);
-        int errorCode = 0;
         try {
             gitLabApi.getUserApi().getCurrentUser();
+            return Health.up().build();
         } catch (GitLabApiException e) {
-            if (e.getHttpStatus() == 401) {
-                errorCode = 401;
-            } else if (e.getHttpStatus() == 404) {
-                errorCode = 404;
+            if (e.getHttpStatus() == 401 || e.getHttpStatus() == 404) {
+                return Health.down().withDetail("Error Code", "the token or the url is error, or the ingress resolution error!").build();
             } else {
-                throw new CommonException(e);
-            }
-        }
-        if (errorCode == 401 || errorCode == 404) {
-            return Health.down().withDetail("Error Code", "the token or the url is error, or the ingress resolution error!").build();
-        } else {
-            try {
-                gitLabApi.getApplicationApi().modifyApplicationSetting(true);
-            } catch (GitLabApiException e) {
                 throw new FeignException(e);
             }
-            return Health.up().build();
         }
     }
 }
