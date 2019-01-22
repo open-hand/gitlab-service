@@ -91,6 +91,7 @@ public class UserServiceImpl implements UserService {
         UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
         try {
             user.setId(userId);
+            user.setSkipReconfirmation(true);
             return userApi.modifyUser(user, null, projectsLimit);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
