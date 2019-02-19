@@ -2,16 +2,16 @@ package io.choerodon.gitlab.app.service.impl;
 
 import java.util.List;
 
-import org.gitlab4j.api.Constants;
-import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.UserApi;
-import org.gitlab4j.api.models.ImpersonationToken;
-import org.gitlab4j.api.models.User;
-import org.springframework.stereotype.Service;
-
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.UserService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import org.gitlab4j.api.Constants;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.UserApi;
+import org.gitlab4j.api.models.Email;
+import org.gitlab4j.api.models.ImpersonationToken;
+import org.gitlab4j.api.models.User;
+import org.springframework.stereotype.Service;
 
 
 @Service
@@ -91,7 +91,19 @@ public class UserServiceImpl implements UserService {
         UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
         try {
             user.setId(userId);
-            return userApi.modifyUser(user, null, projectsLimit);
+            user.setSkipReconfirmation(true);
+            User oldUser = userApi.getUser(userId);
+            user = userApi.modifyUser(user, null, projectsLimit);
+            //删除用户的二级邮箱，否则更新前的邮箱无法在注册
+            if (!oldUser.getEmail().equals(user.getEmail())) {
+                List<Email> emails = userApi.findEmails(userId);
+                for (Email email : emails) {
+                    if (!email.getEmail().equals(user.getEmail())) {
+                        userApi.deleteEmail(userId, email.getId());
+                    }
+                }
+            }
+            return user;
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
