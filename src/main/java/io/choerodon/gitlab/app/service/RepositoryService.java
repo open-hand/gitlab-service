@@ -132,7 +132,7 @@ public interface RepositoryService {
      */
     CompareResults getDiffs(Integer projectId, String from, String to);
 
-    RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId);
+    RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName);
 
     RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId);
 

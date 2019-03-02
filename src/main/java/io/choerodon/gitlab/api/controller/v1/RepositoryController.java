@@ -285,8 +285,10 @@ public class RepositoryController {
             @ApiParam(value = "commitMessage", required = true)
             @RequestParam("commitMessage") String commitMessage,
             @ApiParam(value = "userId", required = true)
-            @RequestParam("userId") Integer userId) {
-        return Optional.ofNullable(repositoryService.createFile(projectId, path, content, commitMessage, userId))
+            @RequestParam("userId") Integer userId,
+            @ApiParam(value = "分支名", required = false)
+            @RequestParam(value = "branch_name", required = false) String branchName) {
+        return Optional.ofNullable(repositoryService.createFile(projectId, path, content, commitMessage, userId, branchName))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.file.create"));
     }
