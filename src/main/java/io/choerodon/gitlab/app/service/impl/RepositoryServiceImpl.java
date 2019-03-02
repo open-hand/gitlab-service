@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.RepositoryService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import org.springframework.util.StringUtils;
 
 
 @Service
@@ -150,14 +151,14 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId) {
+    public RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         RepositoryFile repositoryFile = new RepositoryFile();
         try {
             repositoryFile.setContent(content);
             repositoryFile.setFilePath(path);
             repositoryFile = gitLabApi.getRepositoryFileApi().createFile(
-                    repositoryFile, projectId, "master", "ADD FILE");
+                    repositoryFile, projectId, StringUtils.isEmpty(branchName) ? "master" : branchName, "ADD FILE");
         } catch (GitLabApiException e) {
             return null;
         }

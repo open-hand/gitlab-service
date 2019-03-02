@@ -98,11 +98,11 @@ public class CommitController {
     /**
      * 查询某个项目的所有commit
      *
-     * @param projectId  项目ID
-     * @param  userId 用户名
-     * @param page page
-     * @param size size
-     ** @return commit列表
+     * @param projectId 项目ID
+     * @param userId    用户名
+     * @param page      page
+     * @param size      size
+     *                  * @return commit列表
      */
 
     @ApiOperation(value = "查询某个项目的所有commit")
@@ -111,7 +111,7 @@ public class CommitController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "projectId") Integer projectId,
             @ApiParam(value = "page")
-                    @RequestParam Integer page,
+            @RequestParam Integer page,
             @ApiParam(value = "size")
             @RequestParam Integer size,
             @ApiParam(value = "用户名", required = true)
