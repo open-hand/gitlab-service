@@ -1,7 +1,6 @@
 package io.choerodon.gitlab.api.dto;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * Creator: ChangpingShi0213@gmail.com
@@ -10,42 +9,33 @@ import java.util.List;
  */
 public class VariableDTO {
     @NotNull
-    private List<String> keys;
+    private String key;
     @NotNull
-    private List<String> values;
+    private String value;
     @NotNull
-    private List<Boolean> protecteds;
-    private Integer userId;
+    private Boolean protecteds;
 
-    public List<String> getKeys() {
-        return keys;
+    public String getKey() {
+        return key;
     }
 
-    public void setKeys(List<String> keys) {
-        this.keys = keys;
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public List<String> getValues() {
-        return values;
+    public String getValue() {
+        return value;
     }
 
-    public void setValues(List<String> values) {
-        this.values = values;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public List<Boolean> getProtecteds() {
+    public Boolean getProtecteds() {
         return protecteds;
     }
 
-    public void setProtecteds(List<Boolean> protecteds) {
+    public void setProtecteds(Boolean protecteds) {
         this.protecteds = protecteds;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 }

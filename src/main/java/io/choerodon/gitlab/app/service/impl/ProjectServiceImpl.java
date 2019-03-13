@@ -3,6 +3,7 @@ package io.choerodon.gitlab.app.service.impl;
 import com.google.gson.Gson;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.MemberDto;
+import io.choerodon.gitlab.api.dto.VariableDTO;
 import io.choerodon.gitlab.app.service.ProjectService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import org.gitlab4j.api.GitLabApi;
@@ -17,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -128,25 +128,23 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Map<String, Object>> batchCreateVariable(Integer projectId, List<String> keys, List<String> values, List<Boolean> protecteds, Integer userId) {
-        try {
-            List<Map<String, Object>> newlist = new ArrayList<>();
-            List<Variable> oldlist = getVarible(projectId, userId);
-            for (int i = 0; i < keys.size(); i++) {
-                String key = keys.get(i);
+    public List<Map<String, Object>> batchCreateVariable(Integer projectId, List<VariableDTO> list, Integer userId) {
+        List<Variable> oldlist = getVarible(projectId, userId);
+        return list.stream().map(v -> {
+            try {
+                String key = v.getKey();
                 Optional<Variable> optional = oldlist.stream().filter(t -> key.equals(t.getKey())).findFirst();
                 if (optional.isPresent() && !optional.get().getKey().isEmpty()) {
-                    newlist.add(gitlab4jclient.getGitLabApi(userId)
-                            .getProjectApi().updateVariable(projectId, keys.get(i), values.get(i), protecteds.get(i)));
+                    return gitlab4jclient.getGitLabApi(userId)
+                            .getProjectApi().updateVariable(projectId, v.getKey(), v.getValue(), v.getProtecteds());
                 } else {
-                    newlist.add(gitlab4jclient.getGitLabApi(userId)
-                            .getProjectApi().addVariable(projectId, keys.get(i), values.get(i), protecteds.get(i)));
+                    return gitlab4jclient.getGitLabApi(userId)
+                            .getProjectApi().addVariable(projectId, v.getKey(), v.getValue(), v.getProtecteds());
                 }
+            } catch (GitLabApiException e) {
+                throw new FeignException(e.getMessage(), e);
             }
-            return newlist;
-        } catch (GitLabApiException e) {
-            throw new FeignException(e.getMessage(), e);
-        }
+        }).collect(Collectors.toList());
     }
 
     @Override

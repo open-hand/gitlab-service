@@ -1,6 +1,7 @@
 package io.choerodon.gitlab.app.service;
 
 import io.choerodon.gitlab.api.dto.MemberDto;
+import io.choerodon.gitlab.api.dto.VariableDTO;
 import org.gitlab4j.api.models.DeployKey;
 import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
@@ -59,18 +60,14 @@ public interface ProjectService {
     /**
      * 批量增加项目ci环境变量
      *
-     * @param projectId  项目Id
-     * @param keys       变量key
-     * @param values     变量值
-     * @param protecteds 变量是否受保护
-     * @param userId     用户id
+     * @param projectId 项目Id
+     * @param list      变量信息
+     * @param userId    用户id
      * @return
      */
     List<Map<String, Object>> batchCreateVariable(Integer projectId,
-                                            List<String> keys,
-                                            List<String> values,
-                                            List<Boolean> protecteds,
-                                            Integer userId);
+                                                  List<VariableDTO> list,
+                                                  Integer userId);
 
     /**
      * 增加项目保护分支

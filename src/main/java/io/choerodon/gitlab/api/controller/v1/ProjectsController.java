@@ -128,20 +128,22 @@ public class ProjectsController {
     }
 
     /**
-     * 批量增加项目ci环境变量
+     * 批量增加/更新项目ci环境变量
      *
-     * @param projectId   项目Id
-     * @param variableDTO variable信息
+     * @param projectId 项目Id
+     * @param list      variable信息
      * @return Map
      */
     @ApiOperation(value = "增加项目ci环境变量")
-    @PostMapping(value = "/{projectId}/batch_variables")
+    @PutMapping(value = "/{projectId}/variables")
     public ResponseEntity<List<Map<String, Object>>> batchSaveVariableEvent(
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
+            @ApiParam(value = "项目ID", required = true)
+            @RequestParam Integer userId,
             @ApiParam(value = "variable信息", required = true)
-            @RequestBody @Valid VariableDTO variableDTO) {
-        return Optional.ofNullable(projectService.batchCreateVariable(projectId, variableDTO.getKeys(), variableDTO.getValues(), variableDTO.getProtecteds(), variableDTO.getUserId()))
+            @RequestBody @Valid List<VariableDTO> list) {
+        return Optional.ofNullable(projectService.batchCreateVariable(projectId, list, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.variable.batch.create"));
     }
