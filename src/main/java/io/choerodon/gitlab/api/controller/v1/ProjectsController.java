@@ -134,7 +134,7 @@ public class ProjectsController {
      * @param list      variable信息
      * @return Map
      */
-    @ApiOperation(value = "增加项目ci环境变量")
+    @ApiOperation(value = " 批量增加/更新项目ci环境变量")
     @PutMapping(value = "/{projectId}/variables")
     public ResponseEntity<List<Map<String, Object>>> batchSaveVariableEvent(
             @ApiParam(value = "项目ID", required = true)
@@ -387,7 +387,7 @@ public class ProjectsController {
      * @param list    成员信息
      * @return Member
      */
-    @ApiOperation(value = "添加项目成员")
+    @ApiOperation(value = "批量更新项目成员")
     @PutMapping(value = "/{projectId}/members")
     public ResponseEntity<List<Member>> updateMembers(
             @ApiParam(value = "项目id", required = true)
