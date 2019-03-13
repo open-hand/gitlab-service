@@ -1,10 +1,9 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import javax.validation.Valid;
-
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.dto.MemberDto;
+import io.choerodon.gitlab.api.dto.VariableDTO;
+import io.choerodon.gitlab.app.service.ProjectService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.DeployKey;
@@ -13,11 +12,20 @@ import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Variable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.MemberDto;
-import io.choerodon.gitlab.app.service.ProjectService;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -120,6 +128,25 @@ public class ProjectsController {
     }
 
     /**
+     * 批量增加项目ci环境变量
+     *
+     * @param projectId   项目Id
+     * @param variableDTO variable信息
+     * @return Map
+     */
+    @ApiOperation(value = "增加项目ci环境变量")
+    @PostMapping(value = "/{projectId}/batch_variables")
+    public ResponseEntity<List<Map<String, Object>>> batchSaveVariableEvent(
+            @ApiParam(value = "项目ID", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "variable信息", required = true)
+            @RequestBody @Valid VariableDTO variableDTO) {
+        return Optional.ofNullable(projectService.batchCreateVariable(projectId, variableDTO.getKeys(), variableDTO.getValues(), variableDTO.getProtecteds(), variableDTO.getUserId()))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
+                .orElseThrow(() -> new FeignException("error.projects.variable.batch.create"));
+    }
+
+    /**
      * 增加项目保护分支
      *
      * @param projectId        项目Id
@@ -143,8 +170,8 @@ public class ProjectsController {
             @ApiParam(value = "用户Id")
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(projectService.createProtectedBranches(projectId,
-                                                                          name, mergeAccessLevel, pushAccessLevel,
-                                                                          userId))
+                name, mergeAccessLevel, pushAccessLevel,
+                userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.protected.branches.create"));
     }
@@ -285,7 +312,7 @@ public class ProjectsController {
     @GetMapping(value = "/{project_id}")
     public ResponseEntity<Project> queryProjectById(
             @ApiParam(value = "项目id", required = true)
-            @PathVariable(value = "project_id") Integer projectId){
+            @PathVariable(value = "project_id") Integer projectId) {
         return Optional.ofNullable(projectService.getProjectById(projectId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.project.get"));
@@ -349,6 +376,25 @@ public class ProjectsController {
         return Optional.ofNullable(projectService.createMember(projectId, member))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.groups.member.create"));
+    }
+
+    /**
+     * 批量更新项目成员
+     *
+     * @param projectId 项目id
+     * @param list    成员信息
+     * @return Member
+     */
+    @ApiOperation(value = "添加项目成员")
+    @PutMapping(value = "/{projectId}/members")
+    public ResponseEntity<List<Member>> updateMembers(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "成员信息", required = true)
+            @RequestBody @Valid List<MemberDto> list) {
+        return Optional.ofNullable(projectService.updateMembers(projectId, list))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
+                .orElseThrow(() -> new FeignException("error.groups.member.update"));
     }
 
     /**

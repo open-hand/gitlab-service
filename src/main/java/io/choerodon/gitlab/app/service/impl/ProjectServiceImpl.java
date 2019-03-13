@@ -1,32 +1,38 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
 import com.google.gson.Gson;
-import org.gitlab4j.api.GitLabApi;
-import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.models.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.MemberDto;
 import io.choerodon.gitlab.app.service.ProjectService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import org.gitlab4j.api.GitLabApi;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.AccessLevel;
+import org.gitlab4j.api.models.DeployKey;
+import org.gitlab4j.api.models.Member;
+import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.Variable;
+import org.gitlab4j.api.models.Visibility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectServiceImpl.class);
+    Gson gson = new Gson();
     private Gitlab4jClient gitlab4jclient;
 
     public ProjectServiceImpl(Gitlab4jClient gitlab4jclient) {
         this.gitlab4jclient = gitlab4jclient;
     }
-    Gson gson =  new Gson();
 
     @Override
     public Project createProject(Integer groupId, String projectName, Integer userId, boolean visibility) {
@@ -96,7 +102,7 @@ public class ProjectServiceImpl implements ProjectService {
             if ("404 Project Not Found".equals(e.getMessage())) {
                 return new Project();
             } else {
-               throw new FeignException(e.getMessage(),e);
+                throw new FeignException(e.getMessage(), e);
             }
         }
     }
@@ -116,6 +122,28 @@ public class ProjectServiceImpl implements ProjectService {
         try {
             return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().addVariable(projectId, key, value, protecteds);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> batchCreateVariable(Integer projectId, List<String> keys, List<String> values, List<Boolean> protecteds, Integer userId) {
+        try {
+            List<Map<String, Object>> newlist = new ArrayList<>();
+            List<Variable> oldlist = getVarible(projectId, userId);
+            for (int i = 0; i < keys.size(); i++) {
+                String key = keys.get(i);
+                Optional<Variable> optional = oldlist.stream().filter(t -> key.equals(t.getKey())).findFirst();
+                if (optional.isPresent() && !optional.get().getKey().isEmpty()) {
+                    newlist.add(gitlab4jclient.getGitLabApi(userId)
+                            .getProjectApi().updateVariable(projectId, keys.get(i), values.get(i), protecteds.get(i)));
+                } else {
+                    newlist.add(gitlab4jclient.getGitLabApi(userId)
+                            .getProjectApi().addVariable(projectId, keys.get(i), values.get(i), protecteds.get(i)));
+                }
+            }
+            return newlist;
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -202,6 +230,18 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<Member> updateMembers(Integer projectId, List<MemberDto> list) {
+        return list.stream().map(m -> {
+            try {
+                return gitlab4jclient.getGitLabApi().getProjectApi()
+                        .updateMember(projectId, m.getUserId(), m.getAccessLevel());
+            } catch (GitLabApiException e) {
+                throw new FeignException(e.getMessage(), e);
+            }
+        }).collect(Collectors.toList());
+    }
+
+    @Override
     public void deleteMember(Integer projectId, Integer userId) {
         try {
             gitlab4jclient.getGitLabApi().getProjectApi().removeMember(projectId, userId);
@@ -213,7 +253,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Member getMember(Integer projectId, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi().getProjectApi().getMember(projectId,userId);
+            return gitlab4jclient.getGitLabApi().getProjectApi().getMember(projectId, userId);
         } catch (GitLabApiException e) {
             LOGGER.error("no member found");
             Member member = new Member();
