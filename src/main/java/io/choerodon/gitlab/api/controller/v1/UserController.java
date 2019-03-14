@@ -1,8 +1,7 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import java.util.List;
-import java.util.Optional;
-
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.app.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.ImpersonationToken;
@@ -11,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.app.service.UserService;
+import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -203,5 +202,21 @@ public class UserController {
         return Optional.ofNullable(userService.listUserAccessToken(userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.access_token.get"));
+    }
+
+    /**
+     * 校验用户邮箱是否在gitlab已存在
+     *
+     * @param email 用户邮箱
+     * @return Boolean
+     */
+    @ApiOperation(value = "校验用户邮箱是否在gitlab已存在")
+    @GetMapping(value = "/email/check")
+    public ResponseEntity<Boolean> checkEmailIsExist(
+            @ApiParam(value = "用户邮箱", required = true)
+            @RequestParam(value = "email") String email) {
+        return Optional.ofNullable(userService.checkEmailIsExist(email))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.user.email.check"));
     }
 }
