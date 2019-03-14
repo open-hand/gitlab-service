@@ -95,4 +95,11 @@ public interface UserService {
      * @param userId 用户Id
      */
     void disEnabledUserByUserId(Integer userId);
+
+    /**
+     * 根据用户email 是否已经存在
+     *
+     * @param email 用户邮箱
+     */
+    Boolean checkEmailIsExist(String email);
 }
