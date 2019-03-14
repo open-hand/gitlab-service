@@ -205,12 +205,12 @@ public class UserController {
     }
 
     /**
-     * 根据用户Id获得用户信息
+     * 校验用户邮箱是否在gitlab已存在
      *
-     * @param email 用户Id
+     * @param email 用户邮箱
      * @return Boolean
      */
-    @ApiOperation(value = "根据用户Id获得用户信息")
+    @ApiOperation(value = "校验用户邮箱是否在gitlab已存在")
     @GetMapping(value = "/email/check")
     public ResponseEntity<Boolean> checkEmailIsExist(
             @ApiParam(value = "用户邮箱", required = true)

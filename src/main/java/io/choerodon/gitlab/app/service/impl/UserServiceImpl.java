@@ -1,7 +1,9 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.UserService;
@@ -132,12 +134,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean checkEmailIsExist(String email) {
-        UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
         try {
-            return userApi.getUsers().stream().anyMatch(v->v.getEmail().equals(email));
+            List<User> users = gitlab4jclient.getGitLabApi().getUserApi().findUsers(email);
+            if (!users.isEmpty()) {
+                return true;
+            }
         } catch (GitLabApiException e) {
-            throw new FeignException(e.getMessage(),e);
+            throw new FeignException(e.getMessage(), e);
         }
+        return false;
     }
 
     @Override
