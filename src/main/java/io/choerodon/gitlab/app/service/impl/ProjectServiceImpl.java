@@ -130,7 +130,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<Map<String, Object>> batchCreateVariable(Integer projectId, List<VariableDTO> list, Integer userId) {
         List<Variable> oldlist = getVarible(projectId, userId);
-        return list.stream().map(v -> {
+        return list.stream().filter(t -> t.getValue() != null).map(v -> {
             try {
                 String key = v.getKey();
                 Optional<Variable> optional = oldlist.stream().filter(t -> key.equals(t.getKey())).findFirst();
