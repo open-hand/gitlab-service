@@ -139,8 +139,8 @@ public class ProjectsController {
     public ResponseEntity<List<Map<String, Object>>> batchSaveVariableEvent(
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "项目ID", required = true)
-            @RequestParam Integer userId,
+            @ApiParam(value = "项目ID", required = false)
+            @RequestParam(value = "userId", required = false) Integer userId,
             @ApiParam(value = "variable信息", required = true)
             @RequestBody @Valid List<VariableDTO> list) {
         return Optional.ofNullable(projectService.batchCreateVariable(projectId, list, userId))
