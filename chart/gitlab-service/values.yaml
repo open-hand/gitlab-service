@@ -9,7 +9,7 @@ image:
   pullPolicy: Always
 
 metrics:
-  path: /prometheus
+  path: /actuator/prometheus
   group: spring-boot
 
 logs:
