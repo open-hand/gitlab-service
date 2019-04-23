@@ -19,6 +19,8 @@ preJob:
   preConfig:
     enable: true
     configFile: application.yml
+    configType: k8s
+    registerHost: http://register-server:8000
     mysql:
       host: localhost
       port: 3306
