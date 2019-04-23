@@ -1,5 +1,10 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.google.gson.Gson;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.dto.MemberDto;
@@ -8,20 +13,10 @@ import io.choerodon.gitlab.app.service.ProjectService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.models.AccessLevel;
-import org.gitlab4j.api.models.DeployKey;
-import org.gitlab4j.api.models.Member;
-import org.gitlab4j.api.models.Project;
-import org.gitlab4j.api.models.Variable;
-import org.gitlab4j.api.models.Visibility;
+import org.gitlab4j.api.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -99,7 +94,7 @@ public class ProjectServiceImpl implements ProjectService {
         try {
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProject(groupCode, projectCode);
         } catch (GitLabApiException e) {
-            if ("404 Project Not Found".equals(e.getMessage())) {
+            if (e.getHttpStatus() == 404) {
                 return new Project();
             } else {
                 throw new FeignException(e.getMessage(), e);
