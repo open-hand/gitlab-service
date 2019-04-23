@@ -33,7 +33,13 @@ public class ProjectServiceImpl implements ProjectService {
     public Project createProject(Integer groupId, String projectName, Integer userId, boolean visibility) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
-            Project project = gitLabApi.getProjectApi().createProject(groupId, projectName);
+            Project projectReq = new Project();
+            projectReq.setName(projectName);
+            projectReq.setPath(projectName);
+            Namespace namespace = new Namespace();
+            namespace.setId(groupId);
+            projectReq.setNamespace(namespace);
+            Project project = gitLabApi.getProjectApi().createProject(projectReq);
             if (visibility) {
                 project.setVisibility(Visibility.PUBLIC);
             }
