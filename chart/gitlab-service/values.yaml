@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: registry.choerodon.com.cn/choerodon/gitlab-service
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 metrics:
   path: /actuator/prometheus
