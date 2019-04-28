@@ -17,16 +17,15 @@ logs:
 
 preJob:
   preConfig:
+    image: registry.cn-hangzhou.aliyuncs.com/choerodon-tools/dbtool:0.6.2
     enable: true
     configFile: application.yml
     configType: k8s
     registerHost: http://register-server:8000
-    mysql:
-      host: localhost
-      port: 3306
-      database: manager_service
-      username: root
-      password: choerodon
+    datasource:
+      url: jdbc:mysql://localhost:3306/manager_service?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      username: choerodon
+      password: 123456
 
 deployment:
   managementPort: 8071
