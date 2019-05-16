@@ -32,4 +32,4 @@ ribbon:
   ReadTimeout: 50000
 logging:
   level:
-    io.choerodon.event.consumer: debug
+    io.choerodon.event.consumer: ${LOGGING_LEVEL:info}
