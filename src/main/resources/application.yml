@@ -7,8 +7,8 @@ spring:
     sampler:
       percentage: 1.0
 gitlab:
-  url: "http://git.staging.saas.hand-china.com"
-  privateToken: "kEXZHti27y8zJDyWahaC"
+  url: "http://git.alpha.saas.hand-china.com"
+  privateToken: "d7izawnyte1qj_upmw2g"
 eureka:
   instance:
     preferIpAddress: true
@@ -32,4 +32,4 @@ ribbon:
   ReadTimeout: 50000
 logging:
   level:
-    io.choerodon.event.consumer: debug
+    io.choerodon: ${LOGGING_LEVEL_TEST:info}

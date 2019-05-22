@@ -11,21 +11,18 @@
     <parent>
         <groupId>io.choerodon</groupId>
         <artifactId>choerodon-framework-parent</artifactId>
-        <version>0.9.0.RELEASE</version>
+        <version>0.11.0.RELEASE</version>
+
     </parent>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
         <finalName>app</finalName>
     </build>
 
     <properties>
-        <choerodon.starters.version>0.10.0.RELEASE</choerodon.starters.version>
+        <choerodon.starters.version>0.11.0.RELEASE</choerodon.starters.version>
+        <choerodon.serviceBuild>true</choerodon.serviceBuild>
+        <choerodon.mainClass>io.choerodon.gitlab.GitlabServiceApplication</choerodon.mainClass>
     </properties>
 
 
@@ -57,17 +54,17 @@
         </dependency>
         <dependency>
             <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-hitoa</artifactId>
-            <version>${choerodon.starters.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
             <artifactId>choerodon-gitlab4j-api</artifactId>
             <version>${choerodon.starters.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.choerodon</groupId>
+            <artifactId>choerodon-starter-metric</artifactId>
+            <version>${choerodon.starters.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

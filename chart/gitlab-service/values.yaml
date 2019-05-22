@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: registry.choerodon.com.cn/choerodon/gitlab-service
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 metrics:
   path: /actuator/prometheus
@@ -16,15 +16,17 @@ logs:
   parser: spring-boot
 
 preJob:
+  timeout: 300
+  image: registry.cn-hangzhou.aliyuncs.com/choerodon-tools/dbtool:0.6.2
   preConfig:
     enable: true
     configFile: application.yml
-    mysql:
-      host: localhost
-      port: 3306
-      database: manager_service
-      username: root
-      password: choerodon
+    configType: k8s
+    registerHost: http://register-server:8000
+    datasource:
+      url: jdbc:mysql://localhost:3306/manager_service?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      username: choerodon
+      password: 123456
 
 deployment:
   managementPort: 8071
