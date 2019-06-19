@@ -85,7 +85,7 @@ public class HookController {
             @ApiParam(value = "userId")
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(hookService.listProjectHook(projectId, userId))
-                .map(target -> new ResponseEntity<>(target, HttpStatus.NO_CONTENT))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.projects.get.hook"));
     }
 }

@@ -7,7 +7,7 @@ spring:
     sampler:
       percentage: 1.0
 gitlab:
-  url: "http://git.alpha.saas.hand-china.com"
+  url: "http://git.example.com/"
   privateToken: "d7izawnyte1qj_upmw2g"
 eureka:
   instance:
