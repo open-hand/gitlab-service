@@ -1,4 +1,4 @@
-package io.choerodon.gitlab.api.dto;
+package io.choerodon.gitlab.api.vo;
 
 import javax.validation.constraints.NotNull;
 
@@ -7,7 +7,7 @@ import org.gitlab4j.api.models.Visibility;
 /**
  * Created by younger on 2018/4/2.
  */
-public class GroupDTO {
+public class GroupVO {
     private Integer id;
     @NotNull
     private String name;

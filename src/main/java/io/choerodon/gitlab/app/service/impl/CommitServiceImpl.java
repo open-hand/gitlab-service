@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.choerodon.gitlab.api.dto.CommitDTO;
+import io.choerodon.gitlab.api.vo.CommitVO;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.CommitStatuse;
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.CommitStatuseDTO;
+import io.choerodon.gitlab.api.vo.CommitStatuseVO;
 import io.choerodon.gitlab.app.service.CommitService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -31,36 +31,36 @@ public class CommitServiceImpl implements CommitService {
     private Gitlab4jClient gitlab4jclient;
 
     @Override
-    public CommitDTO getCommit(Integer projectId, String sha, Integer userId) {
+    public CommitVO getCommit(Integer projectId, String sha, Integer userId) {
         try {
             Commit commit = gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, sha);
-            CommitDTO commitDTO = new CommitDTO();
-            BeanUtils.copyProperties(commit, commitDTO, "createdAt", "committedDate");
+            CommitVO commitVO = new CommitVO();
+            BeanUtils.copyProperties(commit, commitVO, "createdAt", "committedDate");
             if (commit.getCreatedAt() != null) {
-                commitDTO.setCreatedAt(formatter.format(commit.getCreatedAt()));
+                commitVO.setCreatedAt(formatter.format(commit.getCreatedAt()));
             }
             if (commit.getCommittedDate() != null) {
-                commitDTO.setCommittedDate(formatter.format(commit.getCommittedDate()));
+                commitVO.setCommittedDate(formatter.format(commit.getCommittedDate()));
             }
-            return commitDTO;
+            return commitVO;
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
     }
 
     @Override
-    public List<CommitStatuseDTO> getCommitStatuse(Integer projectId, String sha, Integer userId) {
+    public List<CommitStatuseVO> getCommitStatuse(Integer projectId, String sha, Integer userId) {
         try {
             List<CommitStatuse> commitStatuses = gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommitStatus(projectId, sha);
-            List<CommitStatuseDTO> commmitStatuseDTOS = new ArrayList<>();
+            List<CommitStatuseVO> commmitStatuseDTOS = new ArrayList<>();
             commitStatuses.stream().forEach(commitStatuse -> {
-                CommitStatuseDTO commitStatuseDTO = new CommitStatuseDTO();
-                BeanUtils.copyProperties(commitStatuse, commitStatuseDTO);
+                CommitStatuseVO commitStatuseVO = new CommitStatuseVO();
+                BeanUtils.copyProperties(commitStatuse, commitStatuseVO);
                 if (commitStatuse.getCreated_at() != null && commitStatuse.getStarted_at() != null) {
-                    commitStatuseDTO.setCreated_at(formatter.format(commitStatuse.getCreated_at()));
-                    commitStatuseDTO.setStarted_at(formatter.format(commitStatuse.getStarted_at()));
+                    commitStatuseVO.setCreated_at(formatter.format(commitStatuse.getCreated_at()));
+                    commitStatuseVO.setStarted_at(formatter.format(commitStatuse.getStarted_at()));
                 }
-                commmitStatuseDTOS.add(commitStatuseDTO);
+                commmitStatuseDTOS.add(commitStatuseVO);
             });
             return commmitStatuseDTOS;
 

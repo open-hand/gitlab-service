@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.MemberDto;
-import io.choerodon.gitlab.api.dto.VariableDTO;
+import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
 import io.choerodon.gitlab.app.service.ProjectService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import org.gitlab4j.api.GitLabApi;
@@ -132,7 +132,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Map<String, Object>> batchCreateVariable(Integer projectId, List<VariableDTO> list, Integer userId) {
+    public List<Map<String, Object>> batchCreateVariable(Integer projectId, List<VariableVO> list, Integer userId) {
         List<Variable> oldlist = getVarible(projectId, userId);
         return list.stream().filter(t -> t.getValue() != null).map(v -> {
             try {
@@ -222,7 +222,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Member createMember(Integer projectId, MemberDto member) {
+    public Member createMember(Integer projectId, MemberVO member) {
         try {
             return gitlab4jclient.getGitLabApi().getProjectApi()
                     .addMember(projectId, member.getUserId(), member.getAccessLevel());
@@ -232,7 +232,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Member> updateMembers(Integer projectId, List<MemberDto> list) {
+    public List<Member> updateMembers(Integer projectId, List<MemberVO> list) {
         return list.stream().map(m -> {
             try {
                 return gitlab4jclient.getGitLabApi().getProjectApi()

@@ -1,7 +1,7 @@
 package io.choerodon.gitlab.app.service;
 
-import io.choerodon.gitlab.api.dto.MemberDto;
-import io.choerodon.gitlab.api.dto.VariableDTO;
+import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
 import org.gitlab4j.api.models.DeployKey;
 import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
@@ -66,7 +66,7 @@ public interface ProjectService {
      * @return
      */
     List<Map<String, Object>> batchCreateVariable(Integer projectId,
-                                                  List<VariableDTO> list,
+                                                  List<VariableVO> list,
                                                   Integer userId);
 
     /**
@@ -169,7 +169,7 @@ public interface ProjectService {
      * @param member    成员信息
      * @return Member
      */
-    Member createMember(Integer projectId, MemberDto member);
+    Member createMember(Integer projectId, MemberVO member);
 
     /**
      * 添加项目成员
@@ -178,7 +178,7 @@ public interface ProjectService {
      * @param list    成员信息
      * @return Member
      */
-    List<Member> updateMembers(Integer projectId, List<MemberDto> list);
+    List<Member> updateMembers(Integer projectId, List<MemberVO> list);
 
     /**
      * 移除项目成员

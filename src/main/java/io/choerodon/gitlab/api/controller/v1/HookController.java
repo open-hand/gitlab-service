@@ -3,6 +3,8 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.Optional;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.ProjectHook;
@@ -40,7 +42,7 @@ public class HookController {
             @ApiParam(value = "userId")
             @RequestParam(required = false) Integer userId,
             @ApiParam(value = "projectHook对象", required = true)
-            @RequestBody ProjectHook projectHook) {
+            @RequestBody @Valid ProjectHook projectHook) {
         return Optional.ofNullable(hookService.createProjectHook(projectId, projectHook, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.add.hook"));

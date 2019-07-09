@@ -1,4 +1,4 @@
-package io.choerodon.gitlab.api.dto;
+package io.choerodon.gitlab.api.vo;
 
 import javax.validation.constraints.NotNull;
 
@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
  * Date:  9:51 2019/3/12
  * Description:
  */
-public class VariableDTO {
+public class VariableVO {
     @NotNull
     private String key;
     @NotNull

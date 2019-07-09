@@ -1,4 +1,4 @@
-package io.choerodon.gitlab.domain.config;
+package io.choerodon.gitlab.infra.common.config;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;

@@ -2,18 +2,17 @@ package io.choerodon.gitlab.app.service;
 
 import java.util.List;
 
+import io.choerodon.gitlab.api.vo.MileStoneVO;
 import org.gitlab4j.api.models.Milestone;
-
-import io.choerodon.gitlab.api.dto.MileStoneDto;
 
 public interface MileStoneService {
     /**
      * 创建milestone
      *
-     * @param mileStoneDto milestone对象
+     * @param mileStoneVO milestone对象
      * @return Milestone
      */
-    Milestone createMilestone(MileStoneDto mileStoneDto);
+    Milestone createMilestone(MileStoneVO mileStoneVO);
 
     /**
      * 关闭milestone
@@ -36,10 +35,10 @@ public interface MileStoneService {
     /**
      * 更新milestone
      *
-     * @param mileStoneDto mileStoneDto对象
+     * @param mileStoneVO mileStoneDto对象
      * @return Milestone
      */
-    Milestone updateMilestone(MileStoneDto mileStoneDto);
+    Milestone updateMilestone(MileStoneVO mileStoneVO);
 
     /**
      * 查询milestones列表
@@ -54,10 +53,10 @@ public interface MileStoneService {
     /**
      * 通过projectId,milestoneState和search查询milestones列表
      *
-     * @param mileStoneDto MileStoneDto对象
+     * @param mileStoneVO MileStoneDto对象
      * @return List
      */
-    List<Milestone> listMileStoneByOptions(MileStoneDto mileStoneDto);
+    List<Milestone> listMileStoneByOptions(MileStoneVO mileStoneVO);
 
 
     /**

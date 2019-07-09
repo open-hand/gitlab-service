@@ -2,12 +2,12 @@ package io.choerodon.gitlab.app.service.impl;
 
 import java.util.List;
 
+import io.choerodon.gitlab.api.vo.MileStoneVO;
 import org.gitlab4j.api.MileStonesApi;
 import org.gitlab4j.api.models.Milestone;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.MileStoneDto;
 import io.choerodon.gitlab.app.service.MileStoneService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -22,16 +22,16 @@ public class MileStoneServiceImpl implements MileStoneService {
     }
 
     @Override
-    public Milestone createMilestone(MileStoneDto mileStoneDto) {
+    public Milestone createMilestone(MileStoneVO mileStoneVO) {
         try {
             return gitlab4jclient
                     .getGitLabApi()
                     .getMileStonesApi()
-                    .createMilestone(mileStoneDto.getProjectId(),
-                            mileStoneDto.getTitle(),
-                            mileStoneDto.getDescription(),
-                            mileStoneDto.getDueDate(),
-                            mileStoneDto.getStartDate());
+                    .createMilestone(mileStoneVO.getProjectId(),
+                            mileStoneVO.getTitle(),
+                            mileStoneVO.getDescription(),
+                            mileStoneVO.getDueDate(),
+                            mileStoneVO.getStartDate());
         } catch (Exception e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -64,18 +64,18 @@ public class MileStoneServiceImpl implements MileStoneService {
     }
 
     @Override
-    public Milestone updateMilestone(MileStoneDto mileStoneDto) {
+    public Milestone updateMilestone(MileStoneVO mileStoneVO) {
         try {
             return gitlab4jclient
                     .getGitLabApi()
                     .getMileStonesApi()
-                    .updateMilestone(mileStoneDto.getProjectId(),
-                            mileStoneDto.getMilestoneId(),
-                            mileStoneDto.getTitle(),
-                            mileStoneDto.getDescription(),
-                            mileStoneDto.getDueDate(),
-                            mileStoneDto.getStartDate(),
-                            mileStoneDto.getMilestoneState());
+                    .updateMilestone(mileStoneVO.getProjectId(),
+                            mileStoneVO.getMilestoneId(),
+                            mileStoneVO.getTitle(),
+                            mileStoneVO.getDescription(),
+                            mileStoneVO.getDueDate(),
+                            mileStoneVO.getStartDate(),
+                            mileStoneVO.getMilestoneState());
         } catch (Exception e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -99,29 +99,29 @@ public class MileStoneServiceImpl implements MileStoneService {
     }
 
     @Override
-    public List<Milestone> listMileStoneByOptions(MileStoneDto mileStoneDto) {
+    public List<Milestone> listMileStoneByOptions(MileStoneVO mileStoneVO) {
         MileStonesApi mileStonesApi = gitlab4jclient.getGitLabApi(null).getMileStonesApi();
         try {
-            if (mileStoneDto.getProjectId() != null) {
-                if (mileStoneDto.getMilestoneState() != null) {
-                    if (mileStoneDto.getSearch() != null) {
+            if (mileStoneVO.getProjectId() != null) {
+                if (mileStoneVO.getMilestoneState() != null) {
+                    if (mileStoneVO.getSearch() != null) {
                         return mileStonesApi.getMilestones(
-                                mileStoneDto.getProjectId(),
-                                mileStoneDto.getMilestoneState(),
-                                mileStoneDto.getSearch());
+                                mileStoneVO.getProjectId(),
+                                mileStoneVO.getMilestoneState(),
+                                mileStoneVO.getSearch());
                     } else {
                         return mileStonesApi.getMilestones(
-                                mileStoneDto.getProjectId(),
-                                mileStoneDto.getMilestoneState());
+                                mileStoneVO.getProjectId(),
+                                mileStoneVO.getMilestoneState());
                     }
                 } else {
-                    if (mileStoneDto.getSearch() != null) {
+                    if (mileStoneVO.getSearch() != null) {
                         return mileStonesApi.getMilestones(
-                                mileStoneDto.getProjectId(),
-                                mileStoneDto.getSearch());
+                                mileStoneVO.getProjectId(),
+                                mileStoneVO.getSearch());
                     }
                 }
-                return listMilestones(mileStoneDto.getProjectId(), null, null);
+                return listMilestones(mileStoneVO.getProjectId(), null, null);
             } else {
                 throw new FeignException("error.milestones.query");
             }

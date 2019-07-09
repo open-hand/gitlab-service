@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.gitlab4j.api.models.Pipeline;
 
-import io.choerodon.gitlab.api.dto.PipelineDto;
+import io.choerodon.gitlab.api.vo.PipelineVO;
 
 
 /**
@@ -40,7 +40,7 @@ public interface PipelineService {
      * @param userId   用户Id
      * @return Pipeline
      */
-    PipelineDto queryPipeline(Integer projectId, Integer pipelineId, Integer userId);
+    PipelineVO queryPipeline(Integer projectId, Integer pipelineId, Integer userId);
 
     /**
      * Retry jobs in a pipeline

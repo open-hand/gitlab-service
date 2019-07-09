@@ -14,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.GroupDTO;
-import io.choerodon.gitlab.api.dto.MemberDto;
+import io.choerodon.gitlab.api.vo.GroupVO;
+import io.choerodon.gitlab.api.vo.MemberVO;
 import io.choerodon.gitlab.app.service.GroupService;
 
 @RestController
@@ -50,9 +50,9 @@ public class GroupsController {
      */
     @ApiOperation(value = "创建组")
     @PostMapping
-    public ResponseEntity<GroupDTO> create(
+    public ResponseEntity<GroupVO> create(
             @ApiParam(value = "组对象信息", required = true)
-            @RequestBody @Valid GroupDTO group,
+            @RequestBody @Valid GroupVO group,
             @ApiParam(value = "用户userId")
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(groupService.createGroup(group, userId))
@@ -138,7 +138,7 @@ public class GroupsController {
             @ApiParam(value = "组ID", required = true)
             @PathVariable Integer groupId,
             @ApiParam(value = "成员信息", required = true)
-            @RequestBody @Valid MemberDto member) {
+            @RequestBody @Valid MemberVO member) {
         return Optional.ofNullable(groupService.createMember(groupId, member))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.groups.member.create"));
@@ -157,7 +157,7 @@ public class GroupsController {
             @ApiParam(value = "组ID", required = true)
             @PathVariable Integer groupId,
             @ApiParam(value = "成员信息", required = true)
-            @RequestBody @Valid io.choerodon.gitlab.api.dto.MemberDto member) {
+            @RequestBody @Valid MemberVO member) {
         return Optional.ofNullable(groupService.updateMember(groupId, member))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.groups.member.update"));

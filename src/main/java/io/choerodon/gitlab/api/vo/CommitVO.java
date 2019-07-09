@@ -1,4 +1,4 @@
-package io.choerodon.gitlab.api.dto;
+package io.choerodon.gitlab.api.vo;
 
 import org.gitlab4j.api.models.Author;
 import org.gitlab4j.api.models.CommitStats;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author zmf
  */
-public class CommitDTO {
+public class CommitVO {
     private Author author;
     private Date authoredDate;
     private String authorEmail;

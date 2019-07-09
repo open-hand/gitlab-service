@@ -1,4 +1,4 @@
-package io.choerodon.gitlab.api.dto;
+package io.choerodon.gitlab.api.vo;
 
 import java.util.Date;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.gitlab4j.api.Constants;
 /**
  * Created by zzy on 2018/3/21.
  */
-public class IssueDto {
+public class IssueVO {
     private Integer projectId;
     private String title;
     private Integer issueIid;

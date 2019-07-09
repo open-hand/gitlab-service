@@ -1,4 +1,4 @@
-package io.choerodon.gitlab.api.dto;
+package io.choerodon.gitlab.api.vo;
 
 import java.util.Date;
 
@@ -7,7 +7,7 @@ import org.gitlab4j.api.Constants;
 /**
  * Created by zzy on 2018/3/21.
  */
-public class MileStoneDto {
+public class MileStoneVO {
 
     private Integer projectId;
     private Integer milestoneId;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.gitlab4j.api.models.Label;
 
-import io.choerodon.gitlab.api.dto.LabelDto;
+import io.choerodon.gitlab.api.vo.LabelVO;
 
 public interface LabelsService {
     /**
@@ -20,18 +20,18 @@ public interface LabelsService {
     /**
      * 创建labels
      *
-     * @param labelDto label对象
+     * @param labelVO label对象
      * @return Label
      */
-    Label createLabel(LabelDto labelDto);
+    Label createLabel(LabelVO labelVO);
 
     /**
      * 创建labels
      *
-     * @param labelDto label对象
+     * @param labelVO label对象
      * @return Label
      */
-    Label updateLabel(LabelDto labelDto);
+    Label updateLabel(LabelVO labelVO);
 
     /**
      * 删除labels

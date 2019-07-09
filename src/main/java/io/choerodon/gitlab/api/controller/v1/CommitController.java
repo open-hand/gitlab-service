@@ -3,7 +3,7 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Optional;
 
-import io.choerodon.gitlab.api.dto.CommitDTO;
+import io.choerodon.gitlab.api.vo.CommitVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.CommitStatuseDTO;
+import io.choerodon.gitlab.api.vo.CommitStatuseVO;
 import io.choerodon.gitlab.app.service.CommitService;
 
 /**
@@ -36,7 +36,7 @@ public class CommitController {
      */
     @ApiOperation(value = "查询某个commit的具体信息")
     @GetMapping
-    public ResponseEntity<CommitDTO> getPipeline(
+    public ResponseEntity<CommitVO> getPipeline(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "sha", required = true)
@@ -59,7 +59,7 @@ public class CommitController {
      */
     @ApiOperation(value = "查询某个commit的Statuse")
     @GetMapping(value = "/statuse")
-    public ResponseEntity<List<CommitStatuseDTO>> getCommitStatuse(
+    public ResponseEntity<List<CommitStatuseVO>> getCommitStatuse(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "sha", required = true)
