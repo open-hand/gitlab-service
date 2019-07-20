@@ -156,7 +156,6 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     @Override
     public RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName) {
-        System.out.println(projectId+":"+path+":"+content+":"+commitMessage+":"+userId+":"+branchName);
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         RepositoryFile repositoryFile = new RepositoryFile();
         try {
