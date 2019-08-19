@@ -26,6 +26,7 @@ public class GitlabHealthy implements HealthIndicator {
 
     @Override
     public Health health() {
+        LOGGER.info("健康检查探测");
         GitLabApi gitLabApi = new GitLabApi(url, privateToken);
         int errorCode = 0;
         try {
