@@ -164,8 +164,7 @@ public class RepositoryServiceImpl implements RepositoryService {
             repositoryFile = gitLabApi.getRepositoryFileApi().createFile(
                     repositoryFile, projectId, StringUtils.isEmpty(branchName) ? "master" : branchName, "ADD FILE");
         } catch (GitLabApiException e) {
-            logger.info("状态码为: " + e.getHttpStatus());
-            throw new FeignException(e);
+            throw new FeignException(e.getMessage(),e);
         }
         return repositoryFile;
     }
@@ -182,7 +181,7 @@ public class RepositoryServiceImpl implements RepositoryService {
             if (e.getHttpStatus() == 200) {
                 return repositoryFile;
             } else {
-                throw new FeignException(e);
+                throw new FeignException(e.getMessage(),e);
             }
         }
         return repositoryFile;

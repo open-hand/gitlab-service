@@ -2,8 +2,11 @@ package io.choerodon.gitlab.infra.common.config;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.app.service.impl.GroupServiceImpl;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -11,6 +14,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GitlabHealthy implements HealthIndicator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GitlabHealthy.class);
+
 
     @Value("${gitlab.url}")
     private String url;
@@ -20,6 +26,7 @@ public class GitlabHealthy implements HealthIndicator {
 
     @Override
     public Health health() {
+        LOGGER.info("健康检查探测");
         GitLabApi gitLabApi = new GitLabApi(url, privateToken);
         int errorCode = 0;
         try {
