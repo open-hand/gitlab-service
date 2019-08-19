@@ -43,7 +43,7 @@ spec:
              command: ["/bin/sh","-c","curl -s localhost:{{ .Values.deployment.managementPort }}/actuator/health --fail && nc -z localhost {{ .Values.service.port }}"]
             failureThreshold: 3
             initialDelaySeconds: 60
-            periodSeconds: 10
+            periodSeconds: 60
             successThreshold: 1
             timeoutSeconds: 120
           resources:
