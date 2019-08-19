@@ -8,6 +8,8 @@ import org.gitlab4j.api.models.Branch;
 import org.gitlab4j.api.models.CompareResults;
 import org.gitlab4j.api.models.RepositoryFile;
 import org.gitlab4j.api.models.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.FeignException;
@@ -18,6 +20,8 @@ import org.springframework.util.StringUtils;
 
 @Service
 public class RepositoryServiceImpl implements RepositoryService {
+
+    private static final Logger logger = LoggerFactory.getLogger(RepositoryServiceImpl.class);
 
     private Gitlab4jClient gitlab4jclient;
 
@@ -160,7 +164,8 @@ public class RepositoryServiceImpl implements RepositoryService {
             repositoryFile = gitLabApi.getRepositoryFileApi().createFile(
                     repositoryFile, projectId, StringUtils.isEmpty(branchName) ? "master" : branchName, "ADD FILE");
         } catch (GitLabApiException e) {
-            return null;
+            logger.info("状态码为: " + e.getHttpStatus());
+            throw new FeignException(e);
         }
         return repositoryFile;
     }
@@ -177,7 +182,7 @@ public class RepositoryServiceImpl implements RepositoryService {
             if (e.getHttpStatus() == 200) {
                 return repositoryFile;
             } else {
-                return null;
+                throw new FeignException(e);
             }
         }
         return repositoryFile;
