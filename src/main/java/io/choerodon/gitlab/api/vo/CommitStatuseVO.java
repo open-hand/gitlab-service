@@ -1,8 +1,8 @@
-package io.choerodon.gitlab.api.dto;
+package io.choerodon.gitlab.api.vo;
 
 import org.gitlab4j.api.models.Author;
 
-public class CommitStatuseDTO {
+public class CommitStatuseVO {
     private String status;
     private String created_at;
     private String started_at;

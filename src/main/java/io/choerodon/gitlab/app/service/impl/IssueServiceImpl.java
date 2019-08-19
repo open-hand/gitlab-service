@@ -11,7 +11,7 @@ import org.gitlab4j.api.models.Issue;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.IssueDto;
+import io.choerodon.gitlab.api.vo.IssueVO;
 import io.choerodon.gitlab.app.service.IssueService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -25,22 +25,22 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public Issue createIssue(IssueDto issueDto) {
+    public Issue createIssue(IssueVO issueVO) {
         try {
             return gitlab4jclient
                     .getGitLabApi(null)
                     .getIssuesApi()
-                    .createIssue(issueDto.getProjectId(),
-                            issueDto.getTitle(),
-                            issueDto.getDescription(),
-                            issueDto.getConfidential(),
-                            issueDto.getAssigneeIds(),
-                            issueDto.getMilestoneId(),
-                            issueDto.getLabels(),
-                            issueDto.getCreatedAt(),
-                            issueDto.getDueDate(),
-                            issueDto.getMergeRequestToResolveId(),
-                            issueDto.getDiscussionToResolveId());
+                    .createIssue(issueVO.getProjectId(),
+                            issueVO.getTitle(),
+                            issueVO.getDescription(),
+                            issueVO.getConfidential(),
+                            issueVO.getAssigneeIds(),
+                            issueVO.getMilestoneId(),
+                            issueVO.getLabels(),
+                            issueVO.getCreatedAt(),
+                            issueVO.getDueDate(),
+                            issueVO.getMergeRequestToResolveId(),
+                            issueVO.getDiscussionToResolveId());
 
         } catch (Exception e) {
             throw new FeignException(e.getMessage(), e);
@@ -48,27 +48,27 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public Map<Long, Issue> batchCreateIssue(Map<Long, IssueDto> issueDtos, Integer userId) {
+    public Map<Long, Issue> batchCreateIssue(Map<Long, IssueVO> issueDtos, Integer userId) {
         Map<Long, Issue> map = new HashMap<>();
         for (Object o : issueDtos.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
             Long id = Long.valueOf(String.valueOf(entry.getKey()));
-            IssueDto issueDto = issueDtos.get(id);
+            IssueVO issueVO = issueDtos.get(id);
             try {
                 Issue issue = gitlab4jclient
                         .getGitLabApi(userId)
                         .getIssuesApi()
-                        .createIssue(issueDto.getProjectId(),
-                                issueDto.getTitle(),
-                                issueDto.getDescription(),
-                                issueDto.getConfidential(),
-                                issueDto.getAssigneeIds(),
-                                issueDto.getMilestoneId(),
-                                issueDto.getLabels(),
-                                issueDto.getCreatedAt(),
-                                issueDto.getDueDate(),
-                                issueDto.getMergeRequestToResolveId(),
-                                issueDto.getDiscussionToResolveId());
+                        .createIssue(issueVO.getProjectId(),
+                                issueVO.getTitle(),
+                                issueVO.getDescription(),
+                                issueVO.getConfidential(),
+                                issueVO.getAssigneeIds(),
+                                issueVO.getMilestoneId(),
+                                issueVO.getLabels(),
+                                issueVO.getCreatedAt(),
+                                issueVO.getDueDate(),
+                                issueVO.getMergeRequestToResolveId(),
+                                issueVO.getDiscussionToResolveId());
                 map.put(id, issue);
             } catch (GitLabApiException e) {
                 throw new FeignException(e.getMessage(), e);
@@ -78,22 +78,22 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public Issue updateIssue(IssueDto issueDto) {
+    public Issue updateIssue(IssueVO issueVO) {
         try {
             return gitlab4jclient
                     .getGitLabApi(null)
                     .getIssuesApi()
-                    .updateIssue(issueDto.getProjectId(),
-                            issueDto.getIssueIid(),
-                            issueDto.getTitle(),
-                            issueDto.getDescription(),
-                            issueDto.getConfidential(),
-                            issueDto.getAssigneeIds(),
-                            issueDto.getMilestoneId(),
-                            issueDto.getLabels(),
-                            issueDto.getStateEvent(),
-                            issueDto.getUpdateAt(),
-                            issueDto.getDueDate());
+                    .updateIssue(issueVO.getProjectId(),
+                            issueVO.getIssueIid(),
+                            issueVO.getTitle(),
+                            issueVO.getDescription(),
+                            issueVO.getConfidential(),
+                            issueVO.getAssigneeIds(),
+                            issueVO.getMilestoneId(),
+                            issueVO.getLabels(),
+                            issueVO.getStateEvent(),
+                            issueVO.getUpdateAt(),
+                            issueVO.getDueDate());
 
         } catch (Exception e) {
             throw new FeignException(e.getMessage(), e);
@@ -101,21 +101,21 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public void batchUpdateIssue(Integer userId, List<IssueDto> issueDtos) {
+    public void batchUpdateIssue(Integer userId, List<IssueVO> issueVOS) {
         try {
             GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
-            for (IssueDto issueDto : issueDtos) {
-                gitLabApi.getIssuesApi().updateIssue(issueDto.getProjectId(),
-                        issueDto.getIssueIid(),
-                        issueDto.getTitle(),
-                        issueDto.getDescription(),
-                        issueDto.getConfidential(),
-                        issueDto.getAssigneeIds(),
-                        issueDto.getMilestoneId(),
-                        issueDto.getLabels(),
-                        issueDto.getStateEvent(),
-                        issueDto.getUpdateAt(),
-                        issueDto.getDueDate());
+            for (IssueVO issueVO : issueVOS) {
+                gitLabApi.getIssuesApi().updateIssue(issueVO.getProjectId(),
+                        issueVO.getIssueIid(),
+                        issueVO.getTitle(),
+                        issueVO.getDescription(),
+                        issueVO.getConfidential(),
+                        issueVO.getAssigneeIds(),
+                        issueVO.getMilestoneId(),
+                        issueVO.getLabels(),
+                        issueVO.getStateEvent(),
+                        issueVO.getUpdateAt(),
+                        issueVO.getDueDate());
             }
         } catch (Exception e) {
             throw new FeignException(e.getMessage(), e);

@@ -13,8 +13,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.GroupDTO;
-import io.choerodon.gitlab.api.dto.MemberDto;
+import io.choerodon.gitlab.api.vo.GroupVO;
+import io.choerodon.gitlab.api.vo.MemberVO;
 import io.choerodon.gitlab.app.service.GroupService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -30,7 +30,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupDTO createGroup(GroupDTO group, Integer userId) {
+    public GroupVO createGroup(GroupVO group, Integer userId) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             GroupApi groupApi = gitLabApi.getGroupApi();
@@ -38,16 +38,16 @@ public class GroupServiceImpl implements GroupService {
                     null, null, group.getVisibility(), null,
                     group.getRequestAccessEnabled(), group.getParentId(), group.getSharedRunnersMinutesLimit());
             Group group1 = gitLabApi.getGroupApi().getGroup(group.getPath());
-            GroupDTO groupDTO = new GroupDTO();
-            BeanUtils.copyProperties(group1, groupDTO);
-            return groupDTO;
+            GroupVO groupVO = new GroupVO();
+            BeanUtils.copyProperties(group1, groupVO);
+            return groupVO;
         } catch (GitLabApiException e) {
             if (e.getHttpStatus() == 404) {
                 try {
-                    GroupDTO groupDTO = new GroupDTO();
+                    GroupVO groupVO = new GroupVO();
                     Group group1 = gitLabApi.getGroupApi().getGroup(group.getPath());
-                    BeanUtils.copyProperties(group1, groupDTO);
-                    return groupDTO;
+                    BeanUtils.copyProperties(group1, groupVO);
+                    return groupVO;
                 } catch (GitLabApiException e1) {
                     LOGGER.info(e.getMessage());
                     throw new FeignException(e.getMessage(), e);
@@ -139,7 +139,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Member createMember(Integer groupId, MemberDto member) {
+    public Member createMember(Integer groupId, MemberVO member) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         try {
             return gitLabApi.getGroupApi().addMember(groupId, member.getUserId(), member.getAccessLevel(),
@@ -150,7 +150,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Member updateMember(Integer groupId, MemberDto member) {
+    public Member updateMember(Integer groupId, MemberVO member) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         try {
             return gitLabApi.getGroupApi().updateMember(groupId, member.getUserId(), member.getAccessLevel(),

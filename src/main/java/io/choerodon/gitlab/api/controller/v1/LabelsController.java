@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.LabelDto;
+import io.choerodon.gitlab.api.vo.LabelVO;
 import io.choerodon.gitlab.app.service.LabelsService;
 
 @RestController
@@ -50,15 +50,15 @@ public class LabelsController {
     /**
      * 创建labels
      *
-     * @param labelDto label对象
+     * @param labelVO label对象
      * @return Label
      */
     @ApiOperation(value = "创建labels")
     @PostMapping
     public ResponseEntity<Label> create(
             @ApiParam(value = "label对象", required = true)
-            @RequestBody LabelDto labelDto) {
-        return Optional.ofNullable(labelsService.createLabel(labelDto))
+            @RequestBody LabelVO labelVO) {
+        return Optional.ofNullable(labelsService.createLabel(labelVO))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.label.create"));
 
@@ -68,15 +68,15 @@ public class LabelsController {
     /**
      * 创建labels
      *
-     * @param labelDto label对象
+     * @param labelVO label对象
      * @return Label
      */
     @ApiOperation(value = "更新labels")
     @PutMapping
     public ResponseEntity<Label> update(
             @ApiParam(value = "label对象", required = true)
-            @RequestBody LabelDto labelDto) {
-        return Optional.ofNullable(labelsService.updateLabel(labelDto))
+            @RequestBody LabelVO labelVO) {
+        return Optional.ofNullable(labelsService.updateLabel(labelVO))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.label.update"));
     }

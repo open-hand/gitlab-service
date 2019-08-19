@@ -7,7 +7,7 @@ import org.gitlab4j.api.models.Label;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.LabelDto;
+import io.choerodon.gitlab.api.vo.LabelVO;
 import io.choerodon.gitlab.app.service.LabelsService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -39,33 +39,33 @@ public class LabelsServiceImpl implements LabelsService {
     }
 
     @Override
-    public Label createLabel(LabelDto labelDto) {
+    public Label createLabel(LabelVO labelVO) {
         try {
             return gitlab4jclient
                     .getGitLabApi(null)
                     .getLabelsApi()
-                    .createLabel(labelDto.getProjectId(),
-                            labelDto.getName(),
-                            labelDto.getColor(),
-                            labelDto.getDescription(),
-                            labelDto.getPriority());
+                    .createLabel(labelVO.getProjectId(),
+                            labelVO.getName(),
+                            labelVO.getColor(),
+                            labelVO.getDescription(),
+                            labelVO.getPriority());
         } catch (Exception e) {
             throw new FeignException(e.getMessage(), e);
         }
     }
 
     @Override
-    public Label updateLabel(LabelDto labelDto) {
+    public Label updateLabel(LabelVO labelVO) {
         try {
             return gitlab4jclient
                     .getGitLabApi(null)
                     .getLabelsApi()
-                    .updateLabel(labelDto.getProjectId(),
-                            labelDto.getName(),
-                            labelDto.getNewName(),
-                            labelDto.getColor(),
-                            labelDto.getDescription(),
-                            labelDto.getPriority());
+                    .updateLabel(labelVO.getProjectId(),
+                            labelVO.getName(),
+                            labelVO.getNewName(),
+                            labelVO.getColor(),
+                            labelVO.getDescription(),
+                            labelVO.getPriority());
         } catch (Exception e) {
             throw new FeignException(e.getMessage(), e);
         }

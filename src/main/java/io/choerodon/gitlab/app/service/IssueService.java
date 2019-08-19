@@ -5,17 +5,17 @@ import java.util.Map;
 
 import org.gitlab4j.api.models.Issue;
 
-import io.choerodon.gitlab.api.dto.IssueDto;
+import io.choerodon.gitlab.api.vo.IssueVO;
 
 public interface IssueService {
 
     /**
      * 创建issue
      *
-     * @param issueDto issueDto对象
+     * @param issueVO issueDto对象
      * @return Issue
      */
-    Issue createIssue(IssueDto issueDto);
+    Issue createIssue(IssueVO issueVO);
 
     /**
      * 批量创建issue
@@ -24,23 +24,23 @@ public interface IssueService {
      * @param issueDtos issueDto对象Map
      * @return Map
      */
-    Map<Long, Issue> batchCreateIssue(Map<Long, IssueDto> issueDtos, Integer userId);
+    Map<Long, Issue> batchCreateIssue(Map<Long, IssueVO> issueDtos, Integer userId);
 
     /**
      * 更新issue
      *
-     * @param issueDto issueDto对象
+     * @param issueVO issueDto对象
      * @return Issue
      */
-    Issue updateIssue(IssueDto issueDto);
+    Issue updateIssue(IssueVO issueVO);
 
     /**
      * 批量更新issue
      *
      * @param userId  用户Id
-     * @param issueDtos issueDto对象
+     * @param issueVOS issueDto对象
      */
-    void batchUpdateIssue(Integer userId, List<IssueDto> issueDtos);
+    void batchUpdateIssue(Integer userId, List<IssueVO> issueVOS);
 
     /**
      * 关闭issue

@@ -1,11 +1,11 @@
-package io.choerodon.gitlab.api.dto;
+package io.choerodon.gitlab.api.vo;
 
 import java.util.Date;
 
 import org.gitlab4j.api.models.PipelineStatus;
 import org.gitlab4j.api.models.User;
 
-public class PipelineDto {
+public class PipelineVO {
 
     private Integer id;
     private PipelineStatus status;

@@ -3,6 +3,8 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Milestone;
@@ -11,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.MileStoneDto;
+import io.choerodon.gitlab.api.vo.MileStoneVO;
 import io.choerodon.gitlab.app.service.MileStoneService;
 
 @RestController
@@ -27,16 +29,16 @@ public class MileStoneController {
     /**
      * 创建milestone
      *
-     * @param mileStoneDto milestone对象
+     * @param mileStoneVO milestone对象
      * @return Milestone
      */
     @ApiOperation(value = "创建milestone")
     @PostMapping
     public ResponseEntity<Milestone> create(
             @ApiParam(value = "milestone参数", required = true)
-            @RequestBody MileStoneDto mileStoneDto
+            @RequestBody @Valid MileStoneVO mileStoneVO
     ) {
-        return Optional.ofNullable(mileStoneService.createMilestone(mileStoneDto))
+        return Optional.ofNullable(mileStoneService.createMilestone(mileStoneVO))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.milestone.create"));
     }
@@ -83,15 +85,15 @@ public class MileStoneController {
     /**
      * 更新milestone
      *
-     * @param mileStoneDto mileStoneDto对象
+     * @param mileStoneVO mileStoneDto对象
      * @return Milestone
      */
     @ApiOperation(value = "更新milestone")
     @PutMapping
     public ResponseEntity<Milestone> update(
             @ApiParam(value = "milestone参数", required = true)
-            @RequestBody MileStoneDto mileStoneDto) {
-        return Optional.ofNullable(mileStoneService.updateMilestone(mileStoneDto))
+            @RequestBody @Valid MileStoneVO mileStoneVO) {
+        return Optional.ofNullable(mileStoneService.updateMilestone(mileStoneVO))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.milestone.update"));
     }
@@ -122,15 +124,15 @@ public class MileStoneController {
     /**
      * 通过projectId,milestoneState和search查询milestones列表
      *
-     * @param mileStoneDto MileStoneDto对象
+     * @param mileStoneVO MileStoneDto对象
      * @return List
      */
     @ApiOperation(value = "通过projectId,milestoneState和search查询milestones列表")
     @GetMapping(value = "/options")
     public ResponseEntity<List<Milestone>> listByOptions(
-            @ApiParam(value = "mileStoneDto", required = true)
-            @RequestBody MileStoneDto mileStoneDto) {
-        return Optional.ofNullable(mileStoneService.listMileStoneByOptions(mileStoneDto))
+            @ApiParam(value = "mileStoneVO", required = true)
+            @RequestBody @Valid MileStoneVO mileStoneVO) {
+        return Optional.ofNullable(mileStoneService.listMileStoneByOptions(mileStoneVO))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.milestones.query"));
 

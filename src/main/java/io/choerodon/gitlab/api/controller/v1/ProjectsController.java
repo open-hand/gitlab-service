@@ -1,8 +1,8 @@
 package io.choerodon.gitlab.api.controller.v1;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.MemberDto;
-import io.choerodon.gitlab.api.dto.VariableDTO;
+import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
 import io.choerodon.gitlab.app.service.ProjectService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -142,7 +142,7 @@ public class ProjectsController {
             @ApiParam(value = "项目ID", required = false)
             @RequestParam(value = "userId", required = false) Integer userId,
             @ApiParam(value = "variable信息", required = true)
-            @RequestBody @Valid List<VariableDTO> list) {
+            @RequestBody @Valid List<VariableVO> list) {
         return Optional.ofNullable(projectService.batchCreateVariable(projectId, list, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.variable.batch.create"));
@@ -374,7 +374,7 @@ public class ProjectsController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "projectId") Integer projectId,
             @ApiParam(value = "成员信息", required = true)
-            @RequestBody @Valid MemberDto member) {
+            @RequestBody @Valid MemberVO member) {
         return Optional.ofNullable(projectService.createMember(projectId, member))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.groups.member.create"));
@@ -393,7 +393,7 @@ public class ProjectsController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "projectId") Integer projectId,
             @ApiParam(value = "成员信息", required = true)
-            @RequestBody @Valid List<MemberDto> list) {
+            @RequestBody @Valid List<MemberVO> list) {
         return Optional.ofNullable(projectService.updateMembers(projectId, list))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.groups.member.update"));

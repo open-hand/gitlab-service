@@ -32,7 +32,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public Branch createBranch(Integer projectId, String branchName, String source, Integer userId) {
         try {
-            return this.gitlab4jclient.getGitLabApi(userId).getRepositoryApi()
+            return this.gitlab4jclient.getGitLabApi().getRepositoryApi()
                     .createBranch(projectId, branchName, source);
         } catch (GitLabApiException e) {
             if (e.getMessage().equals("Branch already exists")) {
@@ -124,11 +124,11 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public List<Branch> listBranches(Integer projectId, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userId)
+            return gitlab4jclient.getGitLabApi()
                     .getRepositoryApi()
                     .getBranches(projectId);
         } catch (GitLabApiException e) {
-            throw new FeignException("error.branch.get");
+            throw new FeignException("error.branch.get",e);
         }
     }
 
@@ -156,7 +156,7 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     @Override
     public RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         RepositoryFile repositoryFile = new RepositoryFile();
         try {
             repositoryFile.setContent(content);
@@ -190,7 +190,7 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     @Override
     public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         try {
             gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, "master", "DELETE FILE");
         } catch (GitLabApiException e) {

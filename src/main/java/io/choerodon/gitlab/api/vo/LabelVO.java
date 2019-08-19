@@ -1,9 +1,9 @@
-package io.choerodon.gitlab.api.dto;
+package io.choerodon.gitlab.api.vo;
 
 /**
  * Created by zzy on 2018/3/21.
  */
-public class LabelDto {
+public class LabelVO {
     private Integer projectId;
     private String name;
     private String newName;

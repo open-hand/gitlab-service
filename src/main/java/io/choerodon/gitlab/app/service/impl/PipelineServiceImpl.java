@@ -10,7 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.dto.PipelineDto;
+import io.choerodon.gitlab.api.vo.PipelineVO;
 import io.choerodon.gitlab.app.service.PipelineService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
@@ -48,14 +48,14 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public PipelineDto queryPipeline(Integer projectId, Integer pipelineId, Integer userId) {
+    public PipelineVO queryPipeline(Integer projectId, Integer pipelineId, Integer userId) {
         try {
             Pipeline pipeline = gitlab4jclient.getGitLabApi(userId)
                     .getPipelineApi().getPipeline(projectId, pipelineId);
-            PipelineDto pipelineDto = new PipelineDto();
-            BeanUtils.copyProperties(pipeline, pipelineDto);
-            pipelineDto.setCreated_at(formatter.format(pipeline.getCreatedAt()));
-            return pipelineDto;
+            PipelineVO pipelineVO = new PipelineVO();
+            BeanUtils.copyProperties(pipeline, pipelineVO);
+            pipelineVO.setCreated_at(formatter.format(pipeline.getCreatedAt()));
+            return pipelineVO;
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }

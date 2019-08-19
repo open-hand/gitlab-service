@@ -7,8 +7,8 @@ spring:
     sampler:
       percentage: 1.0
 gitlab:
-  url: "http://git.example.com/"
-  privateToken: "d7izawnyte1qj_upmw2g"
+  url: "http://git.alpha.saas.hand-china.com"
+  privateToken: "UNSNbuzuoN6faR1LscJi"
 eureka:
   instance:
     preferIpAddress: true
@@ -16,7 +16,7 @@ eureka:
     leaseExpirationDurationInSeconds: 3
   client:
     serviceUrl:
-      defaultZone: http://localhost:8000/eureka/
+      defaultZone: http://localhost:8000/eureka/,http://localhost:8010/eureka/
     registryFetchIntervalSeconds: 1
 feign:
   hystrix:

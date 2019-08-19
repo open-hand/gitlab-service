@@ -1,8 +1,8 @@
-package io.choerodon.gitlab.api.dto;
+package io.choerodon.gitlab.api.vo;
 
 import javax.validation.constraints.NotNull;
 
-public class MemberDto {
+public class MemberVO {
     @NotNull
     private Integer userId;
     @NotNull

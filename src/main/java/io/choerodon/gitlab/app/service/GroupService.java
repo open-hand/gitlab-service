@@ -6,8 +6,8 @@ import org.gitlab4j.api.models.Group;
 import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
 
-import io.choerodon.gitlab.api.dto.GroupDTO;
-import io.choerodon.gitlab.api.dto.MemberDto;
+import io.choerodon.gitlab.api.vo.GroupVO;
+import io.choerodon.gitlab.api.vo.MemberVO;
 
 public interface GroupService {
     /**
@@ -25,7 +25,7 @@ public interface GroupService {
      * @param userId 用户名
      * @return Group
      */
-    GroupDTO createGroup(GroupDTO group, Integer userId);
+    GroupVO createGroup(GroupVO group, Integer userId);
 
 
     /**
@@ -69,7 +69,7 @@ public interface GroupService {
      * @param member  成员信息
      * @return Member
      */
-    Member createMember(Integer groupId, MemberDto member);
+    Member createMember(Integer groupId, MemberVO member);
 
     /**
      * 更新组成员
@@ -78,7 +78,7 @@ public interface GroupService {
      * @param member  成员信息
      * @return Member
      */
-    Member updateMember(Integer groupId, MemberDto member);
+    Member updateMember(Integer groupId, MemberVO member);
 
     /**
      * 移除组成员
