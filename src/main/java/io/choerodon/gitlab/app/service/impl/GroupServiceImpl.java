@@ -142,7 +142,7 @@ public class GroupServiceImpl implements GroupService {
     public Member createMember(Integer groupId, MemberVO member) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         try {
-            return gitLabApi.getGroupApi().addMember(groupId, member.getUserId(), member.getAccessLevel(),
+            return gitLabApi.getGroupApi().addMember(groupId, member.getId(), member.getAccessLevel(),
                     member.getExpiresAt());
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
@@ -153,7 +153,7 @@ public class GroupServiceImpl implements GroupService {
     public Member updateMember(Integer groupId, MemberVO member) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         try {
-            return gitLabApi.getGroupApi().updateMember(groupId, member.getUserId(), member.getAccessLevel(),
+            return gitLabApi.getGroupApi().updateMember(groupId, member.getId(), member.getAccessLevel(),
                     member.getExpiresAt());
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
