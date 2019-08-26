@@ -33,6 +33,7 @@
   此功能用于对Gitlab的User进行管理，包括创建、更新、校验用户邮箱是否存在等操作。                          
 
 ## 环境依赖
+
 - JDK-8
 - [Maven](http://www.maven-sf.com/)
 - [MySQL](https://www.mysql.com)
@@ -57,6 +58,7 @@
     ```
 
 ## 服务依赖
+
 - `eureka-server`: 注册&配置中心
 - `oauth-server` 认证中心
 - `MySQL`: gitlab_service 数据库
