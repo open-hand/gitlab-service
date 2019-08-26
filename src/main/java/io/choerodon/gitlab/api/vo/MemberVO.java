@@ -4,17 +4,17 @@ import javax.validation.constraints.NotNull;
 
 public class MemberVO {
     @NotNull
-    private Integer userId;
+    private Integer id;
     @NotNull
     private Integer accessLevel;
     private String expiresAt;
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getAccessLevel() {

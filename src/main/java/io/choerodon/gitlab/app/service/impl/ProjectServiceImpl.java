@@ -225,7 +225,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Member createMember(Integer projectId, MemberVO member) {
         try {
             return gitlab4jclient.getGitLabApi().getProjectApi()
-                    .addMember(projectId, member.getUserId(), member.getAccessLevel());
+                    .addMember(projectId, member.getId(), member.getAccessLevel());
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -236,7 +236,7 @@ public class ProjectServiceImpl implements ProjectService {
         return list.stream().map(m -> {
             try {
                 return gitlab4jclient.getGitLabApi().getProjectApi()
-                        .updateMember(projectId, m.getUserId(), m.getAccessLevel());
+                        .updateMember(projectId, m.getId(), m.getAccessLevel());
             } catch (GitLabApiException e) {
                 throw new FeignException(e.getMessage(), e);
             }
