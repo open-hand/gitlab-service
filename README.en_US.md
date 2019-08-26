@@ -51,9 +51,17 @@
     ```bash
     mvn clean spring-boot:run
     ```
+    
+## Service dependencies
+- `eureka-server`L Register & configure center
+- `oauth-server` authentication center
+- `MySQL`: gitlab_service
 
 ## Reporting Issues
 If you find any shortcomings or bugs, please describe them in the [issue](https://github.com/choerodon/choerodon/issues/new?template=issue_template.md).
+
+## Link
+[Update Log](CHANGELOG.en-US.md)
 
 ## How to Contribute
 Pull requests are welcome! [Follow](https://github.com/choerodon/choerodon/blob/master/CONTRIBUTING.md) to know for more information on how to contribute.
