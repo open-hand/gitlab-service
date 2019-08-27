@@ -71,7 +71,7 @@
 
 ## 链接
 
-[更新日志](CHANGELOG.zh-CN.md)
+[更新日志](CHANGELOG_zh_CN.md)
 
 ## 贡献
 
