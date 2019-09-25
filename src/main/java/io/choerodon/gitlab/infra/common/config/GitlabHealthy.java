@@ -43,11 +43,11 @@ public class GitlabHealthy implements HealthIndicator {
         if (errorCode == 401 || errorCode == 404) {
             return Health.down().withDetail("Error Code", "the token or the url is error, or the ingress resolution error!").build();
         } else {
-            try {
-                gitLabApi.getApplicationApi().modifyApplicationSetting(true);
-            } catch (GitLabApiException e) {
-                throw new FeignException(e);
-            }
+//            try {
+//                gitLabApi.getApplicationApi().modifyApplicationSetting(true);
+//            } catch (GitLabApiException e) {
+//                throw new FeignException(e);
+//            }
             return Health.up().build();
         }
     }
