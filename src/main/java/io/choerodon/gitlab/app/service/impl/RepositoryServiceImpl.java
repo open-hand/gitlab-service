@@ -156,7 +156,7 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     @Override
     public RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         RepositoryFile repositoryFile = new RepositoryFile();
         try {
             repositoryFile.setContent(content);
@@ -189,7 +189,7 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     @Override
     public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, "master", "DELETE FILE");
         } catch (GitLabApiException e) {
