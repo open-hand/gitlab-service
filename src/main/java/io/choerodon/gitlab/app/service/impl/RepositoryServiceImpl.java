@@ -32,7 +32,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public Branch createBranch(Integer projectId, String branchName, String source, Integer userId) {
         try {
-            return this.gitlab4jclient.getGitLabApi().getRepositoryApi()
+            return this.gitlab4jclient.getGitLabApi(userId).getRepositoryApi()
                     .createBranch(projectId, branchName, source);
         } catch (GitLabApiException e) {
             if (e.getMessage().equals("Branch already exists")) {
@@ -124,7 +124,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public List<Branch> listBranches(Integer projectId, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi()
+            return gitlab4jclient.getGitLabApi(userId)
                     .getRepositoryApi()
                     .getBranches(projectId);
         } catch (GitLabApiException e) {
