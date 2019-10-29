@@ -2,6 +2,7 @@ package io.choerodon.gitlab.app.service.impl;
 
 import java.util.List;
 
+import io.choerodon.gitlab.infra.common.exception.MergeRequestNotFoundException;
 import org.apache.commons.lang.StringUtils;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
@@ -85,6 +86,9 @@ public class MergeRequestServiceImpl implements MergeRequestService {
             return gitlab4jclient.getGitLabApi(userId)
                     .getMergeRequestApi().getCommits(projectId, mergeRequestId);
         } catch (GitLabApiException e) {
+            if (e.getMessage().equals("404 Not found")) {
+                throw new MergeRequestNotFoundException(e.getMessage(), e);
+            }
             throw new FeignException(e.getMessage(), e);
         }
     }
