@@ -7,7 +7,7 @@ preJob:
   # 初始化配置 job 定义
   preConfig:
     # 是否初始化配置至配置服务
-    enable: true
+    enabled: true
     # 初始化到配置中心文件名
     configFile: application.yml
     # 初始化到配置中心存储方式: k8s/db
@@ -127,7 +127,7 @@ service:
   # 是否启用 service 暴露本服务
   enabled: true
   # Service 名称
-  name: devops-service
+  name: gitlab-service
   # Service 类型
   type: ClusterIP
   # 指定 service 的 clusterIP
