@@ -103,6 +103,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project getProject(Integer userId, String groupCode, String projectCode) {
         try {
+            LOGGER.info("userId:{},groupCode:{},projectCode:{}", userId, groupCode, projectCode);
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProject(groupCode, projectCode);
         } catch (GitLabApiException e) {
             if (e.getHttpStatus() == 404) {
