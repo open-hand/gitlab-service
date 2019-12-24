@@ -103,8 +103,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project getProject(Integer userId, String groupCode, String projectCode) {
         try {
-            LOGGER.info("userId:{},groupCode:{},projectCode:{}", userId, groupCode, projectCode);
-            return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProject(groupCode, projectCode);
+            String targetPathWithNamespace = groupCode + "/" + projectCode;
+            return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProjects(projectCode).stream()
+                    .filter(i -> i.getPathWithNamespace().equals(targetPathWithNamespace))
+                    .findFirst().orElse(null);
         } catch (GitLabApiException e) {
             if (e.getHttpStatus() == 404) {
                 return new Project();
