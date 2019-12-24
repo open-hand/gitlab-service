@@ -46,6 +46,8 @@ public class ProjectServiceImpl implements ProjectService {
             project.setPublic(true);
             return gitLabApi.getProjectApi().updateProject(project);
         } catch (GitLabApiException e) {
+            LOGGER.info("groupId:{},projectName:{},userId:{},visibility:{}", groupId, projectName, userId, visibility);
+            LOGGER.info("{}", e.getMessage());
             throw new FeignException(e.getMessage(), e);
         }
     }
@@ -91,7 +93,7 @@ public class ProjectServiceImpl implements ProjectService {
         try {
             return gitlab4jclient.getGitLabApi().getProjectApi().getProject(projectId);
         } catch (GitLabApiException e) {
-            if(e.getHttpStatus() == 404) {
+            if (e.getHttpStatus() == 404) {
                 return new Project();
             }
             throw new FeignException(e.getMessage(), e);
@@ -101,7 +103,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project getProject(Integer userId, String groupCode, String projectCode) {
         try {
-            return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProject(groupCode, projectCode);
+            String targetPathWithNamespace = groupCode + "/" + projectCode;
+            return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProjects(projectCode).stream()
+                    .filter(i -> i.getPathWithNamespace().equals(targetPathWithNamespace))
+                    .findFirst().orElse(null);
         } catch (GitLabApiException e) {
             if (e.getHttpStatus() == 404) {
                 return new Project();
