@@ -107,7 +107,7 @@ public class ProjectServiceImpl implements ProjectService {
             LOGGER.info("{}", targetPathWithNamespace);
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProjects(projectCode).stream()
                     .filter(i -> i.getPathWithNamespace().equals(targetPathWithNamespace))
-                    .findFirst().orElse(null);
+                    .findFirst().orElse(new Project());
         } catch (GitLabApiException e) {
             if (e.getHttpStatus() == 404) {
                 return new Project();

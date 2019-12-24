@@ -7,8 +7,8 @@ spring:
     sampler:
       percentage: 1.0
 gitlab:
-  url: "http://git.alpha.saas.hand-china.com"
-  privateToken: "UNSNbuzuoN6faR1LscJi"
+  url: "http://code.devops.hand-china.com"
+  privateToken: "YrAUZrvXDuqwcmDSzrJj"
 eureka:
   instance:
     preferIpAddress: true
