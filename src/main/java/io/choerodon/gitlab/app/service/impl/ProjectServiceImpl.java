@@ -104,6 +104,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Project getProject(Integer userId, String groupCode, String projectCode) {
         try {
             String targetPathWithNamespace = groupCode + "/" + projectCode;
+            LOGGER.info("{}", targetPathWithNamespace);
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProjects(projectCode).stream()
                     .filter(i -> i.getPathWithNamespace().equals(targetPathWithNamespace))
                     .findFirst().orElse(null);
