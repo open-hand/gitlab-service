@@ -4,6 +4,11 @@ import java.util.List;
 
 import org.gitlab4j.api.models.ImpersonationToken;
 import org.gitlab4j.api.models.User;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 public interface UserService {
 
@@ -60,7 +65,7 @@ public interface UserService {
     /**
      * 根据用户名更新用户
      *
-     * @param userId     用户Id
+     * @param userId        用户Id
      * @param projectsLimit 创建项目上限
      * @param user          用户信息
      */
@@ -102,4 +107,28 @@ public interface UserService {
      * @param email 用户邮箱
      */
     Boolean checkEmailIsExist(String email);
+
+    /**
+     * 判断用户是否是admin
+     *
+     * @param userId gitlab用户id
+     * @return true表示是
+     */
+    Boolean checkIsAdmin(Integer userId);
+
+    /**
+     * 为用户添加admin权限
+     *
+     * @param userId gitlab用户id
+     * @return true表示加上了
+     */
+    Boolean setAdmin(Integer userId);
+
+    /**
+     * 删除用户admin权限
+     *
+     * @param userId gitlab用户id
+     * @return true表示删除了
+     */
+    Boolean deleteAdmin(Integer userId);
 }
