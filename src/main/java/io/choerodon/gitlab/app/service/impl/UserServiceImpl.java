@@ -14,11 +14,14 @@ import org.gitlab4j.api.UserApi;
 import org.gitlab4j.api.models.Email;
 import org.gitlab4j.api.models.ImpersonationToken;
 import org.gitlab4j.api.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class UserServiceImpl implements UserService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private Gitlab4jClient gitlab4jclient;
 
@@ -143,6 +146,56 @@ public class UserServiceImpl implements UserService {
             throw new FeignException(e.getMessage(), e);
         }
         return false;
+    }
+
+    @Override
+    public Boolean checkIsAdmin(Integer userId) {
+        try {
+            User user = gitlab4jclient.getGitLabApi().getUserApi().getUser(userId);
+            return user != null && Boolean.TRUE.equals(user.getIsAdmin());
+        } catch (GitLabApiException e) {
+            LOGGER.info("Exception occurred when querying the user with id {}", userId);
+            LOGGER.info("The exception is {}", e);
+            return Boolean.FALSE;
+        }
+    }
+
+    @Override
+    public Boolean setAdmin(Integer userId) {
+        if (userId == null) {
+            LOGGER.warn("The id for the user to be set as admin is null. Abort.");
+            return Boolean.FALSE;
+        }
+        User user = new User();
+        user.setId(userId);
+        user.setIsAdmin(Boolean.TRUE);
+        try {
+            gitlab4jclient.getGitLabApi().getUserApi().modifyUser(user, null, null);
+        } catch (GitLabApiException e) {
+            LOGGER.info("Exception occurred when setting the user with id {} to be admin", userId);
+            LOGGER.info("The exception is {}", e);
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public Boolean deleteAdmin(Integer userId) {
+        if (userId == null) {
+            LOGGER.warn("The id for the user whose admin role is to be deleted is null. Abort.");
+            return Boolean.FALSE;
+        }
+        User user = new User();
+        user.setId(userId);
+        user.setIsAdmin(Boolean.FALSE);
+        try {
+            gitlab4jclient.getGitLabApi().getUserApi().modifyUser(user, null, null);
+        } catch (GitLabApiException e) {
+            LOGGER.info("Exception occurred when deleting the admin role for the user with id {}", userId);
+            LOGGER.info("The exception is {}", e);
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     @Override

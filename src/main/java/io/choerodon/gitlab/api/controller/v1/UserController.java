@@ -1,7 +1,8 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.app.service.UserService;
+import java.util.List;
+import java.util.Optional;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.ImpersonationToken;
@@ -10,8 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.app.service.UserService;
 
 
 @RestController
@@ -218,5 +219,38 @@ public class UserController {
         return Optional.ofNullable(userService.checkEmailIsExist(email))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.user.email.check"));
+    }
+
+    /**
+     * 判断用户是否是admin
+     *
+     * @param userId gitlab用户id
+     * @return true表示是
+     */
+    @GetMapping("/{userId}/admin")
+    public ResponseEntity<Boolean> checkIsAdmin(@PathVariable("userId") Integer userId) {
+        return new ResponseEntity<>(userService.checkIsAdmin(userId), HttpStatus.OK);
+    }
+
+    /**
+     * 为用户添加admin权限
+     *
+     * @param userId gitlab用户id
+     * @return true表示加上了
+     */
+    @PutMapping("/{userId}/admin")
+    public ResponseEntity<Boolean> setAdmin(@PathVariable("userId") Integer userId) {
+        return new ResponseEntity<>(userService.setAdmin(userId), HttpStatus.OK);
+    }
+
+    /**
+     * 删除用户admin权限
+     *
+     * @param userId gitlab用户id
+     * @return true表示删除了
+     */
+    @DeleteMapping("/{userId}/admin")
+    public ResponseEntity<Boolean> deleteAdmin(@PathVariable("userId") Integer userId) {
+        return new ResponseEntity<>(userService.deleteAdmin(userId), HttpStatus.OK);
     }
 }
