@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.FileCreationVO;
+import io.choerodon.gitlab.api.vo.FileDeleteVO;
 import io.choerodon.gitlab.app.service.RepositoryService;
 
 @RestController
@@ -270,25 +272,17 @@ public class RepositoryController {
     /**
      * 项目下创建File
      *
-     * @param projectId 项目id
-     * @param userId    用户Id
+     * @param projectId      项目id
+     * @param fileCreationVO 文件相关信息
      */
     @ApiOperation(value = "项目下创建File")
     @PostMapping(value = "/file")
     public ResponseEntity<RepositoryFile> createFile(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "path", required = true)
-            @RequestParam("path") String path,
-            @ApiParam(value = "content", required = true)
-            @RequestParam("content") String content,
-            @ApiParam(value = "commitMessage", required = true)
-            @RequestParam("commitMessage") String commitMessage,
-            @ApiParam(value = "userId", required = true)
-            @RequestParam("userId") Integer userId,
-            @ApiParam(value = "分支名", required = false)
-            @RequestParam(value = "branch_name", required = false) String branchName) {
-        return Optional.ofNullable(repositoryService.createFile(projectId, path, content, commitMessage, userId, branchName))
+            // TODO @Valid
+            @RequestBody FileCreationVO fileCreationVO) {
+        return Optional.ofNullable(repositoryService.createFile(projectId, fileCreationVO.getPath(), fileCreationVO.getContent(), fileCreationVO.getCommitMessage(), fileCreationVO.getUserId(), fileCreationVO.getBranchName()))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.file.create"));
     }
@@ -297,23 +291,17 @@ public class RepositoryController {
     /**
      * 项目下更新File
      *
-     * @param projectId 项目id
-     * @param userId    用户Id
+     * @param projectId      项目id
+     * @param fileCreationVO 文件信息
      */
-    @ApiOperation(value = "项目下创建File")
+    @ApiOperation(value = "项目下更新File")
     @PutMapping(value = "/file")
     public ResponseEntity<RepositoryFile> updateFile(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "path", required = true)
-            @RequestParam("path") String path,
-            @ApiParam(value = "content", required = true)
-            @RequestParam("content") String content,
-            @ApiParam(value = "commitMessage", required = true)
-            @RequestParam("commitMessage") String commitMessage,
-            @ApiParam(value = "userId", required = true)
-            @RequestParam("userId") Integer userId) {
-        return Optional.ofNullable(repositoryService.updateFile(projectId, path, content, commitMessage, userId))
+            // TODO @Valid
+            @RequestBody FileCreationVO fileCreationVO) {
+        return Optional.ofNullable(repositoryService.updateFile(projectId, fileCreationVO.getPath(), fileCreationVO.getContent(), fileCreationVO.getCommitMessage(), fileCreationVO.getUserId()))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.file.update"));
     }
@@ -322,21 +310,17 @@ public class RepositoryController {
     /**
      * 项目下删除File
      *
-     * @param projectId 项目id
-     * @param userId    用户Id
+     * @param projectId    项目id
+     * @param fileDeleteVO 文件删除相关信息
      */
     @ApiOperation(value = "项目下删除File")
     @DeleteMapping(value = "/file")
     public ResponseEntity deleteFile(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "path", required = true)
-            @RequestParam("path") String path,
-            @ApiParam(value = "commitMessage", required = true)
-            @RequestParam("commitMessage") String commitMessage,
-            @ApiParam(value = "userId", required = true)
-            @RequestParam("userId") Integer userId) {
-        repositoryService.deleteFile(projectId, path, commitMessage, userId);
+            // TODO @Valid
+            @RequestBody FileDeleteVO fileDeleteVO) {
+        repositoryService.deleteFile(projectId, fileDeleteVO.getPath(), fileDeleteVO.getCommitMessage(), fileDeleteVO.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
