@@ -2,6 +2,7 @@ package io.choerodon.gitlab.app.service.impl;
 
 import java.util.List;
 
+import io.choerodon.gitlab.infra.common.exception.GitlabCreateBranchException;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Branch;
@@ -40,7 +41,10 @@ public class RepositoryServiceImpl implements RepositoryService {
                 branch.setName("create branch message:Branch already exists");
                 return branch;
             }
-            throw new FeignException("error.branch.insert");
+            if (e.getMessage().equals("403 Forbidden")) {
+                throw new GitlabCreateBranchException("403", "user gitlab role no permission create branch");
+            }
+            throw new GitlabCreateBranchException("500", "error.branch.insert");
         }
     }
 
@@ -128,7 +132,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                     .getRepositoryApi()
                     .getBranches(projectId);
         } catch (GitLabApiException e) {
-            throw new FeignException("error.branch.get",e);
+            throw new FeignException("error.branch.get", e);
         }
     }
 
@@ -164,7 +168,7 @@ public class RepositoryServiceImpl implements RepositoryService {
             repositoryFile = gitLabApi.getRepositoryFileApi().createFile(
                     repositoryFile, projectId, StringUtils.isEmpty(branchName) ? "master" : branchName, "ADD FILE");
         } catch (GitLabApiException e) {
-            throw new FeignException(e.getMessage(),e);
+            throw new FeignException(e.getMessage(), e);
         }
         return repositoryFile;
     }
@@ -181,7 +185,7 @@ public class RepositoryServiceImpl implements RepositoryService {
             if (e.getHttpStatus() == 200) {
                 return repositoryFile;
             } else {
-                throw new FeignException(e.getMessage(),e);
+                throw new FeignException(e.getMessage(), e);
             }
         }
         return repositoryFile;
