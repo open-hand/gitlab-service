@@ -2,7 +2,7 @@ package io.choerodon.gitlab.app.service.impl;
 
 import java.util.List;
 
-import io.choerodon.gitlab.infra.common.exception.GitlabCreateBranchException;
+import io.choerodon.gitlab.infra.common.exception.GitlabBranchException;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Branch;
@@ -42,9 +42,9 @@ public class RepositoryServiceImpl implements RepositoryService {
                 return branch;
             }
             if (e.getMessage().equals("403 Forbidden")) {
-                throw new GitlabCreateBranchException("403", "user gitlab role no permission create branch");
+                throw new GitlabBranchException("403", "user gitlab role no permission create branch");
             }
-            throw new GitlabCreateBranchException("500", "error.branch.insert");
+            throw new GitlabBranchException("500", "error.branch.insert");
         }
     }
 
@@ -110,7 +110,7 @@ public class RepositoryServiceImpl implements RepositoryService {
                     .getRepositoryApi()
                     .deleteBranch(projectId, branchName);
         } catch (GitLabApiException e) {
-            throw new FeignException("error.branch.delete");
+            throw new GitlabBranchException("403", "user gitlab role no permission delete branch");
         }
     }
 

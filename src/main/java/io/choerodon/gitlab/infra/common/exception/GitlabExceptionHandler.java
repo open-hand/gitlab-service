@@ -10,12 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 @ControllerAdvice
 public class GitlabExceptionHandler {
@@ -54,8 +50,8 @@ public class GitlabExceptionHandler {
         return locale;
     }
 
-    @ExceptionHandler(GitlabCreateBranchException.class)
-    public ResponseEntity<ExceptionResponse> handUserNotExistException(GitlabCreateBranchException ex) {
+    @ExceptionHandler(GitlabBranchException.class)
+    public ResponseEntity<ExceptionResponse> handUserNotExistException(GitlabBranchException ex) {
         return new ResponseEntity<>(new ExceptionResponse(true, ex.getCode(), ex.getTraceMessage()), HttpStatus.FORBIDDEN);
     }
 }

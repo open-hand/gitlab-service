@@ -4,14 +4,14 @@ package io.choerodon.gitlab.infra.common.exception;
  * User: Mr.Wang
  * Date: 2020/1/14
  */
-public class GitlabCreateBranchException extends RuntimeException {
+public class GitlabBranchException extends RuntimeException {
 
     private static final long serialVersionUID = -6112780192479692859L;
 
     private String code;
     private String traceMessage;
 
-    public GitlabCreateBranchException(String traceMessage, String code) {
+    public GitlabBranchException(String code, String traceMessage) {
         super(traceMessage);
         this.code = code;
     }
