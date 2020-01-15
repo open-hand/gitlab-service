@@ -109,6 +109,32 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<AccessRequest> listAccessRequests(Integer groupId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
+        try {
+            return gitLabApi.getGroupApi().getAccessRequests(groupId);
+        } catch (GitLabApiException e) {
+            LOGGER.info("ex: {}", e);
+            return null;
+        }
+    }
+
+    @Override
+    public void denyAccessRequest(Integer groupId, Integer userIdToBeDenied) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
+        try {
+            gitLabApi.getGroupApi().denyAccessRequest(groupId, userIdToBeDenied);
+        } catch (GitLabApiException e) {
+            if ("404 Not found".equals(e.getMessage())) {
+                LOGGER.info("Swallow not found access request exception...");
+            } else {
+                LOGGER.info("Swallow exception when denying access request of group id {}, userIdToBeDenied {}", groupId, userIdToBeDenied);
+                LOGGER.info("The exception is {}", e);
+            }
+        }
+    }
+
+    @Override
     public List<Group> listGroups() {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         try {
