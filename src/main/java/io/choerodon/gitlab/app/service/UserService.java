@@ -5,6 +5,8 @@ import java.util.List;
 import org.gitlab4j.api.models.ImpersonationToken;
 import org.gitlab4j.api.models.User;
 
+import io.choerodon.gitlab.api.vo.UserWithPassword;
+
 public interface UserService {
 
     /**
@@ -60,11 +62,19 @@ public interface UserService {
     /**
      * 根据用户名更新用户
      *
-     * @param userId     用户Id
+     * @param userId        用户Id
      * @param projectsLimit 创建项目上限
      * @param user          用户信息
      */
     User updateUserByUserId(Integer userId, User user, Integer projectsLimit);
+
+    /**
+     * 根据用户名更新用户
+     *
+     * @param userId 用户Id
+     * @param user   用户信息
+     */
+    User updateUserPasswordByUserId(Integer userId, UserWithPassword user);
 
     /**
      * 创建用户的Aceess_Token

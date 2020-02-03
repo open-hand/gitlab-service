@@ -1,13 +1,7 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.app.service.UserService;
-import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import org.gitlab4j.api.Constants;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.UserApi;
@@ -15,6 +9,11 @@ import org.gitlab4j.api.models.Email;
 import org.gitlab4j.api.models.ImpersonationToken;
 import org.gitlab4j.api.models.User;
 import org.springframework.stereotype.Service;
+
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.UserWithPassword;
+import io.choerodon.gitlab.app.service.UserService;
+import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
 
 @Service
@@ -107,6 +106,18 @@ public class UserServiceImpl implements UserService {
                 }
             }
             return user;
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public User updateUserPasswordByUserId(Integer userId, UserWithPassword user) {
+        UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
+        try {
+            user.setId(userId);
+            user.setSkipReconfirmation(true);
+            return userApi.modifyUser(user, user.getPassword(), null);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
