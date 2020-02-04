@@ -1,7 +1,8 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.app.service.UserService;
+import java.util.List;
+import java.util.Optional;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.ImpersonationToken;
@@ -10,8 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.UserWithPassword;
+import io.choerodon.gitlab.app.service.UserService;
 
 
 @RestController
@@ -146,6 +148,24 @@ public class UserController {
         return Optional.ofNullable(userService.updateUserByUserId(userId, user, projectsLimit))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.users.username.update"));
+    }
+
+    /**
+     * 根据用户Id更新用户密码
+     *
+     * @param userId 用户Id
+     * @param user   用户信息
+     */
+    @ApiOperation(value = "根据用户Id更新用户密码")
+    @PutMapping(value = "/{userId}/password")
+    public ResponseEntity<User> updateUserPasswordByUserId(
+            @ApiParam(value = "用户Id", required = true)
+            @PathVariable Integer userId,
+            @ApiParam(value = "用户密码信息")
+            @RequestBody UserWithPassword user) {
+        return Optional.ofNullable(userService.updateUserPasswordByUserId(userId, user))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
+                .orElseThrow(() -> new FeignException("error.reset.user.password"));
     }
 
     /**
