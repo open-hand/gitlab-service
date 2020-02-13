@@ -93,7 +93,7 @@ public class LabelsController {
             @ApiParam(value = "项目id", required = true)
             @RequestParam Integer projectId,
             @ApiParam(value = "名称", required = true)
-            @RequestParam String name) {
+            @RequestBody String name) {
         labelsService.deleteLabel(projectId, name);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 

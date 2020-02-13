@@ -3,6 +3,7 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Optional;
 
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.ImpersonationToken;
@@ -49,13 +50,11 @@ public class UserController {
     @ApiOperation(value = "创建用户")
     @PostMapping
     public ResponseEntity<User> create(
-            @ApiParam(value = "密码", required = true)
-            @RequestParam String password,
             @ApiParam(value = "创建项目上限")
             @RequestParam(required = false) Integer projectsLimit,
             @ApiParam(value = "用户信息")
-            @RequestBody User user) {
-        return Optional.ofNullable(userService.createUser(user, password, projectsLimit))
+            @RequestBody GitlabTransferVO gitlabTransferVO) {
+        return Optional.ofNullable(userService.createUser(gitlabTransferVO.getUser(), gitlabTransferVO.getPassword(), projectsLimit))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.users.create"));
     }

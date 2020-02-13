@@ -89,7 +89,7 @@ public class NotesController {
             @ApiParam(value = "Issue Id", required = true)
             @RequestParam Integer issueIid,
             @ApiParam(value = "Note Content", required = true)
-            @RequestParam String body,
+            @RequestBody String body,
             @ApiParam(value = "创建时间", required = true)
             @RequestParam Date createdAt) {
         return Optional.ofNullable(notesService.createIssueNote(projectId, issueIid, body, createdAt))
@@ -116,7 +116,7 @@ public class NotesController {
             @ApiParam(value = "gilab Note ID", required = true)
             @RequestParam Integer noteId,
             @ApiParam(value = "gitlab Note Content", required = true)
-            @RequestParam String body) {
+            @RequestBody String body) {
         return Optional.ofNullable(notesService.updateIssueNote(projectId, issueIid, noteId, body))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.note.update"));
