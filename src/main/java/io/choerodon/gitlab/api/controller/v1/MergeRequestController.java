@@ -3,12 +3,14 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Optional;
 
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.MergeRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
@@ -41,22 +43,15 @@ public class MergeRequestController {
     public ResponseEntity<MergeRequest> create(
             @ApiParam(value = "工程id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "要创建的分支名", required = true)
-            @RequestParam("sourceBranch") String sourceBranch,
-            @ApiParam(value = "源分支名", required = true)
-            @RequestParam("targetBranch") String targetBranch,
-            @ApiParam(value = "源分支名", required = true)
-            @RequestParam("title") String title,
-            @ApiParam(value = "源分支名", required = true)
-            @RequestParam("description") String description,
+            @ApiParam(value = "要创建的分支名&源分支名&title&描述", required = true)
+            @RequestBody @Validated({GitlabTransferVO.CreateMerge.class}) GitlabTransferVO gitlabTransferVO,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(mergeRequestService.createMergeRequest(projectId,
-                sourceBranch, targetBranch, title, description, userId))
+                gitlabTransferVO.getSourceBranch(), gitlabTransferVO.getTargetBranch(), gitlabTransferVO.getTitle(), gitlabTransferVO.getDescription(), userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException(ERROR_MERGE_REQUEST_CREATE));
     }
-
 
 
     /**
@@ -116,7 +111,7 @@ public class MergeRequestController {
             @ApiParam(value = "merge请求的id", required = true)
             @PathVariable Integer mergeRequestId,
             @ApiParam(value = "merge的commit信息", required = true)
-            @RequestParam("mergeCommitMessage") String mergeCommitMessage,
+            @RequestBody String mergeCommitMessage,
             @ApiParam(value = "merge后是否删除该分支")
             @RequestParam("removeSourceBranch") Boolean shouldRemoveSourceBranch,
             @ApiParam(value = "pipeline成功后自动合并分支")

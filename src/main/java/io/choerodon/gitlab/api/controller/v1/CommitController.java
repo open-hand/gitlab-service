@@ -4,17 +4,21 @@ import java.util.List;
 import java.util.Optional;
 
 import io.choerodon.gitlab.api.vo.CommitVO;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.CommitStatuseVO;
 import io.choerodon.gitlab.app.service.CommitService;
+
+import javax.validation.Valid;
 
 /**
  * Created by zzy on 2018/1/14.
@@ -81,15 +85,13 @@ public class CommitController {
      */
 
     @ApiOperation(value = "查询某个项目的某个分支的所有commit")
-    @GetMapping(value = "/branch")
+    @PostMapping(value = "/branch")
     public ResponseEntity<List<Commit>> getCommits(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "projectId") Integer projectId,
-            @ApiParam(value = "分支名称", required = true)
-            @RequestParam String branchName,
-            @ApiParam(value = "分支创建时间", required = true)
-            @RequestParam String since) {
-        return Optional.ofNullable(commitService.getCommits(projectId, branchName, since))
+            @ApiParam(value = "分支名称和创建时间", required = true)
+            @RequestBody @Validated({GitlabTransferVO.GetCommits.class}) GitlabTransferVO gitlabTransferVO) {
+        return Optional.ofNullable(commitService.getCommits(projectId, gitlabTransferVO.getBranchName(), gitlabTransferVO.getSince()))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.commits.get"));
     }
