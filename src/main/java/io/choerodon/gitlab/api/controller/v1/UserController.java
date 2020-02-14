@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.UserWithPassword;
 import io.choerodon.gitlab.app.service.UserService;
 
 
