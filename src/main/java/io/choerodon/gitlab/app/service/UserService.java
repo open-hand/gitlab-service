@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import io.choerodon.gitlab.api.vo.UserWithPassword;
+
 public interface UserService {
 
     /**
@@ -70,6 +72,14 @@ public interface UserService {
      * @param user          用户信息
      */
     User updateUserByUserId(Integer userId, User user, Integer projectsLimit);
+
+    /**
+     * 根据用户名更新用户
+     *
+     * @param userId 用户Id
+     * @param user   用户信息
+     */
+    User updateUserPasswordByUserId(Integer userId, UserWithPassword user);
 
     /**
      * 创建用户的Aceess_Token

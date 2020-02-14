@@ -49,4 +49,9 @@ public class GitlabExceptionHandler {
         }
         return locale;
     }
+
+    @ExceptionHandler(GitlabBranchException.class)
+    public ResponseEntity<ExceptionResponse> handUserNotExistException(GitlabBranchException ex) {
+        return new ResponseEntity<>(new ExceptionResponse(true, ex.getCode(), ex.getTraceMessage()), HttpStatus.FORBIDDEN);
+    }
 }

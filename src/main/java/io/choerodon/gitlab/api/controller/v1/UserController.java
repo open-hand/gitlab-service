@@ -149,6 +149,24 @@ public class UserController {
     }
 
     /**
+     * 根据用户Id更新用户密码
+     *
+     * @param userId 用户Id
+     * @param user   用户信息
+     */
+    @ApiOperation(value = "根据用户Id更新用户密码")
+    @PutMapping(value = "/{userId}/password")
+    public ResponseEntity<User> updateUserPasswordByUserId(
+            @ApiParam(value = "用户Id", required = true)
+            @PathVariable Integer userId,
+            @ApiParam(value = "用户密码信息")
+            @RequestBody UserWithPassword user) {
+        return Optional.ofNullable(userService.updateUserPasswordByUserId(userId, user))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
+                .orElseThrow(() -> new FeignException("error.reset.user.password"));
+    }
+
+    /**
      * 根据用户Id禁用用户
      *
      * @param userId 用户Id
