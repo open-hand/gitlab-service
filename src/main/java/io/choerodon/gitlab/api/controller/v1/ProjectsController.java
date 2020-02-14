@@ -1,17 +1,20 @@
 package io.choerodon.gitlab.api.controller.v1;
 
 import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
 import io.choerodon.gitlab.api.vo.VariableVO;
 import io.choerodon.gitlab.app.service.ProjectService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.eclipse.jgit.api.Git;
 import org.gitlab4j.api.models.DeployKey;
 import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Variable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -114,15 +117,13 @@ public class ProjectsController {
     public ResponseEntity<Map<String, Object>> saveVariableEvent(
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "变量key", required = true)
-            @RequestParam String key,
-            @ApiParam(value = "变量值", required = true)
-            @RequestParam String value,
+            @ApiParam(value = "变量key&value", required = true)
+            @RequestBody @Validated({GitlabTransferVO.AddCiProjectVariable.class}) GitlabTransferVO gitlabTransferVO,
             @ApiParam(value = "变量是否保护", required = true)
             @RequestParam boolean protecteds,
             @ApiParam(value = "用户Id称")
             @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(projectService.createVariable(projectId, key, value, protecteds, userId))
+        return Optional.ofNullable(projectService.createVariable(projectId, gitlabTransferVO.getKey(), gitlabTransferVO.getValue(), protecteds, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.variable.create"));
     }
@@ -163,16 +164,12 @@ public class ProjectsController {
     public ResponseEntity<Map<String, Object>> createProtectedBranches(
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "分支名", required = true)
-            @RequestParam String name,
-            @ApiParam(value = "merge权限", required = true)
-            @RequestParam String mergeAccessLevel,
-            @ApiParam(value = "push权限", required = true)
-            @RequestParam String pushAccessLevel,
+            @ApiParam(value = "分支名&merge权限&push权限", required = true)
+            @RequestBody @Validated({GitlabTransferVO.AddProtectedBranches.class}) GitlabTransferVO gitlabTransferVO,
             @ApiParam(value = "用户Id")
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(projectService.createProtectedBranches(projectId,
-                name, mergeAccessLevel, pushAccessLevel,
+                gitlabTransferVO.getBranchName(), gitlabTransferVO.getMergeAccessLevel(), gitlabTransferVO.getPushAccessLevel(),
                 userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.protected.branches.create"));
@@ -273,15 +270,12 @@ public class ProjectsController {
     public ResponseEntity create(
             @ApiParam(value = "项目ID", required = true)
             @RequestParam Integer projectId,
-            @ApiParam(value = "标题", required = true)
-            @RequestParam String title,
-            @ApiParam(value = "ssh key")
-            @RequestParam String key,
+            @RequestBody @Validated({GitlabTransferVO.DeployKey.class}) GitlabTransferVO gitlabTransferVO,
             @ApiParam(value = "canPush")
             @RequestParam(required = false) boolean canPush,
             @ApiParam(value = "用户Id")
             @RequestParam(required = false) Integer userId) {
-        projectService.createDeployKey(projectId, title, key, canPush, userId);
+        projectService.createDeployKey(projectId, gitlabTransferVO.getTitle(), gitlabTransferVO.getSshKey(), canPush, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -384,7 +378,7 @@ public class ProjectsController {
      * 批量更新项目成员
      *
      * @param projectId 项目id
-     * @param list    成员信息
+     * @param list      成员信息
      * @return Member
      */
     @ApiOperation(value = "批量更新项目成员")

@@ -2,6 +2,7 @@ package io.choerodon.gitlab.app.service;
 
 import java.util.List;
 
+import org.gitlab4j.api.models.AccessRequest;
 import org.gitlab4j.api.models.Group;
 import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
@@ -21,7 +22,7 @@ public interface GroupService {
     /**
      * 创建组
      *
-     * @param group    组对象
+     * @param group  组对象
      * @param userId 用户名
      * @return Group
      */
@@ -31,9 +32,9 @@ public interface GroupService {
     /**
      * 更新组
      *
-     * @param groupId  组对象Id
-     * @param userId 用户名
-     * @param group    组对象
+     * @param groupId 组对象Id
+     * @param userId  用户名
+     * @param group   组对象
      * @return Group
      */
     Group updateGroup(Integer groupId, Integer userId, Group group);
@@ -43,7 +44,7 @@ public interface GroupService {
      *
      * @param groupId 组对象Id
      */
-    void deleteGroup(Integer groupId,Integer userId);
+    void deleteGroup(Integer groupId, Integer userId);
 
     /**
      * 查询组中的成员
@@ -91,8 +92,8 @@ public interface GroupService {
     /**
      * 获取项目列表
      *
-     * @param groupId  组对象Id
-     * @param userId 用户名
+     * @param groupId 组对象Id
+     * @param userId  用户名
      * @return List
      */
     List<Project> listProjects(Integer groupId, Integer userId);
@@ -101,9 +102,24 @@ public interface GroupService {
      * 根据组名查询组
      *
      * @param groupName 组名
-     * @param  userId 用户Id
+     * @param userId    用户Id
      * @return group
      */
     Group queryGroupByName(String groupName, Integer userId);
 
+    /**
+     * 查出组下所有的AccessRequest
+     *
+     * @param groupId 组id
+     * @return 所有的AccessRequest列表
+     */
+    List<AccessRequest> listAccessRequests(Integer groupId);
+
+    /**
+     * 拒绝组下某个人的AccessRequest
+     *
+     * @param groupId          组id
+     * @param userIdToBeDenied 被拒绝的人的id
+     */
+    void denyAccessRequest(Integer groupId, Integer userIdToBeDenied);
 }

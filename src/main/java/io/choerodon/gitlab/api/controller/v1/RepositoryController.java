@@ -3,6 +3,7 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Optional;
 
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Branch;
@@ -11,7 +12,7 @@ import org.gitlab4j.api.models.RepositoryFile;
 import org.gitlab4j.api.models.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
@@ -43,14 +44,12 @@ public class RepositoryController {
     public ResponseEntity<Branch> createBranch(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "分支名", required = true)
-            @RequestParam("name") String name,
-            @ApiParam(value = "源分支名", required = true)
-            @RequestParam("source") String source,
+            @ApiParam(value = "分支名&源分支名", required = true)
+            @RequestBody @Validated({GitlabTransferVO.CreateBranch.class}) GitlabTransferVO gitlabTransferVO,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId") Integer userId
     ) {
-        return Optional.ofNullable(repositoryService.createBranch(projectId, name, source, userId))
+        return Optional.ofNullable(repositoryService.createBranch(projectId, gitlabTransferVO.getBranchName(), gitlabTransferVO.getSourceBranch(), userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.branch.create"));
     }
@@ -112,22 +111,17 @@ public class RepositoryController {
     public ResponseEntity<Tag> createTag(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "标签名", required = true)
-            @RequestParam("name") String name,
-            @ApiParam(value = "标签源", required = true)
-            @RequestParam("ref") String ref,
-            @ApiParam(value = "标签描述")
-            @RequestParam(value = "message", required = false, defaultValue = "") String msg,
-            @ApiParam(value = "发布日志")
-            @RequestBody(required = false) String releaseNotes,
+            @ApiParam(value = "标签名&标签源&标签描述&发布日志", required = true)
+            @RequestBody @Validated({GitlabTransferVO.CreateTag.class}) GitlabTransferVO gitlabTransferVO,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
-        return Optional.ofNullable(repositoryService.createTag(projectId, name, ref, msg, releaseNotes, userId))
+        return Optional.ofNullable(repositoryService.createTag(projectId, gitlabTransferVO.getTagName(), gitlabTransferVO.getRef(), gitlabTransferVO.getMsg(), gitlabTransferVO.getReleaseNotes(), userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.tag.create"));
     }
 
     /**
+     * 创建新分支
      * 更新 tag
      *
      * @param projectId    项目id
@@ -141,12 +135,10 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "标签名", required = true)
-            @RequestParam("name") String name,
-            @ApiParam(value = "发布日志")
-            @RequestBody(required = false) String releaseNotes,
+            @RequestBody @Validated({GitlabTransferVO.CreateTag.class}) GitlabTransferVO gitlabTransferVO,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
-        return Optional.ofNullable(repositoryService.updateTagRelease(projectId, name, releaseNotes, userId))
+        return Optional.ofNullable(repositoryService.updateTagRelease(projectId, gitlabTransferVO.getTagName(), gitlabTransferVO.getReleaseNotes(), userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.tag.create"));
     }
@@ -164,7 +156,7 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "标签名", required = true)
-            @RequestParam("name") String name,
+            @RequestBody String name,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false)
                     Integer userId) {
@@ -185,7 +177,7 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "要删除的分支名", required = true)
-            @RequestParam("branchName") String branchName,
+            @RequestBody String branchName,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         repositoryService.deleteBranch(projectId, branchName, userId);
@@ -259,12 +251,12 @@ public class RepositoryController {
      * @return CompareResults
      */
     @ApiOperation(value = "项目下获取diffs")
-    @GetMapping(value = "/file/diffs")
+    @PostMapping(value = "/file/diffs")
     public ResponseEntity<CompareResults> getDiffs(
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
-            @ApiParam(value = "from", required = true) @RequestParam String from,
-            @ApiParam(value = "to", required = true) @RequestParam String to) {
-        return Optional.ofNullable(repositoryService.getDiffs(projectId, from, to))
+            @ApiParam(value = "from", required = true)
+            @RequestBody @Validated({GitlabTransferVO.GetDiffs.class}) GitlabTransferVO gitlabTransferVO) {
+        return Optional.ofNullable(repositoryService.getDiffs(projectId, gitlabTransferVO.getFrom(), gitlabTransferVO.getTo()))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.diffs.get"));
     }

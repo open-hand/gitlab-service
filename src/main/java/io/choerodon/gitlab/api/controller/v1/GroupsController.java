@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.gitlab4j.api.models.AccessRequest;
 import org.gitlab4j.api.models.Group;
 import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
@@ -215,5 +216,32 @@ public class GroupsController {
             @RequestParam Integer userId
     ) {
         return new ResponseEntity<>(groupService.queryGroupByName(groupName, userId), HttpStatus.OK);
+    }
+
+
+    @ApiOperation(value = "查出组下所有的AccessRequest")
+    @GetMapping(value = "/{groupId}/access_requests")
+    public ResponseEntity<List<AccessRequest>> listAccessRequestsOfGroup(
+            @ApiParam("组id")
+            @PathVariable("groupId") Integer groupId) {
+        return new ResponseEntity<>(groupService.listAccessRequests(groupId), HttpStatus.OK);
+    }
+
+    /**
+     * 这个接口不抛出关于GitlabApi的异常
+     *
+     * @param groupId 组id
+     * @param userId  被拒绝的用户的id
+     * @return OK
+     */
+    @ApiOperation(value = "拒绝组下某个人的AccessRequest请求")
+    @DeleteMapping(value = "/{groupId}/access_requests")
+    public ResponseEntity denyAccessRequest(
+            @ApiParam(value = "组id")
+            @PathVariable("groupId") Integer groupId,
+            @ApiParam(value = "被拒绝的用户id")
+            @RequestParam("user_id") Integer userId) {
+        groupService.denyAccessRequest(groupId, userId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
