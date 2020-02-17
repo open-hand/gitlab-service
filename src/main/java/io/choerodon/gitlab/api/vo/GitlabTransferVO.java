@@ -94,7 +94,7 @@ public class GitlabTransferVO {
     /**
      * 标签名
      */
-    @NotEmpty(message = "标签名不能为null", groups = CreateTag.class)
+    @NotEmpty(message = "标签名不能为null", groups = {CreateTag.class, UpdateTag.class})
     private String tagName;
     /**
      * 标签源
@@ -112,7 +112,11 @@ public class GitlabTransferVO {
      */
     private String releaseNotes;
 
-    public interface CreateTag{}
+    public interface CreateTag {
+    }
+
+    public interface UpdateTag {
+    }
 
     /**
      * from
@@ -126,11 +130,13 @@ public class GitlabTransferVO {
     @NotEmpty(message = "to不能为null", groups = GetDiffs.class)
     private String to;
 
-    public interface GetDiffs{}
+    public interface GetDiffs {
+    }
 
 
     /**
      * 创建user
+     *
      * @return
      */
     private User user;

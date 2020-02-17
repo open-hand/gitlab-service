@@ -135,7 +135,7 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "标签名", required = true)
-            @RequestBody @Validated({GitlabTransferVO.CreateTag.class}) GitlabTransferVO gitlabTransferVO,
+            @RequestBody @Validated({GitlabTransferVO.UpdateTag.class}) GitlabTransferVO gitlabTransferVO,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
         return Optional.ofNullable(repositoryService.updateTagRelease(projectId, gitlabTransferVO.getTagName(), gitlabTransferVO.getReleaseNotes(), userId))
