@@ -139,15 +139,15 @@ public class GitlabTransferVO {
      *
      * @return
      */
-    private User user;
+    private GitlabUserReqDTO gitlabUserReqDTO;
     private String password;
 
-    public User getUser() {
-        return user;
+    public GitlabUserReqDTO getGitlabUserReqDTO() {
+        return gitlabUserReqDTO;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setGitlabUserReqDTO(GitlabUserReqDTO gitlabUserReqDTO) {
+        this.gitlabUserReqDTO = gitlabUserReqDTO;
     }
 
     public String getPassword() {
