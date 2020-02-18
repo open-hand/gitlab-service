@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.ImpersonationToken;
 import org.gitlab4j.api.models.User;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +56,9 @@ public class UserController {
             @RequestParam(required = false) Integer projectsLimit,
             @ApiParam(value = "用户信息")
             @RequestBody GitlabTransferVO gitlabTransferVO) {
-        return Optional.ofNullable(userService.createUser(gitlabTransferVO.getUser(), gitlabTransferVO.getPassword(), projectsLimit))
+        User user = new User();
+        BeanUtils.copyProperties(gitlabTransferVO.getGitlabUserReqDTO(), user);
+        return Optional.ofNullable(userService.createUser(user, gitlabTransferVO.getPassword(), projectsLimit))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.users.create"));
     }
