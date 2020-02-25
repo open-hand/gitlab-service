@@ -7,9 +7,13 @@ import java.util.Date;
 import java.util.List;
 
 import io.choerodon.gitlab.api.vo.CommitVO;
+
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
+import org.gitlab4j.api.models.CommitPayload;
 import org.gitlab4j.api.models.CommitStatuse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +28,7 @@ import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
  */
 @Service
 public class CommitServiceImpl implements CommitService {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommitServiceImpl.class);
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
@@ -91,6 +95,16 @@ public class CommitServiceImpl implements CommitService {
         try {
             return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommits(gilabProjectId, page, size);
         } catch (GitLabApiException e) {
+            throw new FeignException(e);
+        }
+    }
+
+    @Override
+    public void createCommit(Integer projectId, Integer userId, CommitPayload commitPayload) {
+        try {
+            gitlab4jclient.getGitLabApi(userId).getCommitsApi().createCommit(projectId, commitPayload);
+        } catch (GitLabApiException e) {
+            LOGGER.info("error occurred while creating commit. the projectId is {}, the user id is {}, the payload is: {}.", projectId, userId, commitPayload);
             throw new FeignException(e);
         }
     }
