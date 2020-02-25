@@ -5,9 +5,11 @@ import java.util.Optional;
 
 import io.choerodon.gitlab.api.vo.CommitVO;
 import io.choerodon.gitlab.api.vo.GitlabTransferVO;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
+import org.gitlab4j.api.models.CommitPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,9 +80,7 @@ public class CommitController {
     /**
      * 查询某个项目的某个分支的所有commit
      *
-     * @param projectId  项目ID
-     * @param branchName 分支名称
-     * @param since      创建时间
+     * @param projectId 项目ID
      * @return commit列表
      */
 
@@ -121,6 +121,20 @@ public class CommitController {
         return Optional.ofNullable(commitService.listCommits(projectId, page, size, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.commits.get"));
+    }
+
+
+    @PostMapping
+    @ApiOperation("创建commit，可以批量操作文件")
+    public ResponseEntity createCommit(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "用户名", required = true)
+            @RequestParam(value = "user_id") Integer userId,
+            @ApiParam(value = "操作文件相关的信息")
+            @RequestBody CommitPayload commitPayload) {
+        commitService.createCommit(projectId, userId, commitPayload);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
 
