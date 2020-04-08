@@ -67,4 +67,38 @@ public class JobController {
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.jobs.get"));
     }
+    /**
+     * 查询某个Job执行日志
+     *
+     * @param projectId 项目id
+     * @param jobId     job id
+     * @return Job
+     */
+    @ApiOperation(value = "查询某个Job执行日志")
+    @GetMapping(value = "/jobs/{jobId}/trace")
+    public ResponseEntity<String> queryTrace(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "jobId", required = true)
+            @PathVariable Integer jobId,
+            @ApiParam(value = "userId")
+            @RequestParam(value = "userId") Integer userId) {
+        return Optional.ofNullable(jobService.queryTrace(projectId, userId, jobId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.jobs.get.trace"));
+    }
+
+    @ApiOperation(value = "重试job")
+    @PutMapping(value = "/jobs/{jobId}/retry")
+    public ResponseEntity<Job> retry(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "jobId", required = true)
+            @PathVariable Integer jobId,
+            @ApiParam(value = "userId")
+            @RequestParam(value = "userId") Integer userId) {
+        return Optional.ofNullable(jobService.retry(projectId, userId, jobId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.jobs.retry"));
+    }
 }

@@ -134,5 +134,24 @@ public class PipelineController {
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.cancel"));
     }
-
+    /**
+     * Create a new pipeline
+     *
+     * @param projectId  项目id
+     * @param ref       分支
+     * @return Pipeline
+     */
+    @ApiOperation(value = "Cancel a pipelines jobs ")
+    @PostMapping
+    public ResponseEntity<Pipeline> create(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "userId")
+            @RequestParam(value = "userId") Integer userId,
+            @ApiParam(value = "分支")
+            @RequestParam(value = "ref") String ref) {
+        return Optional.ofNullable(pipelineService.createPipeline(projectId, userId, ref))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.pipeline.create"));
+    }
 }

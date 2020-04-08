@@ -80,4 +80,14 @@ public class PipelineServiceImpl implements PipelineService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public Pipeline createPipeline(Integer projectId, Integer userId, String ref) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId)
+                    .getPipelineApi().createPipeline(projectId, ref);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }
