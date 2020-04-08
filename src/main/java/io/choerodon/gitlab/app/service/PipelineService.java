@@ -61,4 +61,14 @@ public interface PipelineService {
      * @return
      */
     Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId);
+
+    /**
+     * Create a new pipeline
+     *
+     * @param projectId
+     * @param userId
+     * @param ref
+     * @return
+     */
+    Pipeline createPipeline(Integer projectId, Integer userId, String ref);
 }

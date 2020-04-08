@@ -25,4 +25,8 @@ public interface JobService {
      * @return Job
      */
     Job queryJob(Integer projectId, Integer jobId);
+
+    String queryTrace(Integer projectId, Integer userId, Integer jobId);
+
+    Job retry(Integer projectId, Integer userId, Integer jobId);
 }

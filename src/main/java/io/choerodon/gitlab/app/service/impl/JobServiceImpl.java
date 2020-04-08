@@ -39,4 +39,24 @@ public class JobServiceImpl implements JobService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public String queryTrace(Integer projectId, Integer userId, Integer jobId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId)
+                    .getJobApi().getTrace(projectId, jobId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Job retry(Integer projectId, Integer userId, Integer jobId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId)
+                    .getJobApi().retryJob(projectId, jobId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }
