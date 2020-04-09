@@ -141,7 +141,7 @@ public class PipelineController {
      * @param ref       分支
      * @return Pipeline
      */
-    @ApiOperation(value = "Cancel a pipelines jobs ")
+    @ApiOperation(value = "Create a pipelines")
     @PostMapping
     public ResponseEntity<Pipeline> create(
             @ApiParam(value = "项目id", required = true)
