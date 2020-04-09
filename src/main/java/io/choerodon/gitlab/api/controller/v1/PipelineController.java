@@ -145,7 +145,7 @@ public class PipelineController {
     @PostMapping
     public ResponseEntity<Pipeline> create(
             @ApiParam(value = "项目id", required = true)
-            @PathVariable Integer projectId,
+            @PathVariable(value = "projectId") Integer projectId,
             @ApiParam(value = "userId")
             @RequestParam(value = "userId") Integer userId,
             @ApiParam(value = "分支")
