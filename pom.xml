@@ -4,14 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gitlab-service</artifactId>
-    <version>0.7.0.RELEASE</version>
+    <version>0.22.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <url>https://github.com/choerodon/gitlab-service</url>
 
     <!--加parent-->
     <parent>
         <groupId>io.choerodon</groupId>
         <artifactId>choerodon-framework-parent</artifactId>
-        <version>0.16.1.RELEASE</version>
+        <version>0.16.2-SNAPSHOT</version>
     </parent>
 
     <build>
@@ -24,33 +25,14 @@
         <choerodon.mainClass>io.choerodon.gitlab.GitlabServiceApplication</choerodon.mainClass>
     </properties>
 
-
     <dependencies>
         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-swagger</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-core</artifactId>
-            <version>${choerodon.starters.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.alibaba</groupId>
-                    <artifactId>fastjson</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-oauth-resource</artifactId>
-            <version>${choerodon.starters.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-feign-replay</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-feign-replay</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -67,9 +49,8 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-metric</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-metric</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

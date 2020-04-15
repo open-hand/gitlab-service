@@ -33,7 +33,7 @@ public class GitlabExceptionHandler {
         } catch (Exception exception) {
             LOGGER.trace("exception message {}", exception.getMessage());
         }
-        return new ResponseEntity<>(new ExceptionResponse(true, e.getCode(), message != null ? message : e.getTrace()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ExceptionResponse(e.getCode(), message != null ? message : e.getTrace()), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -52,6 +52,6 @@ public class GitlabExceptionHandler {
 
     @ExceptionHandler(GitlabBranchException.class)
     public ResponseEntity<ExceptionResponse> handUserNotExistException(GitlabBranchException ex) {
-        return new ResponseEntity<>(new ExceptionResponse(true, ex.getCode(), ex.getTraceMessage()), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new ExceptionResponse(ex.getCode(), ex.getTraceMessage()), HttpStatus.FORBIDDEN);
     }
 }
