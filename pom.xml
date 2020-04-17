@@ -20,7 +20,6 @@
     </build>
 
     <properties>
-        <choerodon.starters.version>0.16.1.RELEASE</choerodon.starters.version>
         <choerodon.serviceBuild>true</choerodon.serviceBuild>
         <choerodon.mainClass>io.choerodon.gitlab.GitlabServiceApplication</choerodon.mainClass>
     </properties>
@@ -42,7 +41,6 @@
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-gitlab4j-api</artifactId>
-            <version>${choerodon.starters.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
