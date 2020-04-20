@@ -201,4 +201,13 @@ public class RepositoryServiceImpl implements RepositoryService {
         }
     }
 
+    @Override
+    public Branch getBranch(Integer projectId, String name) {
+        try {
+            return gitlab4jclient.getGitLabApi().getRepositoryApi().getBranch(projectId, name);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
 }
