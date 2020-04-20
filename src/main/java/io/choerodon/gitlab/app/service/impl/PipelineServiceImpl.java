@@ -87,7 +87,7 @@ public class PipelineServiceImpl implements PipelineService {
             return gitlab4jclient.getGitLabApi(userId)
                     .getPipelineApi().createPipeline(projectId, ref);
         } catch (GitLabApiException e) {
-            throw new FeignException(e.getMessage(), e);
+            throw new FeignException(e.getMessage(), e.getHttpStatus());
         }
     }
 }
