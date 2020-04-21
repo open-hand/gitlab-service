@@ -138,5 +138,4 @@ public interface RepositoryService {
 
     void deleteFile(Integer projectId, String path, String commitMessage, Integer userId);
 
-    Branch getBranch(Integer projectId, String name);
 }

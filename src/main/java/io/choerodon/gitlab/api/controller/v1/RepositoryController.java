@@ -222,20 +222,6 @@ public class RepositoryController {
     }
 
     /**
-     * 获取项目下单个分支
-     *
-     */
-    @ApiOperation(value = "获取工程下单个分支")
-    @GetMapping(value = "/branches/{name}")
-    public ResponseEntity<Branch> getBranch(
-            @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
-            @ApiParam(value = "用户Id")
-            @RequestParam(value = "name") String name) {
-        return ResponseEntity.ok(repositoryService.getBranch(projectId, name));
-    }
-
-
-    /**
      * 项目下获取file
      *
      * @param projectId 项目id
