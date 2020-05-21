@@ -20,6 +20,7 @@
     </build>
 
     <properties>
+        <choerodon.starters.version>0.16.2-SNAPSHOT</choerodon.starters.version>
         <choerodon.serviceBuild>true</choerodon.serviceBuild>
         <choerodon.mainClass>io.choerodon.gitlab.GitlabServiceApplication</choerodon.mainClass>
     </properties>

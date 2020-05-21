@@ -3,16 +3,15 @@ package io.choerodon.gitlab.app.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.PipelineVO;
+import io.choerodon.gitlab.app.service.PipelineService;
+import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Pipeline;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.PipelineVO;
-import io.choerodon.gitlab.app.service.PipelineService;
-import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
 
 @Service
@@ -87,7 +86,7 @@ public class PipelineServiceImpl implements PipelineService {
             return gitlab4jclient.getGitLabApi(userId)
                     .getPipelineApi().createPipeline(projectId, ref);
         } catch (GitLabApiException e) {
-            throw new FeignException(e.getMessage(), e);
+            throw new FeignException(e.getMessage(), e.getHttpStatus());
         }
     }
 }
