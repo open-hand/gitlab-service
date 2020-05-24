@@ -166,7 +166,7 @@ public class RepositoryServiceImpl implements RepositoryService {
             repositoryFile.setContent(content);
             repositoryFile.setFilePath(path);
             repositoryFile = gitLabApi.getRepositoryFileApi().createFile(
-                    repositoryFile, projectId, StringUtils.isEmpty(branchName) ? "master" : branchName, "ADD FILE");
+                    repositoryFile, projectId, StringUtils.isEmpty(branchName) ? "master" : branchName, commitMessage);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -195,7 +195,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
-            gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, "master", "DELETE FILE");
+            gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, "master", commitMessage);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
