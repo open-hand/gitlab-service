@@ -1,8 +1,10 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.GroupVO;
+import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.app.service.GroupService;
+import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.GroupApi;
@@ -12,11 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.GroupVO;
-import io.choerodon.gitlab.api.vo.MemberVO;
-import io.choerodon.gitlab.app.service.GroupService;
-import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -191,6 +190,15 @@ public class GroupServiceImpl implements GroupService {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         try {
             gitLabApi.getGroupApi().removeMember(groupId, userId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Variable> getGroupVariable(Integer groupId, Integer userId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getGroupApi().getVariables(groupId);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }

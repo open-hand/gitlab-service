@@ -154,13 +154,13 @@ public interface ProjectService {
 
 
     /**
-     * 查询Variable
+     * 查询项目Variable
      *
      * @param projectId 项目id
      * @param userId    用户id
      * @return list
      */
-    List<Variable> getVarible(Integer projectId, Integer userId);
+    List<Variable> getProjectVariable(Integer projectId, Integer userId);
 
     /**
      * 添加项目成员

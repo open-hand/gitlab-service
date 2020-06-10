@@ -1,14 +1,10 @@
 package io.choerodon.gitlab.app.service;
 
-import java.util.List;
-
-import org.gitlab4j.api.models.AccessRequest;
-import org.gitlab4j.api.models.Group;
-import org.gitlab4j.api.models.Member;
-import org.gitlab4j.api.models.Project;
-
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
+import org.gitlab4j.api.models.*;
+
+import java.util.List;
 
 public interface GroupService {
     /**
@@ -122,4 +118,14 @@ public interface GroupService {
      * @param userIdToBeDenied 被拒绝的人的id
      */
     void denyAccessRequest(Integer groupId, Integer userIdToBeDenied);
+
+
+    /**
+     * 查询组Variable
+     *
+     * @param groupId 项目id
+     * @param userId  用户id
+     * @return list
+     */
+    List<Variable> getGroupVariable(Integer groupId, Integer userId);
 }

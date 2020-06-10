@@ -1,23 +1,19 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
-
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.gitlab4j.api.models.AccessRequest;
-import org.gitlab4j.api.models.Group;
-import org.gitlab4j.api.models.Member;
-import org.gitlab4j.api.models.Project;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
 import io.choerodon.gitlab.app.service.GroupService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.gitlab4j.api.models.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/v1/groups")
@@ -40,6 +36,18 @@ public class GroupsController {
         return Optional.ofNullable(groupService.listGroups())
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.groups.list"));
+    }
+
+    @ApiOperation(value = "查询项目Variable")
+    @GetMapping(value = "/{groupId}/variable")
+    public ResponseEntity<List<Variable>> listGroupVariable(
+            @ApiParam(value = "用户", required = true)
+            @PathVariable Integer groupId,
+            @ApiParam(value = "组名", required = true)
+            @RequestParam Integer userId) {
+        return Optional.ofNullable(groupService.getGroupVariable(groupId, userId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.Variable.get"));
     }
 
     /**
