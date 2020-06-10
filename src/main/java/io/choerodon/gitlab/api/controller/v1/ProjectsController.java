@@ -7,7 +7,6 @@ import io.choerodon.gitlab.api.vo.VariableVO;
 import io.choerodon.gitlab.app.service.ProjectService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.eclipse.jgit.api.Git;
 import org.gitlab4j.api.models.DeployKey;
 import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
@@ -15,15 +14,7 @@ import org.gitlab4j.api.models.Variable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -337,20 +328,20 @@ public class ProjectsController {
     }
 
     /**
-     * 查询Variable
+     * 查询Gitlab项目 Variable
      *
      * @param projectId 项目Id
      * @param userId    组名
      * @return List
      */
-    @ApiOperation(value = "查询Variable")
+    @ApiOperation(value = "查询项目Variable")
     @GetMapping(value = "/{projectId}/variable")
-    public ResponseEntity<List<Variable>> listVariable(
+    public ResponseEntity<List<Variable>> listProjectVariable(
             @ApiParam(value = "用户", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "组名", required = true)
             @RequestParam Integer userId) {
-        return Optional.ofNullable(projectService.getVarible(projectId, userId))
+        return Optional.ofNullable(projectService.getProjectVariable(projectId, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.Variable.get"));
     }
