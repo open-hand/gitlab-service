@@ -3,6 +3,7 @@ package io.choerodon.gitlab.app.service.impl;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
 import io.choerodon.gitlab.app.service.GroupService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import org.gitlab4j.api.GitLabApi;
@@ -15,8 +16,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
 
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -202,5 +203,50 @@ public class GroupServiceImpl implements GroupService {
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public Variable createVariable(Integer groupId, String key, String value, boolean protecteds, Integer userId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getGroupApi().createVariable(groupId, key, value, protecteds);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void deleteVariable(Integer groupId, String key, Integer userId) {
+        try {
+            gitlab4jclient.getGitLabApi(userId).getGroupApi().deleteVariable(groupId, key);
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void batchDeleteVariable(Integer groupId, List<String> keys, Integer userId) {
+        keys.forEach(key -> {
+            deleteVariable(groupId, key, userId);
+        });
+    }
+
+    @Override
+    public List<Variable> batchCreateVariable(Integer groupId, List<VariableVO> list, Integer userId) {
+        List<Variable> oldlist = getGroupVariable(groupId, userId);
+        return list.stream().filter(t -> t.getValue() != null).map(v -> {
+            try {
+                String key = v.getKey();
+                Optional<Variable> optional = oldlist.stream().filter(t -> key.equals(t.getKey())).findFirst();
+                if (optional.isPresent() && !optional.get().getKey().isEmpty()) {
+                    return gitlab4jclient.getGitLabApi(userId)
+                            .getGroupApi().updateVariable(groupId, v.getKey(), v.getValue(), false);
+                } else {
+                    return gitlab4jclient.getGitLabApi(userId)
+                            .getGroupApi().createVariable(groupId, v.getKey(), v.getValue(), false);
+                }
+            } catch (GitLabApiException e) {
+                throw new FeignException(e.getMessage(), e);
+            }
+        }).collect(Collectors.toList());
     }
 }

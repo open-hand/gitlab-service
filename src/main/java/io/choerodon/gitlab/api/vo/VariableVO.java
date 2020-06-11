@@ -12,8 +12,6 @@ public class VariableVO {
     private String key;
     @NotNull
     private String value;
-    @NotNull
-    private Boolean protecteds;
 
     public String getKey() {
         return key;
@@ -29,13 +27,5 @@ public class VariableVO {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public Boolean getProtecteds() {
-        return protecteds;
-    }
-
-    public void setProtecteds(Boolean protecteds) {
-        this.protecteds = protecteds;
     }
 }
