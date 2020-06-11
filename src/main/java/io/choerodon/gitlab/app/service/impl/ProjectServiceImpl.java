@@ -137,6 +137,21 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public void deleteVariable(Integer projectId, String key, Integer userId) {
+        try {
+            gitlab4jclient.getGitLabApi(userId)
+                    .getProjectApi().deleteVariable(projectId, key);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void batchDeleteVariable(Integer projectId, List<String> keys, Integer userId) {
+        keys.forEach(key -> deleteVariable(projectId, key, userId));
+    }
+
+    @Override
     public List<Map<String, Object>> batchCreateVariable(Integer projectId, List<VariableVO> list, Integer userId) {
         List<Variable> oldlist = getProjectVariable(projectId, userId);
         return list.stream().filter(t -> t.getValue() != null).map(v -> {
@@ -145,10 +160,10 @@ public class ProjectServiceImpl implements ProjectService {
                 Optional<Variable> optional = oldlist.stream().filter(t -> key.equals(t.getKey())).findFirst();
                 if (optional.isPresent() && !optional.get().getKey().isEmpty()) {
                     return gitlab4jclient.getGitLabApi(userId)
-                            .getProjectApi().updateVariable(projectId, v.getKey(), v.getValue(), v.getProtecteds());
+                            .getProjectApi().updateVariable(projectId, v.getKey(), v.getValue(), false);
                 } else {
                     return gitlab4jclient.getGitLabApi(userId)
-                            .getProjectApi().addVariable(projectId, v.getKey(), v.getValue(), v.getProtecteds());
+                            .getProjectApi().addVariable(projectId, v.getKey(), v.getValue(), false);
                 }
             } catch (GitLabApiException e) {
                 throw new FeignException(e.getMessage(), e);

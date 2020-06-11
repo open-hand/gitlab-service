@@ -131,13 +131,34 @@ public class ProjectsController {
     public ResponseEntity<List<Map<String, Object>>> batchSaveVariableEvent(
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
-            @ApiParam(value = "项目ID", required = false)
-            @RequestParam(value = "userId", required = false) Integer userId,
+            @ApiParam(value = "用户ID", required = true)
+            @RequestParam(value = "userId") Integer userId,
             @ApiParam(value = "variable信息", required = true)
             @RequestBody @Valid List<VariableVO> list) {
         return Optional.ofNullable(projectService.batchCreateVariable(projectId, list, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.variable.batch.create"));
+    }
+
+    /**
+     * 批量删除项目中指定key的变量
+     *
+     * @param projectId 项目id
+     * @param userId    用户id
+     * @param key       key
+     * @return 204 code
+     */
+    @ApiOperation(value = "批量删除项目中指定key的变量")
+    @DeleteMapping(value = "/{projectId}/variables")
+    public ResponseEntity<Void> batchDeleteVariable(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "用户ID", required = true)
+            @RequestParam(value = "userId") Integer userId,
+            @ApiParam(value = "variable keys", required = true)
+            @RequestBody List<String> key) {
+        projectService.batchDeleteVariable(projectId, key, userId);
+        return ResponseEntity.noContent().build();
     }
 
     /**

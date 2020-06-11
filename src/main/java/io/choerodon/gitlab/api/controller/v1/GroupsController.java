@@ -1,14 +1,17 @@
 package io.choerodon.gitlab.api.controller.v1;
 
 import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
 import io.choerodon.gitlab.app.service.GroupService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,18 +39,6 @@ public class GroupsController {
         return Optional.ofNullable(groupService.listGroups())
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.groups.list"));
-    }
-
-    @ApiOperation(value = "查询项目Variable")
-    @GetMapping(value = "/{groupId}/variable")
-    public ResponseEntity<List<Variable>> listGroupVariable(
-            @ApiParam(value = "用户", required = true)
-            @PathVariable Integer groupId,
-            @ApiParam(value = "组名", required = true)
-            @RequestParam Integer userId) {
-        return Optional.ofNullable(groupService.getGroupVariable(groupId, userId))
-                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new FeignException("error.Variable.get"));
     }
 
     /**
@@ -251,5 +242,76 @@ public class GroupsController {
             @RequestParam("user_id") Integer userId) {
         groupService.denyAccessRequest(groupId, userId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "查询组Variable")
+    @GetMapping(value = "/{groupId}/variable")
+    public ResponseEntity<List<Variable>> listGroupVariable(
+            @ApiParam(value = "用户", required = true)
+            @PathVariable Integer groupId,
+            @ApiParam(value = "组名", required = true)
+            @RequestParam Integer userId) {
+        return Optional.ofNullable(groupService.getGroupVariable(groupId, userId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.group.variable.get"));
+    }
+
+    @ApiOperation(value = "添加组Variable")
+    @PostMapping(value = "/{groupId}/variable")
+    public ResponseEntity<Variable> createGroupVariable(
+            @ApiParam(value = "组ID", required = true)
+            @PathVariable Integer groupId,
+            @ApiParam(value = "变量key&value", required = true)
+            @RequestBody @Validated({GitlabTransferVO.AddCiProjectVariable.class}) GitlabTransferVO gitlabTransferVO,
+            @ApiParam(value = "变量是否保护", required = true)
+            @RequestParam boolean protecteds,
+            @ApiParam(value = "用户Id称")
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(groupService.createVariable(groupId, gitlabTransferVO.getKey(), gitlabTransferVO.getValue(), protecteds, userId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.group.variable.create"));
+    }
+
+
+    /**
+     * 批量增加/更新项目ci环境变量
+     *
+     * @param groupId 组Id
+     * @param list    variable信息
+     * @return Map
+     */
+    @ApiOperation(value = " 批量增加/更新组ci环境变量")
+    @PutMapping(value = "/{groupId}/variables")
+    public ResponseEntity<List<Variable>> batchSaveVariable(
+            @ApiParam(value = "组ID", required = true)
+            @PathVariable Integer groupId,
+            @ApiParam(value = "用户ID", required = true)
+            @RequestParam(value = "userId") Integer userId,
+            @ApiParam(value = "variable信息", required = true)
+            @RequestBody @Valid List<VariableVO> list) {
+        return Optional.ofNullable(groupService.batchCreateVariable(groupId, list, userId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
+                .orElseThrow(() -> new FeignException("error.group.variable.batch.create"));
+    }
+
+    /**
+     * 批量删除组中指定key的变量
+     *
+     * @param groupId 组id
+     * @param userId  用户id
+     * @param key     key
+     * @return 204 code
+     */
+    @ApiOperation(value = "批量删除组中指定key的变量")
+    @DeleteMapping(value = "/{groupId}/variables")
+    public ResponseEntity<Void> batchDeleteVariable(
+            @ApiParam(value = "组ID", required = true)
+            @PathVariable Integer groupId,
+            @ApiParam(value = "用户ID", required = true)
+            @RequestParam(value = "userId") Integer userId,
+            @ApiParam(value = "variable keys", required = true)
+            @RequestBody List<String> key) {
+        groupService.batchDeleteVariable(groupId, key, userId);
+        return ResponseEntity.noContent().build();
     }
 }
