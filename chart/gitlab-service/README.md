@@ -33,15 +33,6 @@ metrics.path|监控地址|/actuator/prometheus
 metrics.group|监控组|spring-boot
 log.parser|日志|spring-boot
 deployment.managementPort|管理端口|8066
-preJob.timeout|初始化job超时时间 | 300
-preJob.image|初始化job镜像 | registry.cn-hangzhou.aliyuncs.com/choerodon-tools/dbtool:0.6.2
-preJob.preConfig.enable|是否执行初始化配置job|true
-preJob.preConfig.configFile|初始化配置解析的文件|application.yml
-preJob.preConfig.configType|初始化配置的方式|k8s
-preJob.preConfig.registerHost|初始化配置所需注册中心地址|http://register-server:8000
-preJob.preConfig.datasource.url|初始化配置数据库地址|jdbc:mysql://localhost:3306/manager_service?useUnicode=true&
-preJob.preConfig.datasource.username|初始化配置数据库用户名|choerodon
-preJob.preConfig.datasource.password|初始化配置数据库密码|123456
 env.open.SPRING_DATASOURCE_URL|数据库链接地址|jdbc:mysql://mysql.db.svc:3306/gitlab_service?useUnicode=true&characterEncoding=utf-8&useSSL=false
 env.open.SPRING_DATASOURCE_USERNAME|数据库用户名|root
 env.open.SPRING_DATASOURCE_PASSWORD|数据库密码|choerodon
