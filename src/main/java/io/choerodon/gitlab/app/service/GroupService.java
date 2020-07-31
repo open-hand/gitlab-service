@@ -1,14 +1,11 @@
 package io.choerodon.gitlab.app.service;
 
-import java.util.List;
-
-import org.gitlab4j.api.models.AccessRequest;
-import org.gitlab4j.api.models.Group;
-import org.gitlab4j.api.models.Member;
-import org.gitlab4j.api.models.Project;
-
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
+import org.gitlab4j.api.models.*;
+
+import java.util.List;
 
 public interface GroupService {
     /**
@@ -122,4 +119,66 @@ public interface GroupService {
      * @param userIdToBeDenied 被拒绝的人的id
      */
     void denyAccessRequest(Integer groupId, Integer userIdToBeDenied);
+
+
+    /**
+     * 查询组Variable
+     *
+     * @param groupId 组id
+     * @param userId  用户id
+     * @return list
+     */
+    List<Variable> getGroupVariable(Integer groupId, Integer userId);
+
+
+    /**
+     * 增加组ci环境变量
+     *
+     * @param groupId    组id
+     * @param key        变量key
+     * @param value      变量值
+     * @param protecteds 变量是否保护
+     * @param userId     用户Id
+     * @return
+     */
+    Variable createVariable(Integer groupId,
+                            String key,
+                            String value,
+                            boolean protecteds,
+                            Integer userId);
+
+    /**
+     * 删除组ci环境变量
+     *
+     * @param groupId 组id
+     * @param key     变量key
+     * @param userId  用户id
+     */
+    void deleteVariable(Integer groupId,
+                        String key,
+                        Integer userId);
+
+    /**
+     * 批量删除组ci环境变量
+     *
+     * @param groupId 组id
+     * @param keys    变量keys
+     * @param userId  用户id
+     */
+    void batchDeleteVariable(Integer groupId,
+                             List<String> keys,
+                             Integer userId);
+
+    /**
+     * 批量增加组ci环境变量
+     *
+     * @param groupId 组id
+     * @param list    变量信息
+     * @param userId  用户id
+     * @return
+     */
+    List<Variable> batchCreateVariable(Integer groupId,
+                                       List<VariableVO> list,
+                                       Integer userId);
+
 }

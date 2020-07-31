@@ -58,6 +58,28 @@ public interface ProjectService {
                                        Integer userId);
 
     /**
+     * 删除项目ci环境变量
+     *
+     * @param projectId 项目id
+     * @param key       变量key
+     * @param userId    用户id
+     */
+    void deleteVariable(Integer projectId,
+                        String key,
+                        Integer userId);
+
+    /**
+     * 批量删除项目ci环境变量
+     *
+     * @param projectId 项目id
+     * @param keys      变量keys
+     * @param userId    用户id
+     */
+    void batchDeleteVariable(Integer projectId,
+                             List<String> keys,
+                             Integer userId);
+
+    /**
      * 批量增加项目ci环境变量
      *
      * @param projectId 项目Id
@@ -154,13 +176,13 @@ public interface ProjectService {
 
 
     /**
-     * 查询Variable
+     * 查询项目Variable
      *
      * @param projectId 项目id
      * @param userId    用户id
      * @return list
      */
-    List<Variable> getVarible(Integer projectId, Integer userId);
+    List<Variable> getProjectVariable(Integer projectId, Integer userId);
 
     /**
      * 添加项目成员
@@ -175,7 +197,7 @@ public interface ProjectService {
      * 添加项目成员
      *
      * @param projectId 项目id
-     * @param list    成员信息
+     * @param list      成员信息
      * @return Member
      */
     List<Member> updateMembers(Integer projectId, List<MemberVO> list);
