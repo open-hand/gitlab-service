@@ -3,7 +3,6 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Optional;
 
-import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
@@ -14,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.choerodon.gitlab.app.service.MergeRequestService;
 
 @RestController
@@ -88,6 +88,22 @@ public class MergeRequestController {
             @ApiParam(value = "工程id", required = true)
             @PathVariable Integer projectId) {
         return Optional.ofNullable(mergeRequestService.listMergeRequests(projectId))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException(ERROR_MERGE_REQUEST_CREATE));
+    }
+
+    /**
+     * 获取合并请求id列表
+     *
+     * @param projectId 项目id
+     * @return List
+     */
+    @ApiOperation(value = "获取合并请求merge request id列表")
+    @GetMapping("/ids")
+    public ResponseEntity<List<Integer>> listMergeRequestIds(
+            @ApiParam(value = "工程id", required = true)
+            @PathVariable Integer projectId) {
+        return Optional.ofNullable(mergeRequestService.listMergeRequestIds(projectId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException(ERROR_MERGE_REQUEST_CREATE));
     }

@@ -16,7 +16,7 @@ public interface MergeRequestService {
      * @param targetBranch 目标分支
      * @param title        标题
      * @param description  描述
-     * @param userId     用户Id Optional
+     * @param userId       用户Id Optional
      * @return MergeRequest
      */
     MergeRequest createMergeRequest(Integer projectId, String sourceBranch,
@@ -29,7 +29,7 @@ public interface MergeRequestService {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求id
-     * @param userId       用户Id Optional
+     * @param userId         用户Id Optional
      * @return MergeRequest
      */
     MergeRequest queryMergeRequest(Integer projectId, Integer mergeRequestId, Integer userId);
@@ -42,6 +42,14 @@ public interface MergeRequestService {
      */
     List<MergeRequest> listMergeRequests(Integer projectId);
 
+    /**
+     * 获取合并请求列表merge request
+     *
+     * @param projectId 项目id
+     * @return MergeRequest
+     */
+    List<Integer> listMergeRequestIds(Integer projectId);
+
 
     /**
      * 执行merge请求
@@ -51,7 +59,7 @@ public interface MergeRequestService {
      * @param mergeCommitMessage        merge的commit信息
      * @param shouldRemoveSourceBranch  merge后是否删除该分支
      * @param mergeWhenPipelineSucceeds pipeline成功后自动合并分支
-     * @param userId                  用户Id
+     * @param userId                    用户Id
      * @return MergeRequest
      */
     MergeRequest acceptMergeRequest(
@@ -64,7 +72,7 @@ public interface MergeRequestService {
      *
      * @param projectId      项目id
      * @param mergeRequestId 合并请求ID
-     * @param userId 用户Id
+     * @param userId         用户Id
      * @return List
      */
     List<Commit> listCommits(Integer projectId, Integer mergeRequestId, Integer userId);

@@ -1,9 +1,8 @@
 package io.choerodon.gitlab.app.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import io.choerodon.gitlab.infra.common.exception.MergeRequestNotFoundException;
-import org.apache.commons.lang.StringUtils;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.MergeRequest;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.MergeRequestService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import io.choerodon.gitlab.infra.common.exception.MergeRequestNotFoundException;
 
 
 @Service
@@ -61,6 +61,12 @@ public class MergeRequestServiceImpl implements MergeRequestService {
         } catch (GitLabApiException e) {
             throw new FeignException("error.mergeRequests.list");
         }
+    }
+
+    @Override
+    public List<Integer> listMergeRequestIds(Integer projectId) {
+        List<MergeRequest> mergeRequestList = listMergeRequests(projectId);
+        return mergeRequestList.stream().map(MergeRequest::getIid).collect(Collectors.toList());
     }
 
     @Override
