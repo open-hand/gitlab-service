@@ -14,6 +14,9 @@ eureka:
     preferIpAddress: true
     leaseRenewalIntervalInSeconds: 1
     leaseExpirationDurationInSeconds: 3
+    # 服务的一些元数据信息
+    metadata-map:
+      VERSION: 0.24.0-alpha.1
   client:
     serviceUrl:
       defaultZone: http://localhost:8000/eureka/,http://localhost:8010/eureka/
