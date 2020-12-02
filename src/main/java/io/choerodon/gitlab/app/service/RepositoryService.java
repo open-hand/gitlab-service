@@ -138,4 +138,13 @@ public interface RepositoryService {
 
     void deleteFile(Integer projectId, String path, String commitMessage, Integer userId);
 
+    /**
+     * 下载压缩包
+     *
+     * @param projectId gitlab项目id
+     * @param userId    gitlab用户id
+     * @param commitSha 要下载的commit
+     * @return tgz压缩包的字节数组
+     */
+    byte[] downloadArchive(Integer projectId, Integer userId, String commitSha);
 }
