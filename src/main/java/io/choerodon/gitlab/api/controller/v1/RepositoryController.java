@@ -3,21 +3,23 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Optional;
 
-import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Branch;
 import org.gitlab4j.api.models.CompareResults;
 import org.gitlab4j.api.models.RepositoryFile;
 import org.gitlab4j.api.models.Tag;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.FileCreationVO;
 import io.choerodon.gitlab.api.vo.FileDeleteVO;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.choerodon.gitlab.app.service.RepositoryService;
 
 @RestController
@@ -314,5 +316,20 @@ public class RepositoryController {
             @RequestBody FileDeleteVO fileDeleteVO) {
         repositoryService.deleteFile(projectId, fileDeleteVO.getPath(), fileDeleteVO.getCommitMessage(), fileDeleteVO.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "项目下下载特定commit的压缩包/tgz压缩格式")
+    @GetMapping("/archive")
+    public ResponseEntity<byte[]> downloadArchive(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "user_id") Integer userId,
+            @RequestParam(value = "commit_sha") String commitSha) {
+        MultiValueMap<String, String> httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.TRANSFER_ENCODING, "chunked");
+        // 因为本身就是gzip压缩格式内容，这个头可以让浏览器将这个接口的内容自动解压，解压之后就是json格式了
+        httpHeaders.add(HttpHeaders.CONTENT_ENCODING, "gzip");
+        return new ResponseEntity<>(repositoryService.downloadArchive(projectId, userId, commitSha), httpHeaders, HttpStatus.OK);
     }
 }

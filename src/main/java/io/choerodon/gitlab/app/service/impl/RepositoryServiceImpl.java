@@ -1,8 +1,9 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.io.InputStream;
 import java.util.List;
 
-import io.choerodon.gitlab.infra.common.exception.GitlabBranchException;
+import org.apache.commons.io.IOUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Branch;
@@ -12,11 +13,12 @@ import org.gitlab4j.api.models.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.RepositoryService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
-import org.springframework.util.StringUtils;
+import io.choerodon.gitlab.infra.common.exception.GitlabBranchException;
 
 
 @Service
@@ -201,4 +203,14 @@ public class RepositoryServiceImpl implements RepositoryService {
         }
     }
 
+    @Override
+    public byte[] downloadArchive(Integer projectId, Integer userId, String commitSha) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            InputStream inputStream = gitLabApi.getRepositoryApi().getRepositoryArchive(projectId, commitSha);
+            return IOUtils.toByteArray(inputStream);
+        } catch (Exception e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }
