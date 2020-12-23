@@ -184,11 +184,7 @@ public class RepositoryServiceImpl implements RepositoryService {
             repositoryFile.setFilePath(path);
             repositoryFile = gitLabApi.getRepositoryFileApi().updateFile(repositoryFile, projectId, "master", commitMessage);
         } catch (GitLabApiException e) {
-            if (e.getHttpStatus() == 200) {
-                return repositoryFile;
-            } else {
-                throw new FeignException(e.getMessage(), e);
-            }
+            throw new FeignException(e.getMessage(), e);
         }
         return repositoryFile;
     }
