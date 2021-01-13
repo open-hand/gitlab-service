@@ -1,10 +1,10 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.GitlabTransferVO;
-import io.choerodon.gitlab.api.vo.MemberVO;
-import io.choerodon.gitlab.api.vo.VariableVO;
-import io.choerodon.gitlab.app.service.ProjectService;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.validation.Valid;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.DeployKey;
@@ -16,17 +16,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
+import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
+import io.choerodon.gitlab.app.service.ProjectService;
 
 
 @RestController
 @RequestMapping(value = "/v1/projects")
 public class ProjectsController {
 
-    private ProjectService projectService;
+    private final ProjectService projectService;
 
     public ProjectsController(ProjectService projectService) {
         this.projectService = projectService;
@@ -197,10 +198,10 @@ public class ProjectsController {
     @ApiOperation(value = "更新项目")
     @PutMapping
     public ResponseEntity<Project> update(
-            @ApiParam(value = "项目信息", required = true)
-            @PathVariable Project project,
             @ApiParam(value = "用户Id", required = true)
-            @RequestParam Integer userId) {
+            @RequestParam Integer userId,
+            @ApiParam(value = "项目信息", required = true)
+            @RequestBody Project project) {
         return Optional.ofNullable(projectService.updateProject(project, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.projects.update"));
