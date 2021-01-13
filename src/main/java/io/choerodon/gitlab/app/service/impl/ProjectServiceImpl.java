@@ -1,11 +1,11 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.google.gson.Gson;
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.MemberVO;
-import io.choerodon.gitlab.api.vo.VariableVO;
-import io.choerodon.gitlab.app.service.ProjectService;
-import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.*;
@@ -13,10 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
+import io.choerodon.gitlab.app.service.ProjectService;
+import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -186,9 +187,11 @@ public class ProjectServiceImpl implements ProjectService {
     public Project updateProject(Project newProject, Integer userId) {
         try {
             Project project = gitlab4jclient.getGitLabApi().getProjectApi().getProject(newProject.getId());
+            project.setCiConfigPath(newProject.getCiConfigPath());
             return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().updateProject(project);
         } catch (GitLabApiException e) {
+            LOGGER.warn("Failed to update project, the user id is {} and project is [id={},ciConfigPath={}]", userId, newProject.getId(), newProject.getCiConfigPath());
             throw new FeignException(e.getMessage(), e);
         }
     }
