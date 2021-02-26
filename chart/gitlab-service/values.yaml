@@ -52,6 +52,10 @@ env:
     GITLAB_URL: http://git.example.com
     # Gitlab admin 用户 private token
     GITLAB_PRIVATETOKEN: sw1W4jywyxsvkHYRGBBp
+
+    # 百分比使用物理内存，预留一部分用于堆外内存以及外部程序
+    JAVA_OPTS: >-
+      -XX:MaxRAMPercentage=85.0
     ## Skywalking 配置参数
     # SKYWALKING_OPTS: >-
     #   -javaagent:/agent/skywalking-agent.jar
