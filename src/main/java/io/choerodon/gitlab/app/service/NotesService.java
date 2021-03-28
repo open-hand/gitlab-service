@@ -59,4 +59,6 @@ public interface NotesService {
      * @param noteId    标记 id
      */
     void deleteIssueNote(Integer projectId, Integer issueIid, Integer noteId);
+
+    List<Note> listByMergeRequestIid(Integer projectId, Integer iid);
 }

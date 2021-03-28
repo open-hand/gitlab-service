@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.MergeRequest;
+import org.gitlab4j.api.models.MergeRequestParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -31,12 +32,10 @@ public class MergeRequestServiceImpl implements MergeRequestService {
     }
 
     @Override
-    public MergeRequest createMergeRequest(Integer projectId, String sourceBranch, String targetBranch,
-                                           String title, String description, Integer userId) {
+    public MergeRequest createMergeRequest(Integer projectId, MergeRequestParams mergeRequestParams, Integer userId) {
         try {
             return gitlab4jclient.getGitLabApi(userId).getMergeRequestApi()
-                    .createMergeRequest(projectId, sourceBranch,
-                            targetBranch, title, description, null);
+                    .createMergeRequest(projectId, mergeRequestParams);
         } catch (GitLabApiException e) {
             throw new FeignException("error.mergeRequest.create");
         }

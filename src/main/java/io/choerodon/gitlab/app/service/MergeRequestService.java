@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.MergeRequest;
+import org.gitlab4j.api.models.MergeRequestParams;
 
 
 public interface MergeRequestService {
@@ -12,16 +13,10 @@ public interface MergeRequestService {
      * 创建merge请求
      *
      * @param projectId    工程ID
-     * @param sourceBranch 源分支
-     * @param targetBranch 目标分支
-     * @param title        标题
-     * @param description  描述
      * @param userId       用户Id Optional
      * @return MergeRequest
      */
-    MergeRequest createMergeRequest(Integer projectId, String sourceBranch,
-                                    String targetBranch, String title,
-                                    String description, Integer userId);
+    MergeRequest createMergeRequest(Integer projectId, MergeRequestParams mergeRequestParams, Integer userId);
 
 
     /**

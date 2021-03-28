@@ -73,4 +73,14 @@ public class NotesServiceImpl implements NotesService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<Note> listByMergeRequestIid(Integer projectId, Integer iid) {
+        try {
+            return gitlab4jclient.getGitLabApi(null)
+                    .getNotesApi().getMergeRequestNotes(projectId, iid);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }
