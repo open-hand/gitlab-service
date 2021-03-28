@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.MergeRequest;
-import org.gitlab4j.api.models.MergeRequestParams;
+
+import io.choerodon.gitlab.api.vo.MergeRequestVO;
 
 
 public interface MergeRequestService {
@@ -16,7 +17,7 @@ public interface MergeRequestService {
      * @param userId       用户Id Optional
      * @return MergeRequest
      */
-    MergeRequest createMergeRequest(Integer projectId, MergeRequestParams mergeRequestParams, Integer userId);
+    MergeRequest createMergeRequest(Integer projectId, MergeRequestVO mergeRequestParams, Integer userId);
 
 
     /**

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.MergeRequestVO;
 import io.choerodon.gitlab.app.service.MergeRequestService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import io.choerodon.gitlab.infra.common.exception.MergeRequestNotFoundException;
@@ -32,8 +33,19 @@ public class MergeRequestServiceImpl implements MergeRequestService {
     }
 
     @Override
-    public MergeRequest createMergeRequest(Integer projectId, MergeRequestParams mergeRequestParams, Integer userId) {
+    public MergeRequest createMergeRequest(Integer projectId, MergeRequestVO mergeRequestVO, Integer userId) {
         try {
+            MergeRequestParams mergeRequestParams = new MergeRequestParams();
+            mergeRequestParams.withSourceBranch(mergeRequestVO.getSourceBranch());
+            mergeRequestParams.withTargetBranch(mergeRequestVO.getTargetBranch());
+            mergeRequestParams.withTitle(mergeRequestVO.getTitle());
+            mergeRequestParams.withDescription(mergeRequestVO.getDescription());
+            mergeRequestParams.withRemoveSourceBranch(mergeRequestVO.getRemoveSourceBranch());
+            mergeRequestParams.withApprovalsBeforeMerge(mergeRequestVO.getApprovalsBeforeMerge());
+            mergeRequestParams.withAssigneeId(mergeRequestVO.getAssigneeId());
+            mergeRequestParams.withAssigneeIds(mergeRequestVO.getAssigneeIds());
+
+
             return gitlab4jclient.getGitLabApi(userId).getMergeRequestApi()
                     .createMergeRequest(projectId, mergeRequestParams);
         } catch (GitLabApiException e) {

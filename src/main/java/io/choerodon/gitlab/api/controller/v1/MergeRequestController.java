@@ -7,12 +7,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.MergeRequest;
-import org.gitlab4j.api.models.MergeRequestParams;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.MergeRequestVO;
 import io.choerodon.gitlab.app.service.MergeRequestService;
 
 @RestController
@@ -43,11 +43,11 @@ public class MergeRequestController {
             @ApiParam(value = "工程id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "要创建的分支名&源分支名&title&描述", required = true)
-            @RequestBody MergeRequestParams mergeRequestParams,
+            @RequestBody MergeRequestVO mergeRequestVO,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
 
-        return ResponseEntity.ok(mergeRequestService.createMergeRequest(projectId, mergeRequestParams, userId));
+        return ResponseEntity.ok(mergeRequestService.createMergeRequest(projectId, mergeRequestVO, userId));
     }
 
 
