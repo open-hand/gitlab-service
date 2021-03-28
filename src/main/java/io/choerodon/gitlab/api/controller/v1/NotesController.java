@@ -141,4 +141,15 @@ public class NotesController {
         notesService.deleteIssueNote(projectId, issueIid, noteId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @ApiOperation(value = "查询MR下的note列表")
+    @GetMapping
+    public ResponseEntity<List<Note>> listByMergeRequestIid(
+            @ApiParam(value = "项目Id", required = true)
+            @RequestParam Integer projectId,
+            @ApiParam(value = "gitlab Issue ID", required = true)
+            @RequestParam Integer iid) {
+        return ResponseEntity.ok(notesService.listByMergeRequestIid(projectId, iid));
+
+    }
 }

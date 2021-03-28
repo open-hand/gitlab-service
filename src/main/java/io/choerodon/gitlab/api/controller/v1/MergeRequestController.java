@@ -7,13 +7,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.MergeRequest;
+import org.gitlab4j.api.models.MergeRequestParams;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.choerodon.gitlab.app.service.MergeRequestService;
 
 @RestController
@@ -44,13 +43,11 @@ public class MergeRequestController {
             @ApiParam(value = "工程id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "要创建的分支名&源分支名&title&描述", required = true)
-            @RequestBody @Validated({GitlabTransferVO.CreateMerge.class}) GitlabTransferVO gitlabTransferVO,
+            @RequestBody MergeRequestParams mergeRequestParams,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "userId", required = false) Integer userId) {
-        return Optional.ofNullable(mergeRequestService.createMergeRequest(projectId,
-                gitlabTransferVO.getSourceBranch(), gitlabTransferVO.getTargetBranch(), gitlabTransferVO.getTitle(), gitlabTransferVO.getDescription(), userId))
-                .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
-                .orElseThrow(() -> new FeignException(ERROR_MERGE_REQUEST_CREATE));
+
+        return ResponseEntity.ok(mergeRequestService.createMergeRequest(projectId, mergeRequestParams, userId));
     }
 
 
