@@ -143,7 +143,7 @@ public class NotesController {
     }
 
     @ApiOperation(value = "查询MR下的note列表")
-    @GetMapping
+    @GetMapping("/on_merge_request")
     public ResponseEntity<List<Note>> listByMergeRequestIid(
             @ApiParam(value = "项目Id", required = true)
             @RequestParam Integer projectId,
