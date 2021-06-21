@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to gitlab-service will be documented in this file.
 
+
+## [1.0.0] - 2021-06-18
+### Changed
+- Upgrading hzero dependency on version 1.6.4
+
 ## [0.22.1] - 2020-08-01
 ### Added
 - Add Apis about GitLab pipelines
