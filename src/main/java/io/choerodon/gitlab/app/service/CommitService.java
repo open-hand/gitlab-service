@@ -13,7 +13,7 @@ import io.choerodon.gitlab.api.vo.CommitStatuseVO;
  * Created by zzy on 2018/1/14.
  */
 public interface CommitService {
-    CommitVO getCommit(Integer projectId, String sha, Integer userId);
+    Commit getCommit(Integer projectId, String sha, Integer userId);
 
     List<CommitStatuseVO> getCommitStatuse(Integer projectId, String sha, Integer userId);
 
