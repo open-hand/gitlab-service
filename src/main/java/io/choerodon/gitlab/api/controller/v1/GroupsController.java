@@ -206,10 +206,28 @@ public class GroupsController {
             @ApiParam(value = "组ID", required = true)
             @PathVariable Integer groupId,
             @ApiParam(value = "userId")
-            @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(groupService.listProjects(groupId, userId))
-                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new FeignException("error.groups.project.query"));
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "perPage", required = false) Integer perPage) {
+        return ResponseEntity.ok(groupService.listProjects(groupId, userId, page, perPage));
+    }
+
+    /**
+     * 获取项目列表
+     *
+     * @param groupId 组对象Id
+     * @param userId  用户Id
+     * @return List
+     */
+    @ApiOperation(value = "获取项目列表")
+    @PostMapping(value = "/{groupId}/projects")
+    public ResponseEntity<List<Project>> listProjects(
+            @ApiParam(value = "组ID", required = true)
+            @PathVariable Integer groupId,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId,
+            @RequestBody GroupProjectsFilter filter) {
+        return ResponseEntity.ok(groupService.listProjects(groupId, userId, filter));
     }
 
     /**

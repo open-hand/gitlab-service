@@ -98,9 +98,11 @@ public interface GroupService {
      *
      * @param groupId 组对象Id
      * @param userId  用户名
+     * @param page
+     * @param perPage
      * @return List
      */
-    List<Project> listProjects(Integer groupId, Integer userId);
+    List<Project> listProjects(Integer groupId, Integer userId, Integer page, Integer perPage);
 
     /**
      * 根据组名查询组
@@ -188,4 +190,5 @@ public interface GroupService {
                                        List<VariableVO> list,
                                        Integer userId);
 
+    List<Project> listProjects(Integer groupId, Integer userId, GroupProjectsFilter filter);
 }
