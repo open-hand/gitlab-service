@@ -89,10 +89,10 @@ public class GroupServiceImpl implements GroupService {
 
 
     @Override
-    public List<Project> listProjects(Integer groupId, Integer userId) {
+    public List<Project> listProjects(Integer groupId, Integer userId, Integer page, Integer perPage) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
-            return gitLabApi.getGroupApi().getProjects(groupId);
+            return gitLabApi.getGroupApi().getProjects(groupId, page, perPage);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -258,5 +258,15 @@ public class GroupServiceImpl implements GroupService {
                 throw new FeignException(e.getMessage(), e);
             }
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Project> listProjects(Integer groupId, Integer userId, GroupProjectsFilter filter) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            return gitLabApi.getGroupApi().getProjects(groupId, filter);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
     }
 }
