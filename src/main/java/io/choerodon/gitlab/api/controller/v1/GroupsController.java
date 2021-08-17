@@ -33,6 +33,19 @@ public class GroupsController {
      *
      * @return List
      */
+    @ApiOperation(value = "查询有权限的所有组")
+    @PostMapping("/{userId}")
+    public ResponseEntity<List<Group>> list(@ApiParam(value = "userId")
+                                            @PathVariable(value = "userId") Integer userId,
+                                            @RequestBody GroupFilter groupFilter) {
+        return ResponseEntity.ok(groupService.listGroupsWithParam(groupFilter, userId));
+    }
+
+    /**
+     * 查询所有组
+     *
+     * @return List
+     */
     @ApiOperation(value = "查询所有组")
     @GetMapping
     public ResponseEntity<List<Group>> list() {

@@ -15,6 +15,13 @@ public interface GroupService {
      */
     List<Group> listGroups();
 
+    /**
+     * 查询所有组
+     *
+     * @return List
+     */
+    List<Group> listGroupsWithParam(GroupFilter groupFilter, Integer userId);
+
 
     /**
      * 创建组
