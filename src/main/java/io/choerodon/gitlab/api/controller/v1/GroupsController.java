@@ -223,9 +223,9 @@ public class GroupsController {
     @PostMapping(value = "/{groupId}/projects")
     public ResponseEntity<List<Project>> listProjects(
             @ApiParam(value = "组ID", required = true)
-            @PathVariable Integer groupId,
+            @PathVariable(value = "groupId") Integer groupId,
             @ApiParam(value = "userId")
-            @RequestParam(required = false) Integer userId,
+            @RequestParam(value = "userId", required = false) Integer userId,
             @RequestBody GroupProjectsFilter filter) {
         return ResponseEntity.ok(groupService.listProjects(groupId, userId, filter));
     }
