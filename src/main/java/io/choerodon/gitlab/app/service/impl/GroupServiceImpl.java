@@ -148,7 +148,7 @@ public class GroupServiceImpl implements GroupService {
     public List<Group> listGroupsWithParam(GroupFilter groupFilter, Integer userId) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
-            return gitLabApi.getGroupApi().getGroups();
+            return gitLabApi.getGroupApi().getGroups(groupFilter);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
