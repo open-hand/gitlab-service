@@ -476,7 +476,7 @@ public class ProjectsController {
 
 
     @ApiParam(value = "迁移应用服务")
-    @GetMapping(value = "/{projectId}")
+    @PutMapping(value = "/{projectId}/transfer")
     public ResponseEntity<Project> transferProject(
             @ApiParam(value = "用户id", required = true)
             @PathVariable(value = "projectId") Integer projectId,
