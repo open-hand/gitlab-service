@@ -244,4 +244,6 @@ public interface ProjectService {
      * @return List
      */
     List<Project> getMemberProjects(Integer userId);
+
+    Project transferProject(Integer projectId, Integer userId, Integer groupId);
 }

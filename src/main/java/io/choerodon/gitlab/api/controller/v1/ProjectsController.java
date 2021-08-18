@@ -473,4 +473,17 @@ public class ProjectsController {
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.member.projects.list"));
     }
+
+
+    @ApiParam(value = "迁移应用服务")
+    @GetMapping(value = "/{projectId}")
+    public ResponseEntity<Project> transferProject(
+            @ApiParam(value = "用户id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId") Integer userId,
+            @ApiParam(value = "新的groupId")
+            @RequestParam(value = "groupId") Integer groupId) {
+        return ResponseEntity.ok(projectService.transferProject(projectId, userId, groupId));
+    }
 }

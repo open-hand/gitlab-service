@@ -304,4 +304,13 @@ public class ProjectServiceImpl implements ProjectService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public Project transferProject(Integer projectId, Integer userId, Integer groupId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getProjectApi().transferProject(projectId, groupId.toString());
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }
