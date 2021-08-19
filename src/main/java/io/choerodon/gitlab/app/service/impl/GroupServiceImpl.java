@@ -145,10 +145,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Group> listGroupsWithParam(GroupFilter groupFilter, Integer userId) {
+    public List<Group> listGroupsWithParam(Integer userId, Boolean owned, String search, List<Integer> skipGroups) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
-            return gitLabApi.getGroupApi().getGroups(groupFilter);
+            GroupFilter groupFilter = new GroupFilter();
+            groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search);
+            return gitLabApi.getGroupApi().getGroups(groupFilter, 20).page(1);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -261,10 +263,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Project> listProjects(Integer groupId, Integer userId, GroupProjectsFilter filter) {
+    public List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
-            return gitLabApi.getGroupApi().getProjects(groupId, filter);
+            GroupProjectsFilter groupProjectsFilter = new GroupProjectsFilter();
+            groupProjectsFilter.withOwned(owned).withSearch(search).withPage(page).withPerPage(perPage);
+            return gitLabApi.getGroupApi().getProjects(groupId, groupProjectsFilter);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
