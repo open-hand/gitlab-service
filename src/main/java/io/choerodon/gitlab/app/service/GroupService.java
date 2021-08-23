@@ -189,6 +189,12 @@ public interface GroupService {
     List<Variable> batchCreateVariable(Integer groupId,
                                        List<VariableVO> list,
                                        Integer userId);
-
+    /**
+     * 获取项目列表
+     *
+     * @param groupId 组对象Id
+     * @param userId  用户Id
+     * @return List
+     */
     List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage);
 }
