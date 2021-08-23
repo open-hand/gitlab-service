@@ -191,5 +191,5 @@ public interface GroupService {
                                        Integer userId);
 
 
-    List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search);
+    List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage);
 }
