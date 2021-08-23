@@ -227,8 +227,10 @@ public class GroupsController {
             @PathVariable(value = "groupId") Integer groupId,
             @RequestParam(value = "userId", required = false) Integer userId,
             @RequestParam(value = "owned", required = false) Boolean owned,
-            @RequestParam(value = "search", required = false) String search) {
-        return ResponseEntity.ok(groupService.listProjects(groupId, userId, owned, search));
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "perPage", required = false) Integer perPage) {
+        return ResponseEntity.ok(groupService.listProjects(groupId, userId, owned, search, page, perPage));
     }
 
     /**
