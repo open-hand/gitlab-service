@@ -37,10 +37,8 @@ public class GroupsController {
     @PostMapping("/{userId}")
     public ResponseEntity<List<Group>> list(@ApiParam(value = "userId")
                                             @PathVariable(value = "userId") Integer userId,
-                                            @RequestParam(value = "owned", required = false) Boolean owned,
-                                            @RequestParam(value = "search", required = false) String search,
-                                            @RequestBody List<Integer> skipGroups) {
-        return ResponseEntity.ok(groupService.listGroupsWithParam(userId, owned, search, skipGroups));
+                                            @RequestBody GroupFilter groupFilter) {
+        return ResponseEntity.ok(groupService.listGroupsWithParam(groupFilter, userId));
     }
 
     /**
@@ -126,7 +124,7 @@ public class GroupsController {
      *
      * @param groupId 组对象Id
      * @param userId  用户Id
-     * @return Member/{userId}
+     * @return Member
      */
     @ApiOperation(value = "根据用户ID获得组成员信息")
     @GetMapping(value = "/{groupId}/members/{userId}")
@@ -222,15 +220,14 @@ public class GroupsController {
      * @return List
      */
     @ApiOperation(value = "获取项目列表")
-    @GetMapping(value = "/{groupId}/projects")
+    @PostMapping(value = "/{groupId}/projects")
     public ResponseEntity<List<Project>> listProjects(
+            @ApiParam(value = "组ID", required = true)
             @PathVariable(value = "groupId") Integer groupId,
+            @ApiParam(value = "userId")
             @RequestParam(value = "userId", required = false) Integer userId,
-            @RequestParam(value = "owned", required = false) Boolean owned,
-            @RequestParam(value = "search", required = false) String search,
-            @RequestParam(value = "page", required = false) Integer page,
-            @RequestParam(value = "perPage", required = false) Integer perPage) {
-        return ResponseEntity.ok(groupService.listProjects(groupId, userId, owned, search, page, perPage));
+            @RequestBody GroupProjectsFilter filter) {
+        return ResponseEntity.ok(groupService.listProjects(groupId, userId, filter));
     }
 
     /**
