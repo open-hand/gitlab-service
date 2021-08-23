@@ -20,7 +20,7 @@ public interface GroupService {
      *
      * @return List
      */
-    List<Group> listGroupsWithParam(GroupFilter groupFilter, Integer userId);
+    List<Group> listGroupsWithParam(Integer userId, Boolean owned, String search, List<Integer> skipGroups);
 
 
     /**
@@ -190,5 +190,5 @@ public interface GroupService {
                                        List<VariableVO> list,
                                        Integer userId);
 
-    List<Project> listProjects(Integer groupId, Integer userId, GroupProjectsFilter filter);
+    List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage);
 }

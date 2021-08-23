@@ -37,8 +37,10 @@ public class GroupsController {
     @PostMapping("/{userId}")
     public ResponseEntity<List<Group>> list(@ApiParam(value = "userId")
                                             @PathVariable(value = "userId") Integer userId,
-                                            @RequestBody GroupFilter groupFilter) {
-        return ResponseEntity.ok(groupService.listGroupsWithParam(groupFilter, userId));
+                                            @RequestParam(value = "owned", required = false) Boolean owned,
+                                            @RequestParam(value = "search", required = false) String search,
+                                            @RequestBody List<Integer> skipGroups) {
+        return ResponseEntity.ok(groupService.listGroupsWithParam(userId, owned, search, skipGroups));
     }
 
     /**
@@ -220,14 +222,15 @@ public class GroupsController {
      * @return List
      */
     @ApiOperation(value = "获取项目列表")
-    @PostMapping(value = "/{groupId}/projects")
+    @GetMapping(value = "/{groupId}/projects")
     public ResponseEntity<List<Project>> listProjects(
-            @ApiParam(value = "组ID", required = true)
             @PathVariable(value = "groupId") Integer groupId,
-            @ApiParam(value = "userId")
             @RequestParam(value = "userId", required = false) Integer userId,
-            @RequestBody GroupProjectsFilter filter) {
-        return ResponseEntity.ok(groupService.listProjects(groupId, userId, filter));
+            @RequestParam(value = "owned", required = false) Boolean owned,
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "perPage", required = false) Integer perPage) {
+        return ResponseEntity.ok(groupService.listProjects(groupId, userId, owned, search, page, perPage));
     }
 
     /**
