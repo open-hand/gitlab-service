@@ -246,4 +246,6 @@ public interface ProjectService {
     List<Project> getMemberProjects(Integer userId);
 
     Project transferProject(Integer projectId, Integer userId, Integer groupId);
+
+    Project updateName(Integer projectId, Integer userId, String name);
 }
