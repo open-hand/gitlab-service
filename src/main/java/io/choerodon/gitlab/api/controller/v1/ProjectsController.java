@@ -214,13 +214,13 @@ public class ProjectsController {
      * @return Project
      */
     @ApiOperation(value = "更新项目")
-    @PutMapping("/{projectId}/name")
-    public ResponseEntity<Project> updateName(
+    @PutMapping("/{projectId}/name_and_path")
+    public ResponseEntity<Project> updateNameAndPath(
             @PathVariable Integer projectId,
             @ApiParam(value = "用户Id", required = true)
             @RequestParam Integer userId,
             @RequestParam String name) {
-        return Optional.ofNullable(projectService.updateName(projectId, userId, name))
+        return Optional.ofNullable(projectService.updateNameAndPath(projectId, userId, name))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.projects.update"));
     }

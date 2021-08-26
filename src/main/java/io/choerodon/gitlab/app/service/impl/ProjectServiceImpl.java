@@ -315,10 +315,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project updateName(Integer projectId, Integer userId, String name) {
+    public Project updateNameAndPath(Integer projectId, Integer userId, String name) {
         try {
             Project project = gitlab4jclient.getGitLabApi().getProjectApi().getProject(projectId);
             project.setName(name);
+            project.setPath(name);
             return gitlab4jclient.getGitLabApi(userId)
                     .getProjectApi().updateProject(project);
         } catch (GitLabApiException e) {
