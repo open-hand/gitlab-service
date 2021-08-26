@@ -208,6 +208,24 @@ public class ProjectsController {
     }
 
     /**
+     * 更新项目
+     *
+     * @param userId  用户Id
+     * @return Project
+     */
+    @ApiOperation(value = "更新项目")
+    @PutMapping("/{projectId}/name")
+    public ResponseEntity<Project> updateName(
+            @PathVariable Integer projectId,
+            @ApiParam(value = "用户Id", required = true)
+            @RequestParam Integer userId,
+            @RequestParam String name) {
+        return Optional.ofNullable(projectService.updateName(projectId, userId, name))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.projects.update"));
+    }
+
+    /**
      * 通过分支名查询保护分支
      *
      * @param projectId 项目Id

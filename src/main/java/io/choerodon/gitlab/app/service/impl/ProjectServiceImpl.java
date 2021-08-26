@@ -313,4 +313,17 @@ public class ProjectServiceImpl implements ProjectService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public Project updateName(Integer projectId, Integer userId, String name) {
+        try {
+            Project project = gitlab4jclient.getGitLabApi().getProjectApi().getProject(projectId);
+            project.setName(name);
+            return gitlab4jclient.getGitLabApi(userId)
+                    .getProjectApi().updateProject(project);
+        } catch (GitLabApiException e) {
+            LOGGER.warn("Failed to update project, the user id is {} and project is [id={},name={}]", userId, projectId, name);
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }
