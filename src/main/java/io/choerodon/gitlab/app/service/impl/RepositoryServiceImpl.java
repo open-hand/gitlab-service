@@ -212,6 +212,11 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     @Override
     public InputStream downloadArchiveByFormat(Integer projectId, Integer userId, String commitSha, String format) {
-        return null;
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            return gitLabApi.getRepositoryFileApi().getRepositoryArchive(projectId, commitSha, format);
+        } catch (Exception e) {
+            throw new FeignException(e.getMessage(), e);
+        }
     }
 }
