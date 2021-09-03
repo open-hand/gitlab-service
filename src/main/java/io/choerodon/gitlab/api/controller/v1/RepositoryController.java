@@ -336,13 +336,13 @@ public class RepositoryController {
 
     @ApiOperation(value = "项目下下载特定commit的压缩包")
     @GetMapping("/archive_format")
-    public InputStream downloadArchiveByFormat(
+    public ResponseEntity<InputStream> downloadArchiveByFormat(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "用户Id")
             @RequestParam(value = "user_id") Integer userId,
             @RequestParam(value = "commit_sha") String commitSha,
             @RequestParam(value = "format", required = false) String format) {
-        return repositoryService.downloadArchiveByFormat(projectId, userId, commitSha, format);
+        return new ResponseEntity<>(repositoryService.downloadArchiveByFormat(projectId, userId, commitSha, format), HttpStatus.OK);
     }
 }

@@ -1,14 +1,10 @@
 package io.choerodon.gitlab.app.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.gitlab4j.api.models.ImpersonationToken;
 import org.gitlab4j.api.models.User;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 
 import io.choerodon.gitlab.api.vo.UserWithPassword;
 
@@ -87,7 +83,7 @@ public interface UserService {
      * @param userId 用户Id
      * @return ImpersonationToken
      */
-    ImpersonationToken createUserAccessToken(Integer userId);
+    ImpersonationToken createUserAccessToken(Integer userId, String tokenName, Date date);
 
     /**
      * 获取用户的Aceess_Token
