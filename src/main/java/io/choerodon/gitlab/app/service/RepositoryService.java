@@ -1,5 +1,6 @@
 package io.choerodon.gitlab.app.service;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.gitlab4j.api.models.Branch;
@@ -147,4 +148,16 @@ public interface RepositoryService {
      * @return tgz压缩包的字节数组
      */
     byte[] downloadArchive(Integer projectId, Integer userId, String commitSha);
+
+
+    /**
+     * 下载压缩包
+     *
+     * @param projectId gitlab项目id
+     * @param userId    gitlab用户id
+     * @param commitSha 要下载的commit或者分支
+     * @param format    文件类型
+     * @return
+     */
+    InputStream downloadArchiveByFormat(Integer projectId, Integer userId, String commitSha, String format);
 }

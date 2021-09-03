@@ -209,4 +209,9 @@ public class RepositoryServiceImpl implements RepositoryService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public InputStream downloadArchiveByFormat(Integer projectId, Integer userId, String commitSha, String format) {
+        return null;
+    }
 }
