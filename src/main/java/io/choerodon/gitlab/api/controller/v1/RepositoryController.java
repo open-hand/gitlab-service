@@ -1,5 +1,6 @@
 package io.choerodon.gitlab.api.controller.v1;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -331,5 +332,17 @@ public class RepositoryController {
         // 因为本身就是gzip压缩格式内容，这个头可以让浏览器将这个接口的内容自动解压，解压之后就是json格式了
         httpHeaders.add(HttpHeaders.CONTENT_ENCODING, "gzip");
         return new ResponseEntity<>(repositoryService.downloadArchive(projectId, userId, commitSha), httpHeaders, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "项目下下载特定commit的压缩包")
+    @GetMapping("/archive_format")
+    public InputStream downloadArchiveByFormat(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "user_id") Integer userId,
+            @RequestParam(value = "commit_sha") String commitSha,
+            @RequestParam(value = "format", required = false) String format) {
+        return repositoryService.downloadArchiveByFormat(projectId, userId, commitSha, format);
     }
 }
