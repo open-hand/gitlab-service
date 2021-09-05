@@ -1,9 +1,9 @@
 package io.choerodon.gitlab.api.controller.v1;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.ImpersonationToken;
@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.choerodon.gitlab.api.vo.UserWithPassword;
 import io.choerodon.gitlab.app.service.UserService;
 
@@ -206,10 +207,26 @@ public class UserController {
      */
     @ApiOperation(value = "创建用户的Access_Token")
     @PostMapping(value = "/{userId}/impersonation_tokens")
-    public ResponseEntity<ImpersonationToken> createUserAccessToken(@PathVariable Integer userId) {
-        return Optional.ofNullable(userService.createUserAccessToken(userId))
+    public ResponseEntity<ImpersonationToken> createUserAccessToken(@PathVariable Integer userId,
+                                                                    @RequestParam(value = "tokenName", required = false) String tokenName,
+                                                                    @RequestParam(value = "date", required = false) Date date) {
+        return Optional.ofNullable(userService.createUserAccessToken(userId, tokenName, date))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.access_token.get"));
+    }
+
+    /**
+     * 删除用户的Access_Token
+     *
+     * @param userId 用户Id
+     * @return
+     */
+    @ApiOperation(value = "删除用户的Access_Token")
+    @DeleteMapping(value = "/{userId}/impersonation_tokens")
+    public ResponseEntity<Void> revokeImpersonationToken(@PathVariable Integer userId,
+                                                         @RequestParam(value = "tokenId") Integer tokenId) {
+        userService.revokeImpersonationToken(userId, tokenId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**

@@ -1,5 +1,6 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.gitlab4j.api.Constants;
@@ -11,6 +12,7 @@ import org.gitlab4j.api.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.UserWithPassword;
@@ -210,17 +212,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ImpersonationToken createUserAccessToken(Integer userId) {
+    public ImpersonationToken createUserAccessToken(Integer userId, String tokenName, Date date) {
         UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
         try {
             User user = userApi.getUser(userId);
             if (user == null) {
                 throw new FeignException("error.users.get");
             }
-            return userApi.createImpersonationToken(
+            if (StringUtils.isEmpty(tokenName)) {
+                tokenName = "myToken";
+            }
+            if (date == null) {
+                return userApi.createImpersonationToken(
+                        user.getId(),
+                        tokenName,
+                        ImpersonationToken.Scope.values());
+            } else {
+                return userApi.createImpersonationToken(
+                        user.getId(),
+                        tokenName,
+                        date,
+                        ImpersonationToken.Scope.values());
+            }
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void revokeImpersonationToken(Integer userId, Integer tokenId) {
+        UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
+        try {
+            User user = userApi.getUser(userId);
+            if (user == null) {
+                throw new FeignException("error.users.get");
+            }
+            userApi.revokeImpersonationToken(
                     user.getId(),
-                    "myToken",
-                    ImpersonationToken.Scope.values());
+                    tokenId);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
