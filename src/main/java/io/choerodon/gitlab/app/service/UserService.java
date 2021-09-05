@@ -86,6 +86,14 @@ public interface UserService {
     ImpersonationToken createUserAccessToken(Integer userId, String tokenName, Date date);
 
     /**
+     * 删除用户的Aceess_Token
+     *
+     * @param userId
+     * @param tokenId
+     */
+    void revokeImpersonationToken(Integer userId, Integer tokenId);
+
+    /**
      * 获取用户的Aceess_Token
      *
      * @param userId 用户Id

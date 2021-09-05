@@ -216,6 +216,20 @@ public class UserController {
     }
 
     /**
+     * 删除用户的Access_Token
+     *
+     * @param userId 用户Id
+     * @return
+     */
+    @ApiOperation(value = "删除用户的Access_Token")
+    @DeleteMapping(value = "/{userId}/impersonation_tokens")
+    public ResponseEntity<Void> revokeImpersonationToken(@PathVariable Integer userId,
+                                                         @RequestParam(value = "tokenId") Integer tokenId) {
+        userService.revokeImpersonationToken(userId, tokenId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
      * 获取用户的Access_Token
      *
      * @param userId 用户Id

@@ -240,6 +240,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void revokeImpersonationToken(Integer userId, Integer tokenId) {
+        UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
+        try {
+            User user = userApi.getUser(userId);
+            if (user == null) {
+                throw new FeignException("error.users.get");
+            }
+            userApi.revokeImpersonationToken(
+                    user.getId(),
+                    tokenId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public List<ImpersonationToken> listUserAccessToken(Integer userId) {
         UserApi userApi = gitlab4jclient.getGitLabApi().getUserApi();
         try {
