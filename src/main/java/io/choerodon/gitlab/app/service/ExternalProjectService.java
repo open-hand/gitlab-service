@@ -13,5 +13,5 @@ import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
  */
 public interface ExternalProjectService {
 
-    Project queryProjectByCode(String namespaceCode, String projectCode, AppExternalConfigDTO appExternalConfigDTO);
+    Project queryExternalProjectByCode(String namespaceCode, String projectCode, AppExternalConfigDTO appExternalConfigDTO);
 }

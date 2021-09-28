@@ -20,7 +20,7 @@ import io.choerodon.gitlab.infra.util.ExternalGitlabApiUtil;
 public class ExternalProjectServiceImpl implements ExternalProjectService {
 
     @Override
-    public Project queryProjectByCode(String namespaceCode, String projectCode, AppExternalConfigDTO appExternalConfigDTO) {
+    public Project queryExternalProjectByCode(String namespaceCode, String projectCode, AppExternalConfigDTO appExternalConfigDTO) {
         try {
             return ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO).getProjectApi().getProject(namespaceCode, projectCode);
         } catch (GitLabApiException e) {

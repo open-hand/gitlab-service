@@ -30,11 +30,11 @@ public class ExternalProjectController {
 
     @ApiOperation(value = "通过项目id查询项目")
     @GetMapping(value = "/query_by_code")
-    public ResponseEntity<Project> queryProjectByCode(
+    public ResponseEntity<Project> queryExternalProjectByCode(
             @RequestParam(value = "namespace_code") String namespaceCode,
             @RequestParam(value = "project_code") String projectCode,
             @ApiParam(value = "认证信息", required = true)
             AppExternalConfigDTO appExternalConfigDTO) {
-        return ResponseEntity.ok(externalProjectService.queryProjectByCode(namespaceCode, projectCode, appExternalConfigDTO));
+        return ResponseEntity.ok(externalProjectService.queryExternalProjectByCode(namespaceCode, projectCode, appExternalConfigDTO));
     }
 }
