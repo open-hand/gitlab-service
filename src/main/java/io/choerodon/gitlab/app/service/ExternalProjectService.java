@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.ProjectHook;
 import org.gitlab4j.api.models.Variable;
 
 import io.choerodon.gitlab.api.vo.VariableVO;
@@ -24,4 +25,5 @@ public interface ExternalProjectService {
 
     List<Map<String, Object>> batchCreateVariable(Integer projectId, List<VariableVO> list, AppExternalConfigDTO appExternalConfigDTO);
 
+    ProjectHook createProjectHook(Integer projectId, ProjectHook projectHook, AppExternalConfigDTO appExternalConfigDTO);
 }

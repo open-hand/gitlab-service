@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.ProjectHook;
 import org.gitlab4j.api.models.Variable;
 import org.springframework.stereotype.Service;
 
@@ -65,5 +66,15 @@ public class ExternalProjectServiceImpl implements ExternalProjectService {
                 throw new FeignException(e.getMessage(), e);
             }
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public ProjectHook createProjectHook(Integer projectId, ProjectHook projectHook, AppExternalConfigDTO appExternalConfigDTO) {
+        try {
+            return ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO).getProjectApi()
+                    .addHook(projectId, projectHook.getUrl(), projectHook, true, projectHook.getToken());
+        } catch (Exception e) {
+            throw new FeignException(e.getMessage(), e);
+        }
     }
 }

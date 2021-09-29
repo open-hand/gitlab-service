@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.ProjectHook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,4 +64,18 @@ public class ExternalProjectController {
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.variable.batch.create"));
     }
+
+    @ApiOperation(value = "创建ProjectHook对象")
+    @PostMapping("/hook")
+    public ResponseEntity<ProjectHook> create(
+            @ApiParam(value = "项目ID", required = true)
+            @RequestParam Integer projectId,
+            @ApiParam(value = "projectHook对象", required = true)
+            @RequestBody @Valid ProjectHook projectHook,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(externalProjectService.createProjectHook(projectId, projectHook, appExternalConfigDTO))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
+                .orElseThrow(() -> new FeignException("error.projects.add.hook"));
+    }
+
 }
