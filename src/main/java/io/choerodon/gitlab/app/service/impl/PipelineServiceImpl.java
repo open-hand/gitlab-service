@@ -64,9 +64,15 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public Pipeline retryPipeline(Integer projectId, Integer pipelineId, Integer userId) {
+    public Pipeline retryPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
         try {
-            return gitlab4jclient.getGitLabApi(userId)
+            return gitLabApi
                     .getPipelineApi().retryPipelineJob(projectId, pipelineId);
         } catch (GitLabApiException e) {
             return new Pipeline();
@@ -74,9 +80,15 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId) {
+    public Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
         try {
-            return gitlab4jclient.getGitLabApi(userId)
+            return gitLabApi
                     .getPipelineApi().cancelPipelineJobs(projectId, pipelineId);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);

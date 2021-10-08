@@ -22,6 +22,7 @@ import io.choerodon.gitlab.api.vo.FileCreationVO;
 import io.choerodon.gitlab.api.vo.FileDeleteVO;
 import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.choerodon.gitlab.app.service.RepositoryService;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 
 @RestController
 @RequestMapping(value = "/v1/projects/{projectId}/repository")
@@ -276,8 +277,15 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             // TODO @Valid
-            @RequestBody FileCreationVO fileCreationVO) {
-        return Optional.ofNullable(repositoryService.createFile(projectId, fileCreationVO.getPath(), fileCreationVO.getContent(), fileCreationVO.getCommitMessage(), fileCreationVO.getUserId(), fileCreationVO.getBranchName()))
+            @RequestBody FileCreationVO fileCreationVO,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(repositoryService.createFile(projectId,
+                fileCreationVO.getPath(),
+                fileCreationVO.getContent(),
+                fileCreationVO.getCommitMessage(),
+                fileCreationVO.getUserId(),
+                fileCreationVO.getBranchName(),
+                appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.file.create"));
     }
@@ -295,8 +303,14 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             // TODO @Valid
-            @RequestBody FileCreationVO fileCreationVO) {
-        return Optional.ofNullable(repositoryService.updateFile(projectId, fileCreationVO.getPath(), fileCreationVO.getContent(), fileCreationVO.getCommitMessage(), fileCreationVO.getUserId()))
+            @RequestBody FileCreationVO fileCreationVO,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(repositoryService.updateFile(projectId,
+                fileCreationVO.getPath(),
+                fileCreationVO.getContent(),
+                fileCreationVO.getCommitMessage(),
+                fileCreationVO.getUserId(),
+                appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.file.update"));
     }

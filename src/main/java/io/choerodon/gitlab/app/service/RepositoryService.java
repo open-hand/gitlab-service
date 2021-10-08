@@ -135,9 +135,9 @@ public interface RepositoryService {
      */
     CompareResults getDiffs(Integer projectId, String from, String to);
 
-    RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName);
+    RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO);
 
-    RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId);
+    RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
     void deleteFile(Integer projectId, String path, String commitMessage, Integer userId);
 

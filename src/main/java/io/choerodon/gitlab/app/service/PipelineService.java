@@ -46,22 +46,24 @@ public interface PipelineService {
     /**
      * Retry jobs in a pipeline
      *
-     * @param projectId  项目 Id
-     * @param pipelineId 流水线 Id
-     * @param userId   用户Id
+     * @param projectId            项目 Id
+     * @param pipelineId           流水线 Id
+     * @param userId               用户Id
+     * @param appExternalConfigDTO
      * @return
      */
-    Pipeline retryPipeline(Integer projectId, Integer pipelineId, Integer userId);
+    Pipeline retryPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
     /**
      * Cancel a pipelines jobs
      *
-     * @param projectId  项目 Id
-     * @param pipelineId 流水线 Id
-     * @param userId   用户Id
+     * @param projectId            项目 Id
+     * @param pipelineId           流水线 Id
+     * @param userId               用户Id
+     * @param appExternalConfigDTO
      * @return
      */
-    Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId);
+    Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
     /**
      * Create a new pipeline

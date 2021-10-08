@@ -108,8 +108,9 @@ public class PipelineController {
             @ApiParam(value = "pipelineId", required = true)
             @PathVariable Integer pipelineId,
             @ApiParam(value = "userId")
-            @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(pipelineService.retryPipeline(projectId, pipelineId, userId))
+            @RequestParam(required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(pipelineService.retryPipeline(projectId, pipelineId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.retry"));
     }
@@ -130,15 +131,17 @@ public class PipelineController {
             @ApiParam(value = "pipelineId", required = true)
             @PathVariable Integer pipelineId,
             @ApiParam(value = "userId")
-            @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(pipelineService.cancelPipeline(projectId, pipelineId, userId))
+            @RequestParam(required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(pipelineService.cancelPipeline(projectId, pipelineId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.cancel"));
     }
+
     /**
      * Create a new pipeline
      *
-     * @param projectId  项目id
+     * @param projectId 项目id
      * @param ref       分支
      * @return Pipeline
      */
