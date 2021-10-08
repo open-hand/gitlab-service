@@ -328,8 +328,13 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             // TODO @Valid
-            @RequestBody FileDeleteVO fileDeleteVO) {
-        repositoryService.deleteFile(projectId, fileDeleteVO.getPath(), fileDeleteVO.getCommitMessage(), fileDeleteVO.getUserId());
+            @RequestBody FileDeleteVO fileDeleteVO,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        repositoryService.deleteFile(projectId,
+                fileDeleteVO.getPath(),
+                fileDeleteVO.getCommitMessage(),
+                fileDeleteVO.getUserId(),
+                appExternalConfigDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

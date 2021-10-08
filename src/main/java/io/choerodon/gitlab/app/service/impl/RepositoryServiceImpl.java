@@ -210,8 +210,13 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+    public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
         try {
             gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, "master", commitMessage);
         } catch (GitLabApiException e) {
