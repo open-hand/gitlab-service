@@ -19,6 +19,8 @@ import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.RepositoryService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import io.choerodon.gitlab.infra.common.exception.GitlabBranchException;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+import io.choerodon.gitlab.infra.util.ExternalGitlabApiUtil;
 
 
 @Service
@@ -139,8 +141,14 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public RepositoryFile getFile(Integer projectId, String commit, String filePath) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
+    public RepositoryFile getFile(Integer projectId, String commit, String filePath, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi();
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
+
         RepositoryFile file;
         try {
             file = gitLabApi.getRepositoryFileApi().getFile(filePath, projectId, commit);

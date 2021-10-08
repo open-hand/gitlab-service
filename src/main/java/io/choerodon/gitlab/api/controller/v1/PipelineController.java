@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.PipelineVO;
 import io.choerodon.gitlab.app.service.PipelineService;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 
 @RestController
 @RequestMapping(value = "/v1/projects/{projectId}/pipelines")
@@ -149,8 +150,9 @@ public class PipelineController {
             @ApiParam(value = "userId")
             @RequestParam(value = "userId") Integer userId,
             @ApiParam(value = "分支")
-            @RequestParam(value = "ref") String ref) {
-        return Optional.ofNullable(pipelineService.createPipeline(projectId, userId, ref))
+            @RequestParam(value = "ref") String ref,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(pipelineService.createPipeline(projectId, userId, ref, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.create"));
     }

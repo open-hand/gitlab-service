@@ -3,13 +3,13 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.validation.Valid;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.ProjectHook;
+import org.gitlab4j.api.models.RepositoryFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.VariableVO;
 import io.choerodon.gitlab.app.service.ExternalProjectService;
+import io.choerodon.gitlab.app.service.JobService;
+import io.choerodon.gitlab.app.service.RepositoryService;
 import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 
 /**
@@ -34,6 +36,11 @@ public class ExternalProjectController {
     @Autowired
     private ExternalProjectService externalProjectService;
 
+    @Autowired
+    private RepositoryService repositoryService;
+    @Autowired
+    private JobService jobService;
+
 
     @ApiOperation(value = "通过项目id查询项目")
     @GetMapping(value = "/query_by_code")
@@ -41,7 +48,7 @@ public class ExternalProjectController {
             @RequestParam(value = "namespace_code") String namespaceCode,
             @RequestParam(value = "project_code") String projectCode,
             @ApiParam(value = "认证信息", required = true)
-            AppExternalConfigDTO appExternalConfigDTO) {
+                    AppExternalConfigDTO appExternalConfigDTO) {
         return ResponseEntity.ok(externalProjectService.queryExternalProjectByCode(namespaceCode, projectCode, appExternalConfigDTO));
     }
 
@@ -76,6 +83,25 @@ public class ExternalProjectController {
         return Optional.ofNullable(externalProjectService.createProjectHook(projectId, projectHook, appExternalConfigDTO))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.add.hook"));
+    }
+
+
+    /**
+     * 项目下获取file
+     *
+     * @param projectId 项目id
+     * @param commit    the commit SHA or branch name
+     * @param filePath  file path
+     * @return file
+     */
+    @ApiOperation(value = "项目下获取file")
+    @GetMapping(value = "/{projectId}/repository/{commit}/file")
+    public ResponseEntity<RepositoryFile> getExternalFile(
+            @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
+            @ApiParam(value = "commit", required = true) @PathVariable String commit,
+            @ApiParam(value = "file path", required = true) @RequestParam(value = "file_path") String filePath,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return ResponseEntity.ok(repositoryService.getFile(projectId, commit, filePath, appExternalConfigDTO));
     }
 
 }

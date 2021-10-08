@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.JobService;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 
 
 /**
@@ -43,8 +44,9 @@ public class JobController {
             @ApiParam(value = "pipelineId", required = true)
             @PathVariable Integer pipelineId,
             @ApiParam(value = "userId")
-            @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(jobService.listJobs(projectId, pipelineId, userId))
+            @RequestParam(required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(jobService.listJobs(projectId, pipelineId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.jobs.get"));
     }

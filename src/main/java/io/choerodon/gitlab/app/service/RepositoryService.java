@@ -8,6 +8,8 @@ import org.gitlab4j.api.models.CompareResults;
 import org.gitlab4j.api.models.RepositoryFile;
 import org.gitlab4j.api.models.Tag;
 
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+
 
 public interface RepositoryService {
 
@@ -120,7 +122,7 @@ public interface RepositoryService {
      * @param filePath  file path
      * @return file
      */
-    RepositoryFile getFile(Integer projectId, String commit, String filePath);
+    RepositoryFile getFile(Integer projectId, String commit, String filePath, AppExternalConfigDTO appExternalConfigDTO);
 
 
     /**

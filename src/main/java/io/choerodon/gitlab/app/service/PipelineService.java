@@ -5,6 +5,7 @@ import java.util.List;
 import org.gitlab4j.api.models.Pipeline;
 
 import io.choerodon.gitlab.api.vo.PipelineVO;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 
 
 /**
@@ -68,7 +69,8 @@ public interface PipelineService {
      * @param projectId
      * @param userId
      * @param ref
+     * @param appExternalConfigDTO
      * @return
      */
-    Pipeline createPipeline(Integer projectId, Integer userId, String ref);
+    Pipeline createPipeline(Integer projectId, Integer userId, String ref, AppExternalConfigDTO appExternalConfigDTO);
 }

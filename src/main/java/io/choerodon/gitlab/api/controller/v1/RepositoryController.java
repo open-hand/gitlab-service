@@ -238,7 +238,7 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
             @ApiParam(value = "commit", required = true) @PathVariable String commit,
             @ApiParam(value = "file path", required = true) @RequestParam(value = "file_path") String filePath) {
-        return Optional.ofNullable(repositoryService.getFile(projectId, commit, filePath))
+        return Optional.ofNullable(repositoryService.getFile(projectId, commit, filePath, null))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.file.get"));
     }
