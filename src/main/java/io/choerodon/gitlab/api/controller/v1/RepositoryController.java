@@ -219,8 +219,9 @@ public class RepositoryController {
     public ResponseEntity<List<Branch>> listBranches(
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
             @ApiParam(value = "用户Id")
-            @RequestParam(value = "userId", required = false) Integer userId) {
-        return Optional.ofNullable(repositoryService.listBranches(projectId, userId))
+            @RequestParam(value = "userId", required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(repositoryService.listBranches(projectId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.branch.list"));
     }

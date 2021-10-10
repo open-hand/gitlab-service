@@ -25,7 +25,7 @@ public class ExternalGitlabApiUtil {
 
                 newGitLabApi = new GitLabApi(GitLabApi.ApiVersion.V4, appExternalConfigDTO.getGitlabUrl(), appExternalConfigDTO.getAccessToken());
             } else if (ExternalAppAuthTypeEnum.USERNAME_PASSWORD.getValue().equals(appExternalConfigDTO.getAuthType())) {
-                newGitLabApi = GitLabApi.login(appExternalConfigDTO.getGitlabUrl(), appExternalConfigDTO.getUsername(), appExternalConfigDTO.getPassword());
+                newGitLabApi = GitLabApi.loginWithOAuth(appExternalConfigDTO.getGitlabUrl(), appExternalConfigDTO.getUsername(), appExternalConfigDTO.getPassword());
             } else {
                 throw new CommonException("unknown auth type");
             }

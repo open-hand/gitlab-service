@@ -130,9 +130,15 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<Branch> listBranches(Integer projectId, Integer userId) {
+    public List<Branch> listBranches(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
         try {
-            return gitlab4jclient.getGitLabApi(userId)
+            GitLabApi gitLabApi;
+            if (appExternalConfigDTO == null) {
+                gitLabApi = gitlab4jclient.getGitLabApi();
+            } else {
+                gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+            }
+            return gitLabApi
                     .getRepositoryApi()
                     .getBranches(projectId);
         } catch (GitLabApiException e) {

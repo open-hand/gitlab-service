@@ -98,11 +98,12 @@ public interface RepositoryService {
     /**
      * 获取项目下所有分支
      *
-     * @param projectId 项目id
-     * @param userId    用户Id
+     * @param projectId            项目id
+     * @param userId               用户Id
+     * @param appExternalConfigDTO
      * @return List
      */
-    List<Branch> listBranches(Integer projectId, Integer userId);
+    List<Branch> listBranches(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
 
 //    /**
