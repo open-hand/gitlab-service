@@ -134,7 +134,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     public List<Branch> listBranches(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
         try {
             GitLabApi gitLabApi;
-            if (appExternalConfigDTO == null) {
+            if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
                 gitLabApi = gitlab4jclient.getGitLabApi();
             } else {
                 gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
@@ -150,7 +150,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public RepositoryFile getFile(Integer projectId, String commit, String filePath, AppExternalConfigDTO appExternalConfigDTO) {
         GitLabApi gitLabApi;
-        if (appExternalConfigDTO == null) {
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi();
         } else {
             gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
@@ -179,7 +179,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     public RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO) {
         GitLabApi gitLabApi;
 
-        if (appExternalConfigDTO == null) {
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi(userId);
         } else {
             gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
@@ -199,7 +199,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
         GitLabApi gitLabApi;
-        if (appExternalConfigDTO == null) {
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi(userId);
         } else {
             gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
@@ -219,7 +219,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
         GitLabApi gitLabApi;
-        if (appExternalConfigDTO == null) {
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi(userId);
         } else {
             gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);

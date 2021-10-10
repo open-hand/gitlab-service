@@ -66,7 +66,7 @@ public class PipelineServiceImpl implements PipelineService {
     @Override
     public Pipeline retryPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
         GitLabApi gitLabApi;
-        if (appExternalConfigDTO == null) {
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi(userId);
         } else {
             gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
@@ -82,7 +82,7 @@ public class PipelineServiceImpl implements PipelineService {
     @Override
     public Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
         GitLabApi gitLabApi;
-        if (appExternalConfigDTO == null) {
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi(userId);
         } else {
             gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
@@ -98,7 +98,7 @@ public class PipelineServiceImpl implements PipelineService {
     @Override
     public Pipeline createPipeline(Integer projectId, Integer userId, String ref, AppExternalConfigDTO appExternalConfigDTO) {
         GitLabApi gitLabApi;
-        if (appExternalConfigDTO == null) {
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi(userId);
         } else {
             gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);

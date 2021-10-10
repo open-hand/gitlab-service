@@ -26,7 +26,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<Job> listJobs(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
         GitLabApi gitLabApi;
-        if (appExternalConfigDTO == null) {
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi(userId);
         } else {
             gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
