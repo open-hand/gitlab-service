@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.app.service.RepositoryService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
@@ -159,7 +160,7 @@ public class RepositoryServiceImpl implements RepositoryService {
         try {
             file = gitLabApi.getRepositoryFileApi().getFile(filePath, projectId, commit);
         } catch (GitLabApiException e) {
-            return null;
+            throw new CommonException("query.repository.file.failed", e);
         }
         return file;
     }
