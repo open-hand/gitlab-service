@@ -1,14 +1,15 @@
 package io.choerodon.gitlab.app.service;
 
-import io.choerodon.gitlab.api.vo.MemberVO;
-import io.choerodon.gitlab.api.vo.VariableVO;
+import java.util.List;
+import java.util.Map;
+
 import org.gitlab4j.api.models.DeployKey;
 import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Variable;
 
-import java.util.List;
-import java.util.Map;
+import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
 
 
 public interface ProjectService {
@@ -248,4 +249,6 @@ public interface ProjectService {
     Project transferProject(Integer projectId, Integer userId, Integer groupId);
 
     Project updateNameAndPath(Integer projectId, Integer userId, String name);
+
+    Project getProjectByPath(String groupName, String projectName, Boolean statistics);
 }

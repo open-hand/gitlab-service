@@ -1,5 +1,6 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.MemberVO;
 import io.choerodon.gitlab.api.vo.VariableVO;
@@ -325,6 +327,18 @@ public class ProjectServiceImpl implements ProjectService {
         } catch (GitLabApiException e) {
             LOGGER.warn("Failed to update project, the user id is {} and project is [id={},name={}]", userId, projectId, name);
             throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Project getProjectByPath(String groupName, String projectName, Boolean statistics) {
+        try {
+            String path = URLEncoder.encode(groupName + "/" + projectName, "UTF-8");
+            return gitlab4jclient
+                    .getGitLabApi(null)
+                    .getProjectApi().getProject(path, statistics);
+        } catch (Exception e) {
+            throw new CommonException("query.Project.Failed", e);
         }
     }
 }

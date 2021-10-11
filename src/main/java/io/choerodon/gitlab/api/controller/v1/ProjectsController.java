@@ -346,6 +346,21 @@ public class ProjectsController {
     }
 
     /**
+     * 通过项目路径查询项目
+     *
+     * @return Project
+     */
+    @ApiOperation(value = "通过项目id查询项目")
+    @GetMapping(value = "/queryByName")
+    public ResponseEntity<Project> queryProjectById(
+            @ApiParam(value = "项目id", required = true)
+            @RequestParam(value = "group_name") String groupName,
+            @RequestParam(value = "project_name") String projectName,
+            @RequestParam(value = "statistics", defaultValue = "false") Boolean statistics) {
+        return ResponseEntity.ok(projectService.getProjectByPath(groupName, projectName, statistics));
+    }
+
+    /**
      * 通过组名项目名查询项目
      *
      * @param userId      项目Id
