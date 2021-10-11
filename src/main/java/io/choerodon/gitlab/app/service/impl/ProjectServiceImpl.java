@@ -104,18 +104,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project getProject(Integer userId, String groupCode, String projectCode) {
+    public Project getProject(Integer userId, String groupCode, String projectCode, Boolean statistics) {
         try {
-            String targetPathWithNamespace = groupCode + "/" + projectCode;
-            return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProjects(projectCode).stream()
-                    .filter(i -> i.getPathWithNamespace().equals(targetPathWithNamespace))
-                    .findFirst().orElse(new Project());
-        } catch (GitLabApiException e) {
-            if (e.getHttpStatus() == 404) {
-                return new Project();
-            } else {
-                throw new FeignException(e.getMessage(), e);
-            }
+            String path = URLEncoder.encode(groupCode + "/" + projectCode, "UTF-8");
+            return gitlab4jclient
+                    .getGitLabApi(userId)
+                    .getProjectApi().getProject(path, statistics);
+        } catch (Exception e) {
+            throw new CommonException("query.Project.Failed", e);
         }
     }
 
@@ -327,18 +323,6 @@ public class ProjectServiceImpl implements ProjectService {
         } catch (GitLabApiException e) {
             LOGGER.warn("Failed to update project, the user id is {} and project is [id={},name={}]", userId, projectId, name);
             throw new FeignException(e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public Project getProjectByPath(String groupName, String projectName, Boolean statistics) {
-        try {
-            String path = URLEncoder.encode(groupName + "/" + projectName, "UTF-8");
-            return gitlab4jclient
-                    .getGitLabApi(null)
-                    .getProjectApi().getProject(path, statistics);
-        } catch (Exception e) {
-            throw new CommonException("query.Project.Failed", e);
         }
     }
 }

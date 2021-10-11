@@ -171,9 +171,10 @@ public interface ProjectService {
      * @param userId      项目Id
      * @param groupCode   组名
      * @param projectCode 项目名
+     * @param statistics
      * @return Project
      */
-    Project getProject(Integer userId, String groupCode, String projectCode);
+    Project getProject(Integer userId, String groupCode, String projectCode, Boolean statistics);
 
 
     /**
@@ -250,5 +251,4 @@ public interface ProjectService {
 
     Project updateNameAndPath(Integer projectId, Integer userId, String name);
 
-    Project getProjectByPath(String groupName, String projectName, Boolean statistics);
 }
