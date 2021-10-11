@@ -71,8 +71,9 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "用户Id")
-            @RequestParam(value = "userId", required = false) Integer userId) {
-        return Optional.ofNullable(repositoryService.listTags(projectId, userId))
+            @RequestParam(value = "userId", required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(repositoryService.listTags(projectId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.tag.get"));
     }

@@ -27,11 +27,12 @@ public interface RepositoryService {
     /**
      * 获取tag列表
      *
-     * @param projectId 项目id
-     * @param userId    用户Id
+     * @param projectId            项目id
+     * @param userId               用户Id
+     * @param appExternalConfigDTO
      * @return List
      */
-    List<Tag> listTags(Integer projectId, Integer userId);
+    List<Tag> listTags(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
     /**
      * 分页获取tag列表

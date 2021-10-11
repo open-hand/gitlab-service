@@ -54,9 +54,15 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<Tag> listTags(Integer projectId, Integer userId) {
+    public List<Tag> listTags(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
         try {
-            return gitlab4jclient.getGitLabApi(userId).getRepositoryApi().getTags(projectId);
+            return gitLabApi.getRepositoryApi().getTags(projectId);
         } catch (GitLabApiException e) {
             throw new FeignException("error.tag.get");
         }
