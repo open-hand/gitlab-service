@@ -1,6 +1,5 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -106,7 +105,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project getProject(Integer userId, String groupCode, String projectCode, Boolean statistics) {
         try {
-            String path = URLEncoder.encode(groupCode + "/" + projectCode, "UTF-8");
+            String path = groupCode + "/" + projectCode;
             return gitlab4jclient
                     .getGitLabApi(userId)
                     .getProjectApi().getProject(path, statistics);
