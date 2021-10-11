@@ -84,8 +84,9 @@ public class JobController {
             @ApiParam(value = "jobId", required = true)
             @PathVariable Integer jobId,
             @ApiParam(value = "userId")
-            @RequestParam(value = "userId") Integer userId) {
-        return Optional.ofNullable(jobService.queryTrace(projectId, userId, jobId))
+            @RequestParam(value = "userId", required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(jobService.queryTrace(projectId, userId, jobId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.jobs.get.trace"));
     }
@@ -98,8 +99,9 @@ public class JobController {
             @ApiParam(value = "jobId", required = true)
             @PathVariable Integer jobId,
             @ApiParam(value = "userId")
-            @RequestParam(value = "userId") Integer userId) {
-        return Optional.ofNullable(jobService.retry(projectId, userId, jobId))
+            @RequestParam(value = "userId", required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(jobService.retry(projectId, userId, jobId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.jobs.retry"));
     }

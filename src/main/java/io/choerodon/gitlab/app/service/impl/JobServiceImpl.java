@@ -49,9 +49,15 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public String queryTrace(Integer projectId, Integer userId, Integer jobId) {
+    public String queryTrace(Integer projectId, Integer userId, Integer jobId, AppExternalConfigDTO appExternalConfigDTO) {
         try {
-            return gitlab4jclient.getGitLabApi(userId)
+            GitLabApi gitLabApi;
+            if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+                gitLabApi = gitlab4jclient.getGitLabApi(userId);
+            } else {
+                gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+            }
+            return gitLabApi
                     .getJobApi().getTrace(projectId, jobId);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
@@ -59,9 +65,15 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Job retry(Integer projectId, Integer userId, Integer jobId) {
+    public Job retry(Integer projectId, Integer userId, Integer jobId, AppExternalConfigDTO appExternalConfigDTO) {
         try {
-            return gitlab4jclient.getGitLabApi(userId)
+            GitLabApi gitLabApi;
+            if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+                gitLabApi = gitlab4jclient.getGitLabApi(userId);
+            } else {
+                gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+            }
+            return gitLabApi
                     .getJobApi().retryJob(projectId, jobId);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);

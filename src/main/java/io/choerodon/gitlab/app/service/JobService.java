@@ -29,7 +29,7 @@ public interface JobService {
      */
     Job queryJob(Integer projectId, Integer jobId);
 
-    String queryTrace(Integer projectId, Integer userId, Integer jobId);
+    String queryTrace(Integer projectId, Integer userId, Integer jobId, AppExternalConfigDTO appExternalConfigDTO);
 
-    Job retry(Integer projectId, Integer userId, Integer jobId);
+    Job retry(Integer projectId, Integer userId, Integer jobId, AppExternalConfigDTO appExternalConfigDTO);
 }
