@@ -1,11 +1,9 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.GitlabTransferVO;
-import io.choerodon.gitlab.api.vo.GroupVO;
-import io.choerodon.gitlab.api.vo.MemberVO;
-import io.choerodon.gitlab.api.vo.VariableVO;
-import io.choerodon.gitlab.app.service.GroupService;
+import java.util.List;
+import java.util.Optional;
+import javax.validation.Valid;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.*;
@@ -14,9 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
+import io.choerodon.gitlab.api.vo.GroupVO;
+import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
+import io.choerodon.gitlab.app.service.GroupService;
 
 @RestController
 @RequestMapping(value = "/v1/groups")
@@ -246,7 +247,7 @@ public class GroupsController {
             @ApiParam(value = "组名", required = true)
             @PathVariable String groupName,
             @ApiParam(value = "userId")
-            @RequestParam Integer userId
+            @RequestParam(required = false) Integer userId
     ) {
         return new ResponseEntity<>(groupService.queryGroupByName(groupName, userId), HttpStatus.OK);
     }
