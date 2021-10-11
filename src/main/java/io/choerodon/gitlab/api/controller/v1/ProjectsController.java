@@ -357,7 +357,7 @@ public class ProjectsController {
     @GetMapping(value = "/queryByName")
     public ResponseEntity<Project> queryByName(
             @ApiParam(value = "用户", required = true)
-            @RequestParam Integer userId,
+            @RequestParam(required = false) Integer userId,
             @ApiParam(value = "组名", required = true)
             @RequestParam String groupName,
             @ApiParam(value = "项目名", required = true)
