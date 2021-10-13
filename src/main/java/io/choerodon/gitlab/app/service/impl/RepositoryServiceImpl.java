@@ -1,8 +1,12 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import java.io.InputStream;
-import java.util.List;
-
+import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.app.service.RepositoryService;
+import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import io.choerodon.gitlab.infra.common.exception.GitlabBranchException;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+import io.choerodon.gitlab.infra.util.ExternalGitlabApiUtil;
 import org.apache.commons.io.IOUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -15,13 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import io.choerodon.core.exception.CommonException;
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.app.service.RepositoryService;
-import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
-import io.choerodon.gitlab.infra.common.exception.GitlabBranchException;
-import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
-import io.choerodon.gitlab.infra.util.ExternalGitlabApiUtil;
+import java.io.InputStream;
+import java.util.List;
 
 
 @Service
@@ -203,7 +202,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
+    public RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO) {
         GitLabApi gitLabApi;
         if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi(userId);
@@ -215,7 +214,8 @@ public class RepositoryServiceImpl implements RepositoryService {
         try {
             repositoryFile.setContent(content);
             repositoryFile.setFilePath(path);
-            repositoryFile = gitLabApi.getRepositoryFileApi().updateFile(repositoryFile, projectId, "master", commitMessage);
+            String branch = branchName != null ? branchName : "master";
+            repositoryFile = gitLabApi.getRepositoryFileApi().updateFile(repositoryFile, projectId, branch, commitMessage);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }

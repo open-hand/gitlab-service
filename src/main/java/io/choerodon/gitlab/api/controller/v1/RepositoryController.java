@@ -1,9 +1,11 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Optional;
-
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.FileCreationVO;
+import io.choerodon.gitlab.api.vo.FileDeleteVO;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
+import io.choerodon.gitlab.app.service.RepositoryService;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Branch;
@@ -17,12 +19,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.FileCreationVO;
-import io.choerodon.gitlab.api.vo.FileDeleteVO;
-import io.choerodon.gitlab.api.vo.GitlabTransferVO;
-import io.choerodon.gitlab.app.service.RepositoryService;
-import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/v1/projects/{projectId}/repository")
@@ -310,6 +309,7 @@ public class RepositoryController {
                 fileCreationVO.getContent(),
                 fileCreationVO.getCommitMessage(),
                 fileCreationVO.getUserId(),
+                fileCreationVO.getBranchName(),
                 appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.file.update"));

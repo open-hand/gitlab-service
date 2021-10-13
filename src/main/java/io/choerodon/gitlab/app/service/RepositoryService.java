@@ -1,14 +1,13 @@
 package io.choerodon.gitlab.app.service;
 
-import java.io.InputStream;
-import java.util.List;
-
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 import org.gitlab4j.api.models.Branch;
 import org.gitlab4j.api.models.CompareResults;
 import org.gitlab4j.api.models.RepositoryFile;
 import org.gitlab4j.api.models.Tag;
 
-import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+import java.io.InputStream;
+import java.util.List;
 
 
 public interface RepositoryService {
@@ -139,7 +138,7 @@ public interface RepositoryService {
 
     RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO);
 
-    RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
+    RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO);
 
     void deleteFile(Integer projectId, String path, String commitMessage, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
