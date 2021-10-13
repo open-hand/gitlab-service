@@ -334,6 +334,7 @@ public class RepositoryController {
                 fileDeleteVO.getPath(),
                 fileDeleteVO.getCommitMessage(),
                 fileDeleteVO.getUserId(),
+                fileDeleteVO.getBranchName(),
                 appExternalConfigDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }

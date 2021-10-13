@@ -223,7 +223,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
+    public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO) {
         GitLabApi gitLabApi;
         if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi(userId);
@@ -231,7 +231,8 @@ public class RepositoryServiceImpl implements RepositoryService {
             gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
         }
         try {
-            gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, "master", commitMessage);
+            String branch = branchName != null ? branchName : "master";
+            gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, branch, commitMessage);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
