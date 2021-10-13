@@ -1,8 +1,9 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import java.util.List;
-import java.util.Optional;
-
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.PipelineVO;
+import io.choerodon.gitlab.app.service.PipelineService;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Pipeline;
@@ -10,10 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.PipelineVO;
-import io.choerodon.gitlab.app.service.PipelineService;
-import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/v1/projects/{projectId}/pipelines")
@@ -86,8 +85,9 @@ public class PipelineController {
             @ApiParam(value = "pipelineId", required = true)
             @PathVariable Integer pipelineId,
             @ApiParam(value = "userId")
-            @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(pipelineService.queryPipeline(projectId, pipelineId, userId))
+            @RequestParam(required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(pipelineService.queryPipeline(projectId, pipelineId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.query"));
     }

@@ -1,11 +1,10 @@
 package io.choerodon.gitlab.app.service;
 
-import java.util.List;
-
-import org.gitlab4j.api.models.Pipeline;
-
 import io.choerodon.gitlab.api.vo.PipelineVO;
 import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+import org.gitlab4j.api.models.Pipeline;
+
+import java.util.List;
 
 
 /**
@@ -36,12 +35,13 @@ public interface PipelineService {
     /**
      * 查询某个pipelines的具体信息
      *
-     * @param projectId  项目 Id
-     * @param pipelineId 流水线 Id
-     * @param userId   用户Id
+     * @param projectId            项目 Id
+     * @param pipelineId           流水线 Id
+     * @param userId               用户Id
+     * @param appExternalConfigDTO
      * @return Pipeline
      */
-    PipelineVO queryPipeline(Integer projectId, Integer pipelineId, Integer userId);
+    PipelineVO queryPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
     /**
      * Retry jobs in a pipeline
