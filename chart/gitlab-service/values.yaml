@@ -47,6 +47,13 @@ env:
     # 注册服务地址
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://register-server:8000/eureka/
 
+    # Redis 主机地址
+    SPRING_REDIS_HOST: localhost
+    # Redis 端口
+    SPRING_REDIS_PORT: 6379
+    # Redis db
+    SPRING_REDIS_DATABASE: 9
+
 
     # Gitlab http(s) 协议访问地址
     GITLAB_URL: http://git.example.com
