@@ -252,6 +252,17 @@ public class GroupsController {
         return new ResponseEntity<>(groupService.queryGroupByName(groupName, userId), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "根据组名检索组的列表")
+    @GetMapping(value = "/{groupName}/with_statistics")
+    public ResponseEntity<List<Group>> queryGroupWithStatisticsByName(
+            @ApiParam(value = "组名", required = true)
+            @PathVariable String groupName,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(value = "statistics", defaultValue = "true") Boolean statistics) {
+        return new ResponseEntity<>(groupService.queryGroupWithStatisticsByName(groupName, userId, statistics), HttpStatus.OK);
+    }
+
 
     @ApiOperation(value = "查出组下所有的AccessRequest")
     @GetMapping(value = "/{groupId}/access_requests")
