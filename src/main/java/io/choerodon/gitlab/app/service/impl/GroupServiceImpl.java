@@ -273,4 +273,14 @@ public class GroupServiceImpl implements GroupService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<Group> queryGroupWithStatisticsByName(String groupName, Integer userId, Boolean statistics) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            return gitLabApi.getGroupApi().getGroup(groupName,statistics);
+        } catch (GitLabApiException e) {
+            return null;
+        }
+    }
 }

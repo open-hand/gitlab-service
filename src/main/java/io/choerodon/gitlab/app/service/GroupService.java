@@ -197,4 +197,7 @@ public interface GroupService {
      * @return List
      */
     List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage);
+
+    List<Group> queryGroupWithStatisticsByName(String groupName, Integer userId, Boolean statistics);
+
 }
