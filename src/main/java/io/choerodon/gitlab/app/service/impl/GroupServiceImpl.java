@@ -276,7 +276,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> queryGroupWithStatisticsByName(String groupName, Integer userId, Boolean statistics) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        //必须要admin才能查询到容量
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
         try {
             return gitLabApi.getGroupApi().getGroup(groupName,statistics);
         } catch (GitLabApiException e) {
