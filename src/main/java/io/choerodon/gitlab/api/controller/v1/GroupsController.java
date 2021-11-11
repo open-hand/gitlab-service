@@ -253,13 +253,13 @@ public class GroupsController {
     }
 
     @ApiOperation(value = "根据组名检索组的列表")
-    @GetMapping(value = "/{groupName}/with_statistics")
+    @GetMapping(value = "/{group_name}/with_statistics")
     public ResponseEntity<List<Group>> queryGroupWithStatisticsByName(
             @ApiParam(value = "组名", required = true)
-            @PathVariable String groupName,
+            @PathVariable(value = "group_name") String groupName,
             @ApiParam(value = "userId")
             @RequestParam(required = false) Integer userId,
-            @RequestParam(value = "statistics", defaultValue = "true") Boolean statistics) {
+            @RequestParam(value = "statistics", defaultValue = "false") Boolean statistics) {
         return new ResponseEntity<>(groupService.queryGroupWithStatisticsByName(groupName, userId, statistics), HttpStatus.OK);
     }
 
