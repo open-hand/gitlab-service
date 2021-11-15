@@ -1,9 +1,5 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.PipelineVO;
-import io.choerodon.gitlab.app.service.PipelineService;
-import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Pipeline;
@@ -12,7 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.PipelineVO;
+import io.choerodon.gitlab.app.service.PipelineService;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 
 @RestController
 @RequestMapping(value = "/v1/projects/{projectId}/pipelines")
@@ -154,8 +156,9 @@ public class PipelineController {
             @RequestParam(value = "userId") Integer userId,
             @ApiParam(value = "分支")
             @RequestParam(value = "ref") String ref,
-            AppExternalConfigDTO appExternalConfigDTO) {
-        return Optional.ofNullable(pipelineService.createPipeline(projectId, userId, ref, appExternalConfigDTO))
+            AppExternalConfigDTO appExternalConfigDTO,
+            @RequestBody Map<String, String> variables) {
+        return Optional.ofNullable(pipelineService.createPipeline(projectId, userId, ref, appExternalConfigDTO, variables))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.create"));
     }

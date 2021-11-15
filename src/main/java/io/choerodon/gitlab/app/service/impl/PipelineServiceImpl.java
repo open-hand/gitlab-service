@@ -1,11 +1,5 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.PipelineVO;
-import io.choerodon.gitlab.app.service.PipelineService;
-import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
-import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
-import io.choerodon.gitlab.infra.util.ExternalGitlabApiUtil;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Pipeline;
@@ -14,6 +8,14 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
+
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.PipelineVO;
+import io.choerodon.gitlab.app.service.PipelineService;
+import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+import io.choerodon.gitlab.infra.util.ExternalGitlabApiUtil;
 
 
 @Service
@@ -101,7 +103,7 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public Pipeline createPipeline(Integer projectId, Integer userId, String ref, AppExternalConfigDTO appExternalConfigDTO) {
+    public Pipeline createPipeline(Integer projectId, Integer userId, String ref, AppExternalConfigDTO appExternalConfigDTO, Map<String, String> variables) {
         GitLabApi gitLabApi;
         if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
             gitLabApi = gitlab4jclient.getGitLabApi(userId);
@@ -110,7 +112,7 @@ public class PipelineServiceImpl implements PipelineService {
         }
         try {
             return gitLabApi
-                    .getPipelineApi().createPipeline(projectId, ref);
+                    .getPipelineApi().createPipeline(projectId, ref, variables);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e.getHttpStatus());
         }
