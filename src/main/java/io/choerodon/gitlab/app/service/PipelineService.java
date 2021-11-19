@@ -1,6 +1,7 @@
 package io.choerodon.gitlab.app.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.gitlab4j.api.models.Pipeline;
 
@@ -68,7 +69,8 @@ public interface PipelineService {
      * @param projectId
      * @param userId
      * @param ref
+     * @param variables
      * @return
      */
-    Pipeline createPipeline(Integer projectId, Integer userId, String ref);
+    Pipeline createPipeline(Integer projectId, Integer userId, String ref, Map<String, String> variables);
 }

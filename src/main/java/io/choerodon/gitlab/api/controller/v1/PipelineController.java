@@ -1,6 +1,7 @@
 package io.choerodon.gitlab.api.controller.v1;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import io.swagger.annotations.ApiOperation;
@@ -149,8 +150,9 @@ public class PipelineController {
             @ApiParam(value = "userId")
             @RequestParam(value = "userId") Integer userId,
             @ApiParam(value = "分支")
-            @RequestParam(value = "ref") String ref) {
-        return Optional.ofNullable(pipelineService.createPipeline(projectId, userId, ref))
+            @RequestParam(value = "ref") String ref,
+            @RequestBody Map<String, String> variables) {
+        return Optional.ofNullable(pipelineService.createPipeline(projectId, userId, ref, variables))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.create"));
     }
