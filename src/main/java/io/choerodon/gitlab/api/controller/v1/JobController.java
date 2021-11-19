@@ -105,4 +105,16 @@ public class JobController {
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.jobs.retry"));
     }
+
+    @ApiOperation(value = "执行 manul状态的job")
+    @PutMapping(value = "/jobs/{jobId}/play")
+    public ResponseEntity<Job> play(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "jobId", required = true)
+            @PathVariable Integer jobId,
+            @ApiParam(value = "userId")
+            @RequestParam(value = "userId") Integer userId) {
+        return ResponseEntity.ok(jobService.play(projectId, userId, jobId));
+    }
 }

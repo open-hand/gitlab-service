@@ -79,4 +79,14 @@ public class JobServiceImpl implements JobService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public Job play(Integer projectId, Integer userId, Integer jobId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId)
+                    .getJobApi().playJob(projectId, jobId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }

@@ -31,5 +31,8 @@ public interface JobService {
 
     String queryTrace(Integer projectId, Integer userId, Integer jobId, AppExternalConfigDTO appExternalConfigDTO);
 
+
+    Job play(Integer projectId, Integer userId, Integer jobId);
+
     Job retry(Integer projectId, Integer userId, Integer jobId, AppExternalConfigDTO appExternalConfigDTO);
 }
