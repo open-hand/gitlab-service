@@ -1,8 +1,5 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import java.util.List;
-import java.util.Optional;
-
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Pipeline;
@@ -10,9 +7,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.PipelineVO;
 import io.choerodon.gitlab.app.service.PipelineService;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 
 @RestController
 @RequestMapping(value = "/v1/projects/{projectId}/pipelines")
@@ -85,8 +87,9 @@ public class PipelineController {
             @ApiParam(value = "pipelineId", required = true)
             @PathVariable Integer pipelineId,
             @ApiParam(value = "userId")
-            @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(pipelineService.queryPipeline(projectId, pipelineId, userId))
+            @RequestParam(required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(pipelineService.queryPipeline(projectId, pipelineId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.query"));
     }
@@ -107,8 +110,9 @@ public class PipelineController {
             @ApiParam(value = "pipelineId", required = true)
             @PathVariable Integer pipelineId,
             @ApiParam(value = "userId")
-            @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(pipelineService.retryPipeline(projectId, pipelineId, userId))
+            @RequestParam(required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(pipelineService.retryPipeline(projectId, pipelineId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.retry"));
     }
@@ -129,15 +133,17 @@ public class PipelineController {
             @ApiParam(value = "pipelineId", required = true)
             @PathVariable Integer pipelineId,
             @ApiParam(value = "userId")
-            @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(pipelineService.cancelPipeline(projectId, pipelineId, userId))
+            @RequestParam(required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(pipelineService.cancelPipeline(projectId, pipelineId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.cancel"));
     }
+
     /**
      * Create a new pipeline
      *
-     * @param projectId  项目id
+     * @param projectId 项目id
      * @param ref       分支
      * @return Pipeline
      */
@@ -149,8 +155,10 @@ public class PipelineController {
             @ApiParam(value = "userId")
             @RequestParam(value = "userId") Integer userId,
             @ApiParam(value = "分支")
-            @RequestParam(value = "ref") String ref) {
-        return Optional.ofNullable(pipelineService.createPipeline(projectId, userId, ref))
+            @RequestParam(value = "ref") String ref,
+            AppExternalConfigDTO appExternalConfigDTO,
+            @RequestBody Map<String, String> variables) {
+        return Optional.ofNullable(pipelineService.createPipeline(projectId, userId, ref, appExternalConfigDTO, variables))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.pipeline.create"));
     }

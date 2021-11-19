@@ -1,11 +1,9 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.GitlabTransferVO;
-import io.choerodon.gitlab.api.vo.GroupVO;
-import io.choerodon.gitlab.api.vo.MemberVO;
-import io.choerodon.gitlab.api.vo.VariableVO;
-import io.choerodon.gitlab.app.service.GroupService;
+import java.util.List;
+import java.util.Optional;
+import javax.validation.Valid;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.*;
@@ -14,9 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
+import io.choerodon.gitlab.api.vo.GroupVO;
+import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
+import io.choerodon.gitlab.app.service.GroupService;
 
 @RestController
 @RequestMapping(value = "/v1/groups")
@@ -26,6 +27,21 @@ public class GroupsController {
 
     public GroupsController(GroupService groupService) {
         this.groupService = groupService;
+    }
+
+    /**
+     * 查询所有组
+     *
+     * @return List
+     */
+    @ApiOperation(value = "查询有权限的所有组")
+    @PostMapping("/{userId}")
+    public ResponseEntity<List<Group>> list(@ApiParam(value = "userId")
+                                            @PathVariable(value = "userId") Integer userId,
+                                            @RequestParam(value = "owned", required = false) Boolean owned,
+                                            @RequestParam(value = "search", required = false) String search,
+                                            @RequestBody List<Integer> skipGroups) {
+        return ResponseEntity.ok(groupService.listGroupsWithParam(userId, owned, search, skipGroups));
     }
 
     /**
@@ -193,10 +209,29 @@ public class GroupsController {
             @ApiParam(value = "组ID", required = true)
             @PathVariable Integer groupId,
             @ApiParam(value = "userId")
-            @RequestParam(required = false) Integer userId) {
-        return Optional.ofNullable(groupService.listProjects(groupId, userId))
-                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new FeignException("error.groups.project.query"));
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "perPage", required = false) Integer perPage) {
+        return ResponseEntity.ok(groupService.listProjects(groupId, userId, page, perPage));
+    }
+
+    /**
+     * 获取项目列表
+     *
+     * @param groupId 组对象Id
+     * @param userId  用户Id
+     * @return List
+     */
+    @ApiOperation(value = "获取项目列表")
+    @GetMapping(value = "/{groupId}/projects")
+    public ResponseEntity<List<Project>> listProjects(
+            @PathVariable(value = "groupId") Integer groupId,
+            @RequestParam(value = "userId", required = false) Integer userId,
+            @RequestParam(value = "owned", required = false) Boolean owned,
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "perPage", required = false) Integer perPage) {
+        return ResponseEntity.ok(groupService.listProjects(groupId, userId, owned, search, page, perPage));
     }
 
     /**
@@ -212,9 +247,20 @@ public class GroupsController {
             @ApiParam(value = "组名", required = true)
             @PathVariable String groupName,
             @ApiParam(value = "userId")
-            @RequestParam Integer userId
+            @RequestParam(required = false) Integer userId
     ) {
         return new ResponseEntity<>(groupService.queryGroupByName(groupName, userId), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "根据组名检索组的列表")
+    @GetMapping(value = "/{group_name}/with_statistics")
+    public ResponseEntity<List<Group>> queryGroupWithStatisticsByName(
+            @ApiParam(value = "组名", required = true)
+            @PathVariable(value = "group_name") String groupName,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(value = "statistics", defaultValue = "false") Boolean statistics) {
+        return new ResponseEntity<>(groupService.queryGroupWithStatisticsByName(groupName, userId, statistics), HttpStatus.OK);
     }
 
 

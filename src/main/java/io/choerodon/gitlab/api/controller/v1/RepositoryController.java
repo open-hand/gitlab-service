@@ -1,8 +1,11 @@
 package io.choerodon.gitlab.api.controller.v1;
 
-import java.util.List;
-import java.util.Optional;
-
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.FileCreationVO;
+import io.choerodon.gitlab.api.vo.FileDeleteVO;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
+import io.choerodon.gitlab.app.service.RepositoryService;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Branch;
@@ -16,11 +19,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.FileCreationVO;
-import io.choerodon.gitlab.api.vo.FileDeleteVO;
-import io.choerodon.gitlab.api.vo.GitlabTransferVO;
-import io.choerodon.gitlab.app.service.RepositoryService;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/v1/projects/{projectId}/repository")
@@ -69,8 +70,9 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "用户Id")
-            @RequestParam(value = "userId", required = false) Integer userId) {
-        return Optional.ofNullable(repositoryService.listTags(projectId, userId))
+            @RequestParam(value = "userId", required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(repositoryService.listTags(projectId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.tag.get"));
     }
@@ -217,8 +219,9 @@ public class RepositoryController {
     public ResponseEntity<List<Branch>> listBranches(
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
             @ApiParam(value = "用户Id")
-            @RequestParam(value = "userId", required = false) Integer userId) {
-        return Optional.ofNullable(repositoryService.listBranches(projectId, userId))
+            @RequestParam(value = "userId", required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(repositoryService.listBranches(projectId, userId, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.branch.list"));
     }
@@ -237,9 +240,7 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true) @PathVariable Integer projectId,
             @ApiParam(value = "commit", required = true) @PathVariable String commit,
             @ApiParam(value = "file path", required = true) @RequestParam(value = "file_path") String filePath) {
-        return Optional.ofNullable(repositoryService.getFile(projectId, commit, filePath))
-                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-                .orElseThrow(() -> new FeignException("error.file.get"));
+        return ResponseEntity.ok(repositoryService.getFile(projectId, commit, filePath, null));
     }
 
 
@@ -275,8 +276,15 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             // TODO @Valid
-            @RequestBody FileCreationVO fileCreationVO) {
-        return Optional.ofNullable(repositoryService.createFile(projectId, fileCreationVO.getPath(), fileCreationVO.getContent(), fileCreationVO.getCommitMessage(), fileCreationVO.getUserId(), fileCreationVO.getBranchName()))
+            @RequestBody FileCreationVO fileCreationVO,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(repositoryService.createFile(projectId,
+                fileCreationVO.getPath(),
+                fileCreationVO.getContent(),
+                fileCreationVO.getCommitMessage(),
+                fileCreationVO.getUserId(),
+                fileCreationVO.getBranchName(),
+                appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.file.create"));
     }
@@ -294,8 +302,15 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             // TODO @Valid
-            @RequestBody FileCreationVO fileCreationVO) {
-        return Optional.ofNullable(repositoryService.updateFile(projectId, fileCreationVO.getPath(), fileCreationVO.getContent(), fileCreationVO.getCommitMessage(), fileCreationVO.getUserId()))
+            @RequestBody FileCreationVO fileCreationVO,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(repositoryService.updateFile(projectId,
+                fileCreationVO.getPath(),
+                fileCreationVO.getContent(),
+                fileCreationVO.getCommitMessage(),
+                fileCreationVO.getUserId(),
+                fileCreationVO.getBranchName(),
+                appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.file.update"));
     }
@@ -313,8 +328,14 @@ public class RepositoryController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             // TODO @Valid
-            @RequestBody FileDeleteVO fileDeleteVO) {
-        repositoryService.deleteFile(projectId, fileDeleteVO.getPath(), fileDeleteVO.getCommitMessage(), fileDeleteVO.getUserId());
+            @RequestBody FileDeleteVO fileDeleteVO,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        repositoryService.deleteFile(projectId,
+                fileDeleteVO.getPath(),
+                fileDeleteVO.getCommitMessage(),
+                fileDeleteVO.getUserId(),
+                fileDeleteVO.getBranchName(),
+                appExternalConfigDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -331,5 +352,17 @@ public class RepositoryController {
         // 因为本身就是gzip压缩格式内容，这个头可以让浏览器将这个接口的内容自动解压，解压之后就是json格式了
         httpHeaders.add(HttpHeaders.CONTENT_ENCODING, "gzip");
         return new ResponseEntity<>(repositoryService.downloadArchive(projectId, userId, commitSha), httpHeaders, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "项目下下载特定commit的压缩包")
+    @GetMapping("/archive_format")
+    public ResponseEntity<InputStream> downloadArchiveByFormat(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "user_id") Integer userId,
+            @RequestParam(value = "commit_sha") String commitSha,
+            @RequestParam(value = "format", required = false) String format) {
+        return new ResponseEntity<>(repositoryService.downloadArchiveByFormat(projectId, userId, commitSha, format), HttpStatus.OK);
     }
 }

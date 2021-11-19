@@ -42,7 +42,7 @@ public class CommitController {
      */
     @ApiOperation(value = "查询某个commit的具体信息")
     @GetMapping
-    public ResponseEntity<CommitVO> getPipeline(
+    public ResponseEntity<Commit> getPipeline(
             @ApiParam(value = "项目id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "sha", required = true)

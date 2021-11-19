@@ -1,8 +1,9 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import io.choerodon.gitlab.app.service.ConfigService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import io.choerodon.gitlab.app.service.ConfigService;
 
 /**
  * @author: trump

@@ -1,8 +1,8 @@
 package io.choerodon.gitlab.api.vo;
 
-import javax.validation.constraints.NotNull;
-
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author zmf
@@ -20,6 +20,17 @@ public class FileDeleteVO {
     @NotNull(message = "error.commit.user.id.null")
     @ApiModelProperty("操作人的gitlab用户id")
     private Integer userId;
+
+    @ApiModelProperty("提交到的分支名称")
+    private String branchName;
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
 
     public String getPath() {
         return path;

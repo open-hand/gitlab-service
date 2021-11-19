@@ -6,6 +6,9 @@ spring:
       enabled: false
     sampler:
       percentage: 1.0
+  redis:
+    host: localhost
+    database: ${SPRING_REDIS_DATABASE:1}
 gitlab:
   url: "http://git.example.com"
   privateToken: "inputprivatetoken"

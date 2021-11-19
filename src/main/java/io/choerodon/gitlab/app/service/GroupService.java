@@ -15,6 +15,13 @@ public interface GroupService {
      */
     List<Group> listGroups();
 
+    /**
+     * 查询所有组
+     *
+     * @return List
+     */
+    List<Group> listGroupsWithParam(Integer userId, Boolean owned, String search, List<Integer> skipGroups);
+
 
     /**
      * 创建组
@@ -91,9 +98,11 @@ public interface GroupService {
      *
      * @param groupId 组对象Id
      * @param userId  用户名
+     * @param page
+     * @param perPage
      * @return List
      */
-    List<Project> listProjects(Integer groupId, Integer userId);
+    List<Project> listProjects(Integer groupId, Integer userId, Integer page, Integer perPage);
 
     /**
      * 根据组名查询组
@@ -180,5 +189,15 @@ public interface GroupService {
     List<Variable> batchCreateVariable(Integer groupId,
                                        List<VariableVO> list,
                                        Integer userId);
+    /**
+     * 获取项目列表
+     *
+     * @param groupId 组对象Id
+     * @param userId  用户Id
+     * @return List
+     */
+    List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage);
+
+    List<Group> queryGroupWithStatisticsByName(String groupName, Integer userId, Boolean statistics);
 
 }

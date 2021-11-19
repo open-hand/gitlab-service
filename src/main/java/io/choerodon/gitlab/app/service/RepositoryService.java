@@ -1,11 +1,13 @@
 package io.choerodon.gitlab.app.service;
 
-import java.util.List;
-
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 import org.gitlab4j.api.models.Branch;
 import org.gitlab4j.api.models.CompareResults;
 import org.gitlab4j.api.models.RepositoryFile;
 import org.gitlab4j.api.models.Tag;
+
+import java.io.InputStream;
+import java.util.List;
 
 
 public interface RepositoryService {
@@ -24,11 +26,12 @@ public interface RepositoryService {
     /**
      * 获取tag列表
      *
-     * @param projectId 项目id
-     * @param userId    用户Id
+     * @param projectId            项目id
+     * @param userId               用户Id
+     * @param appExternalConfigDTO
      * @return List
      */
-    List<Tag> listTags(Integer projectId, Integer userId);
+    List<Tag> listTags(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
     /**
      * 分页获取tag列表
@@ -95,11 +98,12 @@ public interface RepositoryService {
     /**
      * 获取项目下所有分支
      *
-     * @param projectId 项目id
-     * @param userId    用户Id
+     * @param projectId            项目id
+     * @param userId               用户Id
+     * @param appExternalConfigDTO
      * @return List
      */
-    List<Branch> listBranches(Integer projectId, Integer userId);
+    List<Branch> listBranches(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
 
 //    /**
@@ -119,7 +123,7 @@ public interface RepositoryService {
      * @param filePath  file path
      * @return file
      */
-    RepositoryFile getFile(Integer projectId, String commit, String filePath);
+    RepositoryFile getFile(Integer projectId, String commit, String filePath, AppExternalConfigDTO appExternalConfigDTO);
 
 
     /**
@@ -132,11 +136,11 @@ public interface RepositoryService {
      */
     CompareResults getDiffs(Integer projectId, String from, String to);
 
-    RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName);
+    RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO);
 
-    RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId);
+    RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO);
 
-    void deleteFile(Integer projectId, String path, String commitMessage, Integer userId);
+    void deleteFile(Integer projectId, String path, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO);
 
     /**
      * 下载压缩包
@@ -147,4 +151,16 @@ public interface RepositoryService {
      * @return tgz压缩包的字节数组
      */
     byte[] downloadArchive(Integer projectId, Integer userId, String commitSha);
+
+
+    /**
+     * 下载压缩包
+     *
+     * @param projectId gitlab项目id
+     * @param userId    gitlab用户id
+     * @param commitSha 要下载的commit或者分支
+     * @param format    文件类型
+     * @return
+     */
+    InputStream downloadArchiveByFormat(Integer projectId, Integer userId, String commitSha, String format);
 }

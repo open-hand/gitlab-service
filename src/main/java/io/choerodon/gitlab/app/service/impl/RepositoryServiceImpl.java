@@ -1,8 +1,12 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import java.io.InputStream;
-import java.util.List;
-
+import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.app.service.RepositoryService;
+import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import io.choerodon.gitlab.infra.common.exception.GitlabBranchException;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+import io.choerodon.gitlab.infra.util.ExternalGitlabApiUtil;
 import org.apache.commons.io.IOUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -15,10 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.app.service.RepositoryService;
-import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
-import io.choerodon.gitlab.infra.common.exception.GitlabBranchException;
+import java.io.InputStream;
+import java.util.List;
 
 
 @Service
@@ -51,9 +53,15 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<Tag> listTags(Integer projectId, Integer userId) {
+    public List<Tag> listTags(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
         try {
-            return gitlab4jclient.getGitLabApi(userId).getRepositoryApi().getTags(projectId);
+            return gitLabApi.getRepositoryApi().getTags(projectId);
         } catch (GitLabApiException e) {
             throw new FeignException("error.tag.get");
         }
@@ -128,9 +136,15 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<Branch> listBranches(Integer projectId, Integer userId) {
+    public List<Branch> listBranches(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
         try {
-            return gitlab4jclient.getGitLabApi(userId)
+            GitLabApi gitLabApi;
+            if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+                gitLabApi = gitlab4jclient.getGitLabApi();
+            } else {
+                gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+            }
+            return gitLabApi
                     .getRepositoryApi()
                     .getBranches(projectId);
         } catch (GitLabApiException e) {
@@ -139,13 +153,19 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public RepositoryFile getFile(Integer projectId, String commit, String filePath) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi();
+    public RepositoryFile getFile(Integer projectId, String commit, String filePath, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi();
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
+
         RepositoryFile file;
         try {
             file = gitLabApi.getRepositoryFileApi().getFile(filePath, projectId, commit);
         } catch (GitLabApiException e) {
-            return null;
+            throw new CommonException("query.repository.file.failed", e);
         }
         return file;
     }
@@ -161,8 +181,14 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+    public RepositoryFile createFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
         RepositoryFile repositoryFile = new RepositoryFile();
         try {
             repositoryFile.setContent(content);
@@ -176,13 +202,20 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+    public RepositoryFile updateFile(Integer projectId, String path, String content, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
+
         RepositoryFile repositoryFile = new RepositoryFile();
         try {
             repositoryFile.setContent(content);
             repositoryFile.setFilePath(path);
-            repositoryFile = gitLabApi.getRepositoryFileApi().updateFile(repositoryFile, projectId, "master", commitMessage);
+            String branch = branchName != null ? branchName : "master";
+            repositoryFile = gitLabApi.getRepositoryFileApi().updateFile(repositoryFile, projectId, branch, commitMessage);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -190,10 +223,16 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId) {
-        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+    public void deleteFile(Integer projectId, String path, String commitMessage, Integer userId, String branchName, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
         try {
-            gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, "master", commitMessage);
+            String branch = branchName != null ? branchName : "master";
+            gitLabApi.getRepositoryFileApi().deleteFile(path, projectId, branch, commitMessage);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -205,6 +244,16 @@ public class RepositoryServiceImpl implements RepositoryService {
         try {
             InputStream inputStream = gitLabApi.getRepositoryApi().getRepositoryArchive(projectId, commitSha);
             return IOUtils.toByteArray(inputStream);
+        } catch (Exception e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public InputStream downloadArchiveByFormat(Integer projectId, Integer userId, String commitSha, String format) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            return gitLabApi.getRepositoryFileApi().getRepositoryArchive(projectId, commitSha, format);
         } catch (Exception e) {
             throw new FeignException(e.getMessage(), e);
         }

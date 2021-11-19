@@ -35,18 +35,9 @@ public class CommitServiceImpl implements CommitService {
     private Gitlab4jClient gitlab4jclient;
 
     @Override
-    public CommitVO getCommit(Integer projectId, String sha, Integer userId) {
+    public Commit getCommit(Integer projectId, String sha, Integer userId) {
         try {
-            Commit commit = gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, sha);
-            CommitVO commitVO = new CommitVO();
-            BeanUtils.copyProperties(commit, commitVO, "createdAt", "committedDate");
-            if (commit.getCreatedAt() != null) {
-                commitVO.setCreatedAt(formatter.format(commit.getCreatedAt()));
-            }
-            if (commit.getCommittedDate() != null) {
-                commitVO.setCommittedDate(formatter.format(commit.getCommittedDate()));
-            }
-            return commitVO;
+            return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, sha);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }

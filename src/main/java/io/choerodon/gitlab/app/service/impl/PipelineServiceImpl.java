@@ -1,17 +1,21 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.PipelineVO;
-import io.choerodon.gitlab.app.service.PipelineService;
-import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Pipeline;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
+
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.PipelineVO;
+import io.choerodon.gitlab.app.service.PipelineService;
+import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+import io.choerodon.gitlab.infra.util.ExternalGitlabApiUtil;
 
 
 @Service
@@ -47,9 +51,15 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public PipelineVO queryPipeline(Integer projectId, Integer pipelineId, Integer userId) {
+    public PipelineVO queryPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
         try {
-            Pipeline pipeline = gitlab4jclient.getGitLabApi(userId)
+            GitLabApi gitLabApi;
+            if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+                gitLabApi = gitlab4jclient.getGitLabApi(userId);
+            } else {
+                gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+            }
+            Pipeline pipeline = gitLabApi
                     .getPipelineApi().getPipeline(projectId, pipelineId);
             PipelineVO pipelineVO = new PipelineVO();
             BeanUtils.copyProperties(pipeline, pipelineVO);
@@ -61,9 +71,15 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public Pipeline retryPipeline(Integer projectId, Integer pipelineId, Integer userId) {
+    public Pipeline retryPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
         try {
-            return gitlab4jclient.getGitLabApi(userId)
+            return gitLabApi
                     .getPipelineApi().retryPipelineJob(projectId, pipelineId);
         } catch (GitLabApiException e) {
             return new Pipeline();
@@ -71,9 +87,15 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId) {
+    public Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
         try {
-            return gitlab4jclient.getGitLabApi(userId)
+            return gitLabApi
                     .getPipelineApi().cancelPipelineJobs(projectId, pipelineId);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
@@ -81,10 +103,16 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public Pipeline createPipeline(Integer projectId, Integer userId, String ref) {
+    public Pipeline createPipeline(Integer projectId, Integer userId, String ref, AppExternalConfigDTO appExternalConfigDTO, Map<String, String> variables) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
         try {
-            return gitlab4jclient.getGitLabApi(userId)
-                    .getPipelineApi().createPipeline(projectId, ref);
+            return gitLabApi
+                    .getPipelineApi().createPipeline(projectId, ref, variables);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e.getHttpStatus());
         }

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gitlab-service</artifactId>
-    <version>1.0.1.RELEASE</version>
+    <version>1.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <url>https://github.com/choerodon/gitlab-service</url>
 
@@ -12,7 +12,7 @@
     <parent>
         <groupId>io.choerodon</groupId>
         <artifactId>choerodon-framework-parent</artifactId>
-        <version>1.0.0.RELEASE</version>
+        <version>1.1.1.RELEASE</version>
     </parent>
 
     <build>
@@ -22,9 +22,35 @@
     <properties>
         <choerodon.serviceBuild>true</choerodon.serviceBuild>
         <choerodon.mainClass>io.choerodon.gitlab.GitlabServiceApplication</choerodon.mainClass>
+        <spring.data.redis.version>2.1.0.RELEASE</spring.data.redis.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.choerodon</groupId>
+            <artifactId>choerodon-starter-limit</artifactId>
+        </dependency>
+        <!--排除springBoot2.0中引入的redis，升级redis到2.1-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-redis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>${spring.data.redis.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.hzero.starter</groupId>
             <artifactId>hzero-starter-core</artifactId>
@@ -41,7 +67,7 @@
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-gitlab4j-api</artifactId>
-            <version>1.0.1.RELEASE</version>
+            <version>1.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -1,10 +1,12 @@
 package io.choerodon.gitlab.app.service;
 
-import java.util.List;
-
 import org.gitlab4j.api.models.Pipeline;
 
+import java.util.List;
+import java.util.Map;
+
 import io.choerodon.gitlab.api.vo.PipelineVO;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 
 
 /**
@@ -35,32 +37,35 @@ public interface PipelineService {
     /**
      * 查询某个pipelines的具体信息
      *
-     * @param projectId  项目 Id
-     * @param pipelineId 流水线 Id
-     * @param userId   用户Id
+     * @param projectId            项目 Id
+     * @param pipelineId           流水线 Id
+     * @param userId               用户Id
+     * @param appExternalConfigDTO
      * @return Pipeline
      */
-    PipelineVO queryPipeline(Integer projectId, Integer pipelineId, Integer userId);
+    PipelineVO queryPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
     /**
      * Retry jobs in a pipeline
      *
-     * @param projectId  项目 Id
-     * @param pipelineId 流水线 Id
-     * @param userId   用户Id
+     * @param projectId            项目 Id
+     * @param pipelineId           流水线 Id
+     * @param userId               用户Id
+     * @param appExternalConfigDTO
      * @return
      */
-    Pipeline retryPipeline(Integer projectId, Integer pipelineId, Integer userId);
+    Pipeline retryPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
     /**
      * Cancel a pipelines jobs
      *
-     * @param projectId  项目 Id
-     * @param pipelineId 流水线 Id
-     * @param userId   用户Id
+     * @param projectId            项目 Id
+     * @param pipelineId           流水线 Id
+     * @param userId               用户Id
+     * @param appExternalConfigDTO
      * @return
      */
-    Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId);
+    Pipeline cancelPipeline(Integer projectId, Integer pipelineId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
     /**
      * Create a new pipeline
@@ -68,7 +73,9 @@ public interface PipelineService {
      * @param projectId
      * @param userId
      * @param ref
+     * @param appExternalConfigDTO
+     * @param variables
      * @return
      */
-    Pipeline createPipeline(Integer projectId, Integer userId, String ref);
+    Pipeline createPipeline(Integer projectId, Integer userId, String ref, AppExternalConfigDTO appExternalConfigDTO, Map<String, String> variables);
 }

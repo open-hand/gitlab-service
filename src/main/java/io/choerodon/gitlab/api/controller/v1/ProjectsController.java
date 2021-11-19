@@ -208,6 +208,24 @@ public class ProjectsController {
     }
 
     /**
+     * 更新项目
+     *
+     * @param userId  用户Id
+     * @return Project
+     */
+    @ApiOperation(value = "更新项目")
+    @PutMapping("/{projectId}/name_and_path")
+    public ResponseEntity<Project> updateNameAndPath(
+            @PathVariable Integer projectId,
+            @ApiParam(value = "用户Id", required = true)
+            @RequestParam Integer userId,
+            @RequestParam String name) {
+        return Optional.ofNullable(projectService.updateNameAndPath(projectId, userId, name))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.projects.update"));
+    }
+
+    /**
      * 通过分支名查询保护分支
      *
      * @param projectId 项目Id
@@ -339,12 +357,13 @@ public class ProjectsController {
     @GetMapping(value = "/queryByName")
     public ResponseEntity<Project> queryByName(
             @ApiParam(value = "用户", required = true)
-            @RequestParam Integer userId,
+            @RequestParam(required = false) Integer userId,
             @ApiParam(value = "组名", required = true)
             @RequestParam String groupName,
             @ApiParam(value = "项目名", required = true)
-            @RequestParam String projectName) {
-        return Optional.ofNullable(projectService.getProject(userId, groupName, projectName))
+            @RequestParam String projectName,
+            @RequestParam(value = "statistics", defaultValue = "false") Boolean statistics) {
+        return Optional.ofNullable(projectService.getProject(userId, groupName, projectName, statistics))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.project.get"));
     }
@@ -472,5 +491,18 @@ public class ProjectsController {
         return Optional.ofNullable(projectService.getMemberProjects(userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.member.projects.list"));
+    }
+
+
+    @ApiParam(value = "迁移应用服务")
+    @PutMapping(value = "/{projectId}/transfer")
+    public ResponseEntity<Project> transferProject(
+            @ApiParam(value = "用户id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "用户Id")
+            @RequestParam(value = "userId") Integer userId,
+            @ApiParam(value = "新的groupId")
+            @RequestParam(value = "groupId") Integer groupId) {
+        return ResponseEntity.ok(projectService.transferProject(projectId, userId, groupId));
     }
 }

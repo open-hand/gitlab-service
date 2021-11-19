@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.MemberVO;
 import io.choerodon.gitlab.api.vo.VariableVO;
@@ -102,18 +103,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project getProject(Integer userId, String groupCode, String projectCode) {
+    public Project getProject(Integer userId, String groupCode, String projectCode, Boolean statistics) {
         try {
-            String targetPathWithNamespace = groupCode + "/" + projectCode;
-            return gitlab4jclient.getGitLabApi(userId).getProjectApi().getProjects(projectCode).stream()
-                    .filter(i -> i.getPathWithNamespace().equals(targetPathWithNamespace))
-                    .findFirst().orElse(new Project());
-        } catch (GitLabApiException e) {
-            if (e.getHttpStatus() == 404) {
-                return new Project();
-            } else {
-                throw new FeignException(e.getMessage(), e);
-            }
+            String path = groupCode + "/" + projectCode;
+            return gitlab4jclient
+                    .getGitLabApi(userId)
+                    .getProjectApi().getProject(path, statistics);
+        } catch (Exception e) {
+            throw new CommonException("query.Project.Failed", e);
         }
     }
 
@@ -301,6 +298,29 @@ public class ProjectServiceImpl implements ProjectService {
         try {
             return gitlab4jclient.getGitLabApi(userId).getProjectApi().getMemberProjects();
         } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Project transferProject(Integer projectId, Integer userId, Integer groupId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getProjectApi().transferProject(projectId, groupId.toString());
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Project updateNameAndPath(Integer projectId, Integer userId, String name) {
+        try {
+            Project project = gitlab4jclient.getGitLabApi().getProjectApi().getProject(projectId);
+            project.setName(name);
+            project.setPath(name);
+            return gitlab4jclient.getGitLabApi(userId)
+                    .getProjectApi().updateProject(project);
+        } catch (GitLabApiException e) {
+            LOGGER.warn("Failed to update project, the user id is {} and project is [id={},name={}]", userId, projectId, name);
             throw new FeignException(e.getMessage(), e);
         }
     }
