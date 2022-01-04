@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gitlab-service</artifactId>
-    <version>1.2.0-alpha.1.RELEASE</version>
+    <version>1.2.0-alpha.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <url>https://github.com/choerodon/gitlab-service</url>
 
@@ -12,7 +12,7 @@
     <parent>
         <groupId>io.choerodon</groupId>
         <artifactId>choerodon-framework-parent</artifactId>
-        <version>1.1.1.RELEASE</version>
+        <version>1.2.0.RELEASE</version>
     </parent>
 
     <build>
