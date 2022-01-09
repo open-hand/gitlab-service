@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gitlab-service</artifactId>
-    <version>1.2.0-alpha.2.RELEASE</version>
+    <version>1.2.0-alpha.4.RELEASE</version>
     <packaging>jar</packaging>
     <url>https://github.com/choerodon/gitlab-service</url>
 
@@ -37,6 +37,12 @@
         <dependency>
             <groupId>org.hzero.starter</groupId>
             <artifactId>hzero-starter-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fastjson</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hzero.starter</groupId>
