@@ -279,7 +279,7 @@ public class ProjectServiceImpl implements ProjectService {
         } catch (GitLabApiException e) {
             LOGGER.error("no member found");
             Member member = new Member();
-            member.setAccessLevel(AccessLevel.NONE.value);
+            member.setAccessLevel(AccessLevel.NONE);
             return member;
         }
     }
