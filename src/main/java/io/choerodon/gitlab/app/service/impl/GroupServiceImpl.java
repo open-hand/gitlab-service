@@ -1,11 +1,9 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import io.choerodon.core.exception.FeignException;
-import io.choerodon.gitlab.api.vo.GroupVO;
-import io.choerodon.gitlab.api.vo.MemberVO;
-import io.choerodon.gitlab.api.vo.VariableVO;
-import io.choerodon.gitlab.app.service.GroupService;
-import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.GroupApi;
@@ -15,9 +13,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import io.choerodon.core.exception.FeignException;
+import io.choerodon.gitlab.api.vo.GroupVO;
+import io.choerodon.gitlab.api.vo.MemberVO;
+import io.choerodon.gitlab.api.vo.VariableVO;
+import io.choerodon.gitlab.app.service.GroupService;
+import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
 
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -77,7 +78,7 @@ public class GroupServiceImpl implements GroupService {
             User user = gitLabApi.getUserApi().getUser(userId);
             List<Member> members = groupApi.getMembers(groupId)
                     .stream().filter(t -> user.getUsername().equals(t.getUsername())).collect(Collectors.toList());
-            if (members != null && AccessLevel.OWNER.value.equals(members.get(0).getAccessLevel())) {
+            if (members != null && AccessLevel.OWNER.value.equals(members.get(0).getAccessLevel().value)) {
                 groupApi.deleteGroup(groupId);
             } else {
                 throw new FeignException("error.groups.deleteGroup.Owner");
