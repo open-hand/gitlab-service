@@ -41,12 +41,7 @@ public class ProjectServiceImpl implements ProjectService {
             Namespace namespace = new Namespace();
             namespace.setId(groupId);
             projectReq.setNamespace(namespace);
-            Project project = gitLabApi.getProjectApi().createProject(projectReq);
-            if (visibility) {
-                project.setVisibility(Visibility.PUBLIC);
-            }
-            project.setPublic(true);
-            return gitLabApi.getProjectApi().updateProject(project);
+            return gitLabApi.getProjectApi().createProject(projectReq);
         } catch (GitLabApiException e) {
             LOGGER.info("groupId:{},projectName:{},userId:{},visibility:{}", groupId, projectName, userId, visibility);
             LOGGER.info("{}", e.getMessage());
