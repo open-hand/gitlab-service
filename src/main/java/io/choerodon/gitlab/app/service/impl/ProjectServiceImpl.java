@@ -178,10 +178,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project updateProject(Project newProject, Integer userId) {
         try {
-            Project project = gitlab4jclient.getGitLabApi().getProjectApi().getProject(newProject.getId());
-            project.setCiConfigPath(newProject.getCiConfigPath());
             return gitlab4jclient.getGitLabApi(userId)
-                    .getProjectApi().updateProject(project);
+                    .getProjectApi().updateProject(newProject);
         } catch (GitLabApiException e) {
             LOGGER.warn("Failed to update project, the user id is {} and project is [id={},ciConfigPath={}]", userId, newProject.getId(), newProject.getCiConfigPath());
             throw new FeignException(e.getMessage(), e);
