@@ -1,12 +1,12 @@
 package io.choerodon.gitlab.app.service.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import io.choerodon.gitlab.api.vo.CommitVO;
 
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
@@ -37,8 +37,8 @@ public class CommitServiceImpl implements CommitService {
     @Override
     public Commit getCommit(Integer projectId, String sha, Integer userId) {
         try {
-            return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, sha);
-        } catch (GitLabApiException e) {
+            return gitlab4jclient.getGitLabApi(userId).getCommitsApi().getCommit(projectId, URLEncoder.encode(sha, "UTF-8"));
+        } catch (GitLabApiException | UnsupportedEncodingException e) {
             throw new FeignException(e.getMessage(), e);
         }
     }
