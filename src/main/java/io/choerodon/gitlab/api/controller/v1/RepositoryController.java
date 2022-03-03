@@ -196,7 +196,7 @@ public class RepositoryController {
      * @return Branch
      */
     @ApiOperation(value = "根据分支名查询分支")
-    @GetMapping(value = "/branches")
+    @GetMapping(value = "/branches/query")
     public ResponseEntity<Branch> queryBranchByName(
             @ApiParam(value = "工程id", required = true)
             @PathVariable Integer projectId,
