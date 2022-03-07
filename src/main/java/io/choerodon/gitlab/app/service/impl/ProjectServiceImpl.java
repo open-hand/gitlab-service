@@ -41,12 +41,7 @@ public class ProjectServiceImpl implements ProjectService {
             Namespace namespace = new Namespace();
             namespace.setId(groupId);
             projectReq.setNamespace(namespace);
-            Project project = gitLabApi.getProjectApi().createProject(projectReq);
-            if (visibility) {
-                project.setVisibility(Visibility.PUBLIC);
-            }
-            project.setPublic(true);
-            return gitLabApi.getProjectApi().updateProject(project);
+            return gitLabApi.getProjectApi().createProject(projectReq);
         } catch (GitLabApiException e) {
             LOGGER.info("groupId:{},projectName:{},userId:{},visibility:{}", groupId, projectName, userId, visibility);
             LOGGER.info("{}", e.getMessage());
@@ -183,10 +178,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project updateProject(Project newProject, Integer userId) {
         try {
-            Project project = gitlab4jclient.getGitLabApi().getProjectApi().getProject(newProject.getId());
-            project.setCiConfigPath(newProject.getCiConfigPath());
             return gitlab4jclient.getGitLabApi(userId)
-                    .getProjectApi().updateProject(project);
+                    .getProjectApi().updateProject(newProject);
         } catch (GitLabApiException e) {
             LOGGER.warn("Failed to update project, the user id is {} and project is [id={},ciConfigPath={}]", userId, newProject.getId(), newProject.getCiConfigPath());
             throw new FeignException(e.getMessage(), e);
