@@ -196,12 +196,12 @@ public class RepositoryController {
      * @return Branch
      */
     @ApiOperation(value = "根据分支名查询分支")
-    @GetMapping(value = "/branches/{branchName}")
+    @GetMapping(value = "/branches/query")
     public ResponseEntity<Branch> queryBranchByName(
             @ApiParam(value = "工程id", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "要查询的分支名", required = true)
-            @PathVariable("branchName") String branchName) {
+            @RequestParam("branchName") String branchName) {
         return Optional.ofNullable(repositoryService.queryBranchByName(projectId, branchName))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.branch.query"));
