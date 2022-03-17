@@ -80,6 +80,15 @@ public class CommitServiceImpl implements CommitService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+    @Override
+    public List<Commit> getCommitsByRef(Integer gitLabProjectId, String ref, String path) {
+        try {
+            return gitlab4jclient.getGitLabApi()
+                    .getCommitsApi().getCommits(gitLabProjectId, ref, path);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 
     @Override
     public List<Commit> listCommits(Integer gilabProjectId, int page, int size, Integer userId) {

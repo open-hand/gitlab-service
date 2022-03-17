@@ -21,6 +21,7 @@ public interface CommitService {
 
     List<Commit> listCommits(Integer gilabProjectId, int page, int size, Integer userId);
 
+    List<Commit> getCommitsByRef(Integer gitLabProjectId, String ref, String path);
     /**
      * 创建commit，可以批量操作文件
      *

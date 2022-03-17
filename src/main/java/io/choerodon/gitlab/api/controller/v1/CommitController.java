@@ -96,6 +96,18 @@ public class CommitController {
                 .orElseThrow(() -> new FeignException("error.commits.get"));
     }
 
+    @ApiOperation(value = "查询某个项目的某个分支的所有commit")
+    @GetMapping(value = "/branch/{ref}")
+    public ResponseEntity<List<Commit>> getCommitsByRef(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "分支名称和创建时间", required = true)
+            @PathVariable(value = "ref") String ref) {
+        return Optional.ofNullable(commitService.getCommitsByRef(projectId, ref, null))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.commits.get"));
+    }
+
 
     /**
      * 查询某个项目的所有commit
