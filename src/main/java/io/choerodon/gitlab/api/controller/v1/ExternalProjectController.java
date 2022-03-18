@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.ProjectHook;
 import org.gitlab4j.api.models.RepositoryFile;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.VariableVO;
+import io.choerodon.gitlab.app.service.CommitService;
 import io.choerodon.gitlab.app.service.ExternalProjectService;
-import io.choerodon.gitlab.app.service.JobService;
 import io.choerodon.gitlab.app.service.RepositoryService;
 import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 
@@ -35,11 +36,11 @@ public class ExternalProjectController {
 
     @Autowired
     private ExternalProjectService externalProjectService;
+    @Autowired
+    private CommitService commitService;
 
     @Autowired
     private RepositoryService repositoryService;
-    @Autowired
-    private JobService jobService;
 
 
     @ApiOperation(value = "通过项目id查询项目")
@@ -102,6 +103,21 @@ public class ExternalProjectController {
             @ApiParam(value = "file path", required = true) @RequestParam(value = "file_path") String filePath,
             AppExternalConfigDTO appExternalConfigDTO) {
         return ResponseEntity.ok(repositoryService.getFile(projectId, commit, filePath, appExternalConfigDTO));
+    }
+
+    @ApiOperation(value = "查询某个项目的所有commit")
+    @GetMapping(value = "/{projectId}/repository/commits/project")
+    public ResponseEntity<List<Commit>> listExternalCommits(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "page")
+            @RequestParam Integer page,
+            @ApiParam(value = "size")
+            @RequestParam Integer size,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return Optional.ofNullable(commitService.listExternalCommits(projectId, page, size, appExternalConfigDTO))
+                .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.commits.get"));
     }
 
 }
