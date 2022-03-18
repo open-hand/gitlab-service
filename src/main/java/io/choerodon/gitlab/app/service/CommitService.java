@@ -2,12 +2,11 @@ package io.choerodon.gitlab.app.service;
 
 import java.util.List;
 
-import io.choerodon.gitlab.api.vo.CommitVO;
-
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.CommitPayload;
 
 import io.choerodon.gitlab.api.vo.CommitStatuseVO;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 
 /**
  * Created by zzy on 2018/1/14.
@@ -30,4 +29,6 @@ public interface CommitService {
      * @param commitPayload 操作文件相关的信息
      */
     void createCommit(Integer projectId, Integer userId, CommitPayload commitPayload);
+
+    List<Commit> listExternalCommits(Integer projectId, Integer page, Integer size, AppExternalConfigDTO appExternalConfigDTO);
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.CommitPayload;
@@ -18,10 +19,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.CommitStatuseVO;
 import io.choerodon.gitlab.app.service.CommitService;
 import io.choerodon.gitlab.infra.common.client.Gitlab4jClient;
+import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
+import io.choerodon.gitlab.infra.util.ExternalGitlabApiUtil;
 
 /**
  * Created by zzy on 2018/1/14.
@@ -106,6 +110,22 @@ public class CommitServiceImpl implements CommitService {
         } catch (GitLabApiException e) {
             LOGGER.info("error occurred while creating commit. the projectId is {}, the user id is {}, the payload is: {}.", projectId, userId, commitPayload);
             throw new FeignException(e);
+        }
+    }
+
+    @Override
+    public List<Commit> listExternalCommits(Integer projectId, Integer page, Integer size, AppExternalConfigDTO appExternalConfigDTO) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi();
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
+
+        try {
+            return gitLabApi.getCommitsApi().getCommits(projectId, page, size);
+        } catch (GitLabApiException e) {
+            throw new CommonException("query.repository.file.failed", e);
         }
     }
 }
