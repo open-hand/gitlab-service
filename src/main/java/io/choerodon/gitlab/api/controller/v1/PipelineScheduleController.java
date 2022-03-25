@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.PipelineSchedule;
 import org.gitlab4j.api.models.Variable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 @RequestMapping(value = "/v1/projects/{project_id}/pipeline_schedules")
 public class PipelineScheduleController {
 
+    @Autowired
     private PipelineScheduleService pipelineScheduleService;
 
     @ApiOperation(value = "创建定时执行计划")

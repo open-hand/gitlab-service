@@ -6,6 +6,7 @@ import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.PipelineSchedule;
 import org.gitlab4j.api.models.Variable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.exception.CommonException;
@@ -24,6 +25,7 @@ import io.choerodon.gitlab.infra.util.ExternalGitlabApiUtil;
 @Service
 public class PipelineScheduleServiceImpl implements PipelineScheduleService {
 
+    @Autowired
     private Gitlab4jClient gitlab4jclient;
 
     @Override
