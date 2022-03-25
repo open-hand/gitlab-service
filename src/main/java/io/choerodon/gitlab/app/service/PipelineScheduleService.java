@@ -30,4 +30,8 @@ public interface PipelineScheduleService {
                            AppExternalConfigDTO appExternalConfigDTO, Integer pipelineScheduleId);
 
     List<PipelineSchedule> list(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
+
+    void update(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO, Integer pipelineScheduleId, PipelineSchedule pipelineSchedule);
+
+    void delete(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO, Integer pipelineScheduleId);
 }

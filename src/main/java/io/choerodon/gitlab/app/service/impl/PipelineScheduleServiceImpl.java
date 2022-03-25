@@ -97,4 +97,38 @@ public class PipelineScheduleServiceImpl implements PipelineScheduleService {
             throw new CommonException(e);
         }
     }
+
+    @Override
+    public void update(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO, Integer pipelineScheduleId, PipelineSchedule pipelineSchedule) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
+        try {
+            gitLabApi
+                    .getPipelineApi()
+                    .updatePipelineSchedule(projectId, pipelineSchedule);
+        } catch (GitLabApiException e) {
+            throw new CommonException(e);
+        }
+    }
+
+    @Override
+    public void delete(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO, Integer pipelineScheduleId) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
+        try {
+            gitLabApi
+                    .getPipelineApi()
+                    .deletePipelineSchedule(projectId, pipelineScheduleId);
+        } catch (GitLabApiException e) {
+            throw new CommonException(e);
+        }
+    }
 }
