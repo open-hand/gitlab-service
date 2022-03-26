@@ -17,8 +17,11 @@ import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
 @RequestMapping(value = "/v1/projects/{project_id}/pipeline_schedules")
 public class PipelineScheduleController {
 
-    @Autowired
     private PipelineScheduleService pipelineScheduleService;
+
+    public PipelineScheduleController(PipelineScheduleService pipelineScheduleService) {
+        this.pipelineScheduleService = pipelineScheduleService;
+    }
 
     @ApiOperation(value = "创建定时执行计划")
     @PostMapping
