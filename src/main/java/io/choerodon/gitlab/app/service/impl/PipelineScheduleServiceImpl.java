@@ -133,4 +133,43 @@ public class PipelineScheduleServiceImpl implements PipelineScheduleService {
             throw new CommonException(e);
         }
     }
+
+    @Override
+    public void deleteVariable(Integer projectId, Integer pipelineScheduleId, Integer userId, AppExternalConfigDTO appExternalConfigDTO, Variable variable) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
+        try {
+            gitLabApi
+                    .getPipelineApi()
+                    .deletePipelineScheduleVariable(projectId,
+                            pipelineScheduleId,
+                            variable.getKey());
+        } catch (GitLabApiException e) {
+            throw new CommonException(e);
+        }
+    }
+
+    @Override
+    public void editVariable(Integer projectId, Integer pipelineScheduleId, Integer userId, AppExternalConfigDTO appExternalConfigDTO, Variable variable) {
+        GitLabApi gitLabApi;
+        if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+            gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        } else {
+            gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+        }
+        try {
+            gitLabApi
+                    .getPipelineApi()
+                    .updatePipelineScheduleVariable(projectId,
+                            pipelineScheduleId,
+                            variable.getKey(),
+                            variable.getValue());
+        } catch (GitLabApiException e) {
+            throw new CommonException(e);
+        }
+    }
 }

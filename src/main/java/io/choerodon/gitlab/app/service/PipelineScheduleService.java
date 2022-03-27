@@ -34,4 +34,9 @@ public interface PipelineScheduleService {
     void update(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO, Integer pipelineScheduleId, PipelineSchedule pipelineSchedule);
 
     void delete(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO, Integer pipelineScheduleId);
+
+    void deleteVariable(Integer projectId, Integer pipelineScheduleId, Integer userId, AppExternalConfigDTO appExternalConfigDTO, Variable variable);
+
+    void editVariable(Integer projectId, Integer pipelineScheduleId, Integer userId, AppExternalConfigDTO appExternalConfigDTO, Variable variable);
+
 }

@@ -85,5 +85,28 @@ public class PipelineScheduleController {
             @RequestBody Variable variable) {
         return ResponseEntity.ok(pipelineScheduleService.createVariable(projectId, pipelineScheduleId, userId, appExternalConfigDTO, variable));
     }
+    @ApiOperation(value = "删除定时执行计划变量")
+    @DeleteMapping("{pipeline_schedule_id}/variables")
+    public ResponseEntity<Void> deleteVariable(
+            @PathVariable("project_id") Integer projectId,
+            @PathVariable("pipeline_schedule_id") Integer pipelineScheduleId,
+            @RequestParam(name = "user_id", required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO,
+            @RequestBody Variable variable) {
+        pipelineScheduleService.deleteVariable(projectId, pipelineScheduleId, userId, appExternalConfigDTO, variable);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "修改定时执行计划变量")
+    @PutMapping("{pipeline_schedule_id}/variables")
+    public ResponseEntity<Void> editVariable(
+            @PathVariable("project_id") Integer projectId,
+            @PathVariable("pipeline_schedule_id") Integer pipelineScheduleId,
+            @RequestParam(name = "user_id", required = false) Integer userId,
+            AppExternalConfigDTO appExternalConfigDTO,
+            @RequestBody Variable variable) {
+        pipelineScheduleService.editVariable(projectId, pipelineScheduleId, userId, appExternalConfigDTO, variable);
+        return ResponseEntity.noContent().build();
+    }
 
 }
