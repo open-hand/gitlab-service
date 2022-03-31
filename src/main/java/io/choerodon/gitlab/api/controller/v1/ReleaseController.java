@@ -42,5 +42,16 @@ public class ReleaseController {
                 .orElseThrow(() -> new FeignException("error.projects.create.name"));
     }
 
+    @ApiOperation(value = "")
+    @PutMapping("/releases")
+    public ResponseEntity<Release> update(
+            @PathVariable(value = "project_id") Integer projectId,
+            @RequestParam(required = false) Integer userId,
+            @RequestBody(required = false) ReleaseParams release) {
+        return Optional.ofNullable(releaseService.update(projectId, userId, release))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
+                .orElseThrow(() -> new FeignException("error.projects.create.name"));
+    }
+
 
 }

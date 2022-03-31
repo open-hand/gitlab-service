@@ -13,4 +13,6 @@ import org.gitlab4j.api.models.ReleaseParams;
 public interface ReleaseService {
 
     Release create(Integer projectId, Integer userId, ReleaseParams release);
+
+    Release update(Integer projectId, Integer userId, ReleaseParams release);
 }
