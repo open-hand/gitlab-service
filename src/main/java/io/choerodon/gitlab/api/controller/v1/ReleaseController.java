@@ -52,6 +52,16 @@ public class ReleaseController {
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.create.name"));
     }
+    @ApiOperation(value = "")
+    @PutMapping("/releases/{tag_name}")
+    public ResponseEntity<Release> query(
+            @PathVariable(value = "project_id") Integer projectId,
+            @PathVariable(value = "tag_name") String tagName,
+            @RequestParam(required = false) Integer userId) {
+        return Optional.ofNullable(releaseService.query(projectId, userId, tagName))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
+                .orElseThrow(() -> new FeignException("error.projects.create.name"));
+    }
 
 
 }

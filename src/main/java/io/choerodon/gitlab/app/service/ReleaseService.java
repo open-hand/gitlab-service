@@ -15,4 +15,6 @@ public interface ReleaseService {
     Release create(Integer projectId, Integer userId, ReleaseParams release);
 
     Release update(Integer projectId, Integer userId, ReleaseParams release);
+
+    Release query(Integer projectId, Integer userId, String tagName);
 }

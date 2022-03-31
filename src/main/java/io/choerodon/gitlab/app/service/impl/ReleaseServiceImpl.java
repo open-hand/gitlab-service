@@ -46,4 +46,16 @@ public class ReleaseServiceImpl implements ReleaseService {
             throw new CommonException(e);
         }
     }
+
+    @Override
+    public Release query(Integer projectId, Integer userId, String tagName) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+
+            return gitLabApi.getReleasesApi().getRelease(projectId, tagName);
+        } catch (GitLabApiException e) {
+
+            throw new CommonException(e);
+        }
+    }
 }
