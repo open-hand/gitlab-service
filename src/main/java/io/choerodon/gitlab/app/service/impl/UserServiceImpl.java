@@ -162,6 +162,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User queryUserByEmail(String email) {
+        try {
+            List<User> users = gitlab4jclient.getGitLabApi().getUserApi().findUsers(email);
+            if (!users.isEmpty()) {
+                return users.get(0);
+            }
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+        return null;
+    }
+
+    @Override
     public Boolean checkIsAdmin(Integer userId) {
         try {
             User user = gitlab4jclient.getGitLabApi().getUserApi().getUser(userId);
