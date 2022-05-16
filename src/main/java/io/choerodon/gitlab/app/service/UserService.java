@@ -122,6 +122,9 @@ public interface UserService {
      */
     Boolean checkEmailIsExist(String email);
 
+
+    User queryUserByEmail(String email);
+
     /**
      * 判断用户是否是admin
      *

@@ -260,6 +260,20 @@ public class UserController {
     }
 
     /**
+     * 校验用户邮箱是否在gitlab已存在
+     *
+     * @param email 用户邮箱
+     * @return Boolean
+     */
+    @ApiOperation(value = "根据邮箱查询用户")
+    @GetMapping(value = "/query_user/email")
+    public ResponseEntity<User> queryUserByEmail(
+            @ApiParam(value = "用户邮箱", required = true)
+            @RequestParam(value = "email") String email) {
+        return new ResponseEntity<>(userService.queryUserByEmail(email), HttpStatus.OK);
+    }
+
+    /**
      * 判断用户是否是admin
      *
      * @param userId gitlab用户id
