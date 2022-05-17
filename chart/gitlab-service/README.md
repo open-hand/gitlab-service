@@ -1,6 +1,6 @@
 # gitlab-service
 
-Gateway of Choerodon.
+Gitlab service of Choerodon.
 
 ## Installing the Chart
 

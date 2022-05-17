@@ -6,13 +6,13 @@ dependencies:
   - name: common
     repository: https://openchart.choerodon.com.cn/choerodon/c7n
     version: 1.x.x
-description: Gateway of Choerodon.
+description: Gitlab service of Choerodon.
 engine: gotpl
 home: https://github.com/open-hand/gitlab-service/tree/master/chart/gitlab-service
 icon: https://ui-avatars.com/api/?name=gitlab-service
 keywords:
   - choerodon
-  - gateway
+  - gitlab
 maintainers:
   - email: zhuchiyu@vip.hand-china.com
     name: choerodon
