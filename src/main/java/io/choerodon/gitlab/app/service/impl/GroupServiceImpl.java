@@ -238,9 +238,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void batchDeleteVariable(Integer groupId, List<String> keys, Integer userId) {
-        keys.forEach(key -> {
-            deleteVariable(groupId, key, userId);
-        });
+        keys.forEach(key -> deleteVariable(groupId, key, userId));
     }
 
     @Override

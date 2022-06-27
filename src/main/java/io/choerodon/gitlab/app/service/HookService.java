@@ -2,7 +2,6 @@ package io.choerodon.gitlab.app.service;
 
 import java.util.List;
 
-import org.gitlab4j.api.models.CommitStatuse;
 import org.gitlab4j.api.models.ProjectHook;
 
 

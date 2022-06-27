@@ -26,8 +26,6 @@ import java.util.List;
 @Service
 public class RepositoryServiceImpl implements RepositoryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RepositoryServiceImpl.class);
-
     private Gitlab4jClient gitlab4jclient;
 
     public RepositoryServiceImpl(Gitlab4jClient gitlab4jclient) {

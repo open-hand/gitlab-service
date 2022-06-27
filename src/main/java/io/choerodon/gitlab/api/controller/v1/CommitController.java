@@ -3,9 +3,6 @@ package io.choerodon.gitlab.api.controller.v1;
 import java.util.List;
 import java.util.Optional;
 
-import io.choerodon.gitlab.api.vo.CommitVO;
-import io.choerodon.gitlab.api.vo.GitlabTransferVO;
-
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.gitlab4j.api.models.Commit;
@@ -18,9 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.CommitStatuseVO;
+import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.choerodon.gitlab.app.service.CommitService;
-
-import javax.validation.Valid;
 
 /**
  * Created by zzy on 2018/1/14.

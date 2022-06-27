@@ -105,16 +105,6 @@ public interface RepositoryService {
      */
     List<Branch> listBranches(Integer projectId, Integer userId, AppExternalConfigDTO appExternalConfigDTO);
 
-
-//    /**
-//     * 项目下创建readme
-//     *
-//     * @param projectId 项目id
-//     * @param userId    用户Id
-//     */
-//    boolean createFile(Integer projectId, Integer userId);
-
-
     /**
      * 项目下获取file
      *
