@@ -27,10 +27,6 @@
     <dependencies>
         <dependency>
             <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
             <artifactId>choerodon-starter-limit</artifactId>
         </dependency>
         <dependency>
