@@ -133,7 +133,7 @@ public class ProjectsController {
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "用户ID", required = true)
-            @RequestParam(value = "userId") Integer userId,
+            @RequestParam(value = "userId", required = false) Integer userId,
             @ApiParam(value = "variable信息", required = true)
             @RequestBody @Valid List<VariableVO> list) {
         return Optional.ofNullable(projectService.batchCreateVariable(projectId, list, userId))
