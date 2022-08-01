@@ -196,7 +196,7 @@ public interface GroupService {
      * @param userId  用户Id
      * @return List
      */
-    List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage);
+    List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage, Integer minAccessLevel);
 
     List<Group> queryGroupWithStatisticsByName(String groupName, Integer userId, Boolean statistics);
 

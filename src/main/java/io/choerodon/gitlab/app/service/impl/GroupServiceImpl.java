@@ -262,11 +262,16 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage) {
+    public List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage, Integer minAccessLevel) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             GroupProjectsFilter groupProjectsFilter = new GroupProjectsFilter();
-            groupProjectsFilter.withOwned(owned).withSearch(search).withPage(page).withPerPage(perPage);
+            groupProjectsFilter
+                    .withOwned(owned)
+                    .withSearch(search)
+                    .withPage(page)
+                    .withPerPage(perPage)
+                    .withMinAccessLevel(minAccessLevel);
             return gitLabApi.getGroupApi().getProjects(groupId, groupProjectsFilter);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
