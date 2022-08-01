@@ -2,6 +2,8 @@ package io.choerodon.gitlab.infra.common.config;
 
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.ApplicationSettings;
+import org.gitlab4j.api.models.Setting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +46,10 @@ public class GitlabHealthy implements HealthIndicator {
             return Health.down().withDetail("Error Code", "the token or the url is error, or the ingress resolution error!").build();
         } else {
             try {
-                gitLabApi.getApplicationApi().modifyApplicationSetting(true);
+                ApplicationSettings applicationSettings = gitLabApi.getApplicationSettingsApi().getApplicationSettings();
+                if (!Boolean.TRUE.equals(applicationSettings.getSetting(Setting.ALLOW_LOCAL_REQUESTS_FROM_WEB_HOOKS_AND_SERVICES))) {
+                    gitLabApi.getApplicationSettingsApi().updateApplicationSetting(Setting.ALLOW_LOCAL_REQUESTS_FROM_WEB_HOOKS_AND_SERVICES, true);
+                }
             } catch (GitLabApiException e) {
                 throw new FeignException(e);
             }
