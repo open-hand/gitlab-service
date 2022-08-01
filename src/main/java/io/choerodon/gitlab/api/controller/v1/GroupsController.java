@@ -253,6 +253,16 @@ public class GroupsController {
         return new ResponseEntity<>(groupService.queryGroupByName(groupName, userId), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "根据组id查询组")
+    @GetMapping(value = "/{group_iid}")
+    public ResponseEntity<Group> queryGroupByIid(
+            @ApiParam(value = "组名", required = true)
+            @PathVariable(value = "group_iid") Integer groupIid,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId) {
+        return new ResponseEntity<>(groupService.queryGroupByIid(groupIid, userId), HttpStatus.OK);
+    }
+
     @ApiOperation(value = "根据组名检索组的列表")
     @GetMapping(value = "/{group_name}/with_statistics")
     public ResponseEntity<List<Group>> queryGroupWithStatisticsByName(

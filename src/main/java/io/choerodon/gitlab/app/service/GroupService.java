@@ -200,4 +200,5 @@ public interface GroupService {
 
     List<Group> queryGroupWithStatisticsByName(String groupName, Integer userId, Boolean statistics);
 
+    Group queryGroupByIid(Integer groupIid, Integer userId);
 }
