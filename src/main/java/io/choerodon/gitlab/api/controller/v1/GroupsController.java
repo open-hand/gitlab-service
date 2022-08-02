@@ -254,7 +254,7 @@ public class GroupsController {
     }
 
     @ApiOperation(value = "根据组id查询组")
-    @GetMapping(value = "/{group_iid}")
+    @GetMapping(value = "/query_by_id/{group_iid}")
     public ResponseEntity<Group> queryGroupByIid(
             @ApiParam(value = "组名", required = true)
             @PathVariable(value = "group_iid") Integer groupIid,
