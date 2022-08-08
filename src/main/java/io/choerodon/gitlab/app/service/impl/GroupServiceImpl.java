@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
@@ -262,11 +263,16 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage) {
+    public List<Project> listProjects(Integer groupId, Integer userId, Boolean owned, String search, Integer page, Integer perPage, Integer minAccessLevel) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             GroupProjectsFilter groupProjectsFilter = new GroupProjectsFilter();
-            groupProjectsFilter.withOwned(owned).withSearch(search).withPage(page).withPerPage(perPage);
+            groupProjectsFilter
+                    .withOwned(owned)
+                    .withSearch(search)
+                    .withPage(page)
+                    .withPerPage(perPage)
+                    .withMinAccessLevel(minAccessLevel);
             return gitLabApi.getGroupApi().getProjects(groupId, groupProjectsFilter);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
@@ -281,6 +287,16 @@ public class GroupServiceImpl implements GroupService {
             return gitLabApi.getGroupApi().getGroup(groupName,statistics);
         } catch (GitLabApiException e) {
             return null;
+        }
+    }
+
+    @Override
+    public Group queryGroupByIid(Integer groupIid, Integer userId) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            return gitLabApi.getGroupApi().getGroup(groupIid);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
         }
     }
 }

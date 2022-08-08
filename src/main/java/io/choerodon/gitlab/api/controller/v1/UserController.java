@@ -87,6 +87,19 @@ public class UserController {
     }
 
     /**
+     * 查找所有admin用户
+     *
+     * @return List
+     */
+    @ApiOperation(value = "查找所有用户")
+    @GetMapping(value = "/list_admin_users")
+    public ResponseEntity<List<User>> listAdminUsers() {
+        return Optional.ofNullable(userService.getAdminUsers())
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.users.queryAll"));
+    }
+
+    /**
      * 根据用户ID获得用户信息
      *
      * @param userId 用户id

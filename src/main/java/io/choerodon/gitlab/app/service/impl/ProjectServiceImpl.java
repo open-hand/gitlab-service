@@ -317,4 +317,13 @@ public class ProjectServiceImpl implements ProjectService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<Member> getAllMemberByProjectIdAndQuery(Integer projectId, String query) {
+        try {
+            return gitlab4jclient.getGitLabApi().getProjectApi().getAllMembers(projectId, query);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }

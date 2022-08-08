@@ -133,7 +133,7 @@ public class ProjectsController {
             @ApiParam(value = "项目ID", required = true)
             @PathVariable Integer projectId,
             @ApiParam(value = "用户ID", required = true)
-            @RequestParam(value = "userId") Integer userId,
+            @RequestParam(value = "userId", required = false) Integer userId,
             @ApiParam(value = "variable信息", required = true)
             @RequestBody @Valid List<VariableVO> list) {
         return Optional.ofNullable(projectService.batchCreateVariable(projectId, list, userId))
@@ -475,6 +475,20 @@ public class ProjectsController {
         return Optional.ofNullable(projectService.getAllMemberByProjectId(projectId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.project.member.list"));
+    }
+    /**
+     * 获取项目下所有成员
+     *
+     * @param projectId 项目id
+     * @return List
+     */
+    @ApiOperation(value = "获取项目下所有成员")
+    @GetMapping(value = "/{project_id}/all_members/list")
+    public ResponseEntity<List<Member>> getAllMemberByProjectIdAndQuery(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "project_id") Integer projectId,
+            @RequestParam(value = "query") String query) {
+        return ResponseEntity.ok(projectService.getAllMemberByProjectIdAndQuery(projectId, query));
     }
 
     /**

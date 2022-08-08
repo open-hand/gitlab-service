@@ -230,8 +230,9 @@ public class GroupsController {
             @RequestParam(value = "owned", required = false) Boolean owned,
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "page", required = false) Integer page,
-            @RequestParam(value = "perPage", required = false) Integer perPage) {
-        return ResponseEntity.ok(groupService.listProjects(groupId, userId, owned, search, page, perPage));
+            @RequestParam(value = "perPage", required = false) Integer perPage,
+            @RequestParam(value = "minAccessLevel", required = false) Integer minAccessLevel) {
+        return ResponseEntity.ok(groupService.listProjects(groupId, userId, owned, search, page, perPage, minAccessLevel));
     }
 
     /**
@@ -250,6 +251,16 @@ public class GroupsController {
             @RequestParam(required = false) Integer userId
     ) {
         return new ResponseEntity<>(groupService.queryGroupByName(groupName, userId), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "根据组id查询组")
+    @GetMapping(value = "/query_by_id/{group_iid}")
+    public ResponseEntity<Group> queryGroupByIid(
+            @ApiParam(value = "组名", required = true)
+            @PathVariable(value = "group_iid") Integer groupIid,
+            @ApiParam(value = "userId")
+            @RequestParam(required = false) Integer userId) {
+        return new ResponseEntity<>(groupService.queryGroupByIid(groupIid, userId), HttpStatus.OK);
     }
 
     @ApiOperation(value = "根据组名检索组的列表")
