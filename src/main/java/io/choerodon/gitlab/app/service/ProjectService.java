@@ -251,4 +251,5 @@ public interface ProjectService {
 
     Project updateNameAndPath(Integer projectId, Integer userId, String name);
 
+    List<Member> getAllMemberByProjectIdAndQuery(Integer projectId, String query);
 }
