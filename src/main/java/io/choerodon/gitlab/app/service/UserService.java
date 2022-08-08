@@ -10,6 +10,8 @@ import io.choerodon.gitlab.api.vo.UserWithPassword;
 
 public interface UserService {
 
+    List<User> getAdminUsers();
+
     /**
      * 获得当前用户信息
      *

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.gitlab4j.api.Constants;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.Pager;
 import org.gitlab4j.api.UserApi;
 import org.gitlab4j.api.models.Email;
 import org.gitlab4j.api.models.ImpersonationToken;
@@ -48,6 +49,16 @@ public class UserServiceImpl implements UserService {
             return active
                     ? userApi.getActiveUsers(page, perPage)
                     : userApi.getUsers(page, perPage);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<User> getAdminUsers() {
+        try {
+            Pager<User> adminUsers = gitlab4jclient.getGitLabApi().getUserApi().getAdminUsers(1, 100);
+            return adminUsers.all();
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
