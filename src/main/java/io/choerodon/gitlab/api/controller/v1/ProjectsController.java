@@ -462,6 +462,23 @@ public class ProjectsController {
     }
 
     /**
+     * 查询项目角色
+     *
+     * @param projectId 项目id
+     * @param userId    用户Id
+     * @return Member
+     */
+    @ApiOperation(value = "查询项目角色,包含继承的角色")
+    @GetMapping(value = "/{projectId}/members/all/{userId}")
+    public ResponseEntity<Member> getAllMember(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "成员信息", required = true)
+            @PathVariable(value = "userId") Integer userId) {
+        return ResponseEntity.ok(projectService.getAllMember(projectId, userId));
+    }
+
+    /**
      * 获取项目下所有成员
      *
      * @param projectId 项目id
