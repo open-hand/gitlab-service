@@ -323,7 +323,7 @@ public class ProjectsController {
             @ApiParam(value = "项目ID", required = true)
             @RequestParam Integer projectId,
             @ApiParam(value = "用户Id")
-            @RequestParam Integer userId) {
+            @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(projectService.getDeployKeys(projectId, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.project.deploy.key.get"));
