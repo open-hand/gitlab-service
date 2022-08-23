@@ -306,8 +306,8 @@ public class GroupServiceImpl implements GroupService {
     public Page<Member> pageMember(Integer groupId, Integer page, Integer size, Integer userId, String search) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
-            Pager<Member> allMembers = gitLabApi.getGroupApi().getAllMembers(groupId, search, null, page, size);
-            return new Page<>(allMembers.getCurrentItems(), new PageInfo(allMembers.getCurrentPage(), allMembers.getItemsPerPage()), allMembers.getTotalItems());
+            Pager<Member> allMembers = gitLabApi.getGroupApi().getAllMembers(groupId, search, null, page + 1, size);
+            return new Page<>(allMembers.getCurrentItems(), new PageInfo(page, size), allMembers.getTotalItems());
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -319,8 +319,8 @@ public class GroupServiceImpl implements GroupService {
         try {
             GroupFilter groupFilter = new GroupFilter();
             groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search);
-            Pager<Group> groups = gitLabApi.getGroupApi().getGroups(groupFilter, page, size);
-            return new Page<>(groups.getCurrentItems(), new PageInfo(groups.getCurrentPage(), groups.getItemsPerPage()), groups.getTotalItems());
+            Pager<Group> groups = gitLabApi.getGroupApi().getGroups(groupFilter, page + 1, size);
+            return new Page<>(groups.getCurrentItems(), new PageInfo(page, size), groups.getTotalItems());
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
