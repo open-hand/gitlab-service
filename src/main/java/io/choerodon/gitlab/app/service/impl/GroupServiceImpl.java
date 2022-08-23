@@ -312,4 +312,17 @@ public class GroupServiceImpl implements GroupService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public Page<Group> pagingGroupsWithParam(Integer userId, Integer page, Integer size, Boolean owned, String search, List<Integer> skipGroups) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            GroupFilter groupFilter = new GroupFilter();
+            groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search);
+            Pager<Group> groups = gitLabApi.getGroupApi().getGroups(groupFilter, page, size);
+            return new Page<>(groups.current(), new PageInfo(groups.getCurrentPage(), groups.getItemsPerPage()), groups.getTotalItems());
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }

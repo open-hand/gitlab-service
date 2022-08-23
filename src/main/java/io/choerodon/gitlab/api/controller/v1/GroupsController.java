@@ -46,6 +46,23 @@ public class GroupsController {
     }
 
     /**
+     * 分页查询所有组
+     *
+     * @return List
+     */
+    @ApiOperation(value = "分页查询有权限的所有组")
+    @PostMapping("/{userId}/paging")
+    public ResponseEntity<Page<Group>> paging(@ApiParam(value = "userId")
+                                              @PathVariable(value = "userId") Integer userId,
+                                              @RequestParam(value = "page") Integer page,
+                                              @RequestParam(value = "size") Integer size,
+                                              @RequestParam(value = "owned", required = false) Boolean owned,
+                                              @RequestParam(value = "search", required = false) String search,
+                                              @RequestBody List<Integer> skipGroups) {
+        return ResponseEntity.ok(groupService.pagingGroupsWithParam(userId, page, size, owned, search, skipGroups));
+    }
+
+    /**
      * 查询所有组
      *
      * @return List
