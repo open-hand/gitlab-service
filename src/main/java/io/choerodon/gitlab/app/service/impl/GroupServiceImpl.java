@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.domain.PageInfo;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
@@ -301,10 +303,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Pager<Member> pageMember(Integer groupId, Integer page, Integer size, Integer userId, String search) {
+    public Page<Member> pageMember(Integer groupId, Integer page, Integer size, Integer userId, String search) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
-            return gitLabApi.getGroupApi().getAllMembers(groupId, search, null, page, size);
+            Pager<Member> allMembers = gitLabApi.getGroupApi().getAllMembers(groupId, search, null, page, size);
+            return new Page<>(allMembers.current(), new PageInfo(allMembers.getCurrentPage(), allMembers.getItemsPerPage()), allMembers.getTotalItems());
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }

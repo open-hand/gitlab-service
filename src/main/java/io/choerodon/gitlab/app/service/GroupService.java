@@ -2,9 +2,9 @@ package io.choerodon.gitlab.app.service;
 
 import java.util.List;
 
-import org.gitlab4j.api.Pager;
 import org.gitlab4j.api.models.*;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
 import io.choerodon.gitlab.api.vo.VariableVO;
@@ -204,5 +204,5 @@ public interface GroupService {
 
     Group queryGroupByIid(Integer groupIid, Integer userId);
 
-    Pager<Member> pageMember(Integer groupId, Integer page, Integer size, Integer userId, String search);
+    Page<Member> pageMember(Integer groupId, Integer page, Integer size, Integer userId, String search);
 }

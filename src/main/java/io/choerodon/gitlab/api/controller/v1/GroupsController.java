@@ -6,13 +6,13 @@ import javax.validation.Valid;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.gitlab4j.api.Pager;
 import org.gitlab4j.api.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.choerodon.gitlab.api.vo.GroupVO;
@@ -131,7 +131,7 @@ public class GroupsController {
      */
     @ApiOperation(value = "分页查询成员列表")
     @GetMapping(value = "/{groupId}/members/page")
-    public ResponseEntity<Pager<Member>> pageMember(
+    public ResponseEntity<Page<Member>> pageMember(
             @ApiParam(value = "组ID", required = true)
             @PathVariable Integer groupId,
             @RequestParam Integer page,
