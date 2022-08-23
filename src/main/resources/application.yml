@@ -10,8 +10,8 @@ spring:
     host: localhost
     database: ${SPRING_REDIS_DATABASE:1}
 gitlab:
-  url: "http://git.example.com"
-  privateToken: "inputprivatetoken"
+  url: "https://gitlabtest.ctyun.cn/"
+  privateToken: "glpat-vLsA6dqXQsbaqKVnwF6A"
 eureka:
   instance:
     preferIpAddress: true
