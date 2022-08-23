@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.gitlab4j.api.Pager;
 import org.gitlab4j.api.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -120,6 +121,25 @@ public class GroupsController {
         return Optional.ofNullable(groupService.listMember(groupId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.groups.members.get"));
+    }
+
+    /**
+     * 查询组中的成员
+     *
+     * @param groupId 组对象Id
+     * @return List
+     */
+    @ApiOperation(value = "分页查询成员列表")
+    @GetMapping(value = "/{groupId}/members/page")
+    public ResponseEntity<Pager<Member>> pageMember(
+            @ApiParam(value = "组ID", required = true)
+            @PathVariable Integer groupId,
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @ApiParam(value = "用户userId")
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(value = "search", required = false) String search) {
+        return ResponseEntity.ok(groupService.pageMember(groupId, page, size, userId, search));
     }
 
     /**

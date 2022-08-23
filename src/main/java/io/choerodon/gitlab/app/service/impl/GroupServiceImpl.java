@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.GroupApi;
+import org.gitlab4j.api.Pager;
 import org.gitlab4j.api.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
@@ -295,6 +295,16 @@ public class GroupServiceImpl implements GroupService {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             return gitLabApi.getGroupApi().getGroup(groupIid);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Pager<Member> pageMember(Integer groupId, Integer page, Integer size, Integer userId, String search) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            return gitLabApi.getGroupApi().getAllMembers(groupId, search, null, page, size);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
