@@ -15,7 +15,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import io.choerodon.core.domain.Page;
-import io.choerodon.core.domain.PageInfo;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
@@ -307,7 +306,13 @@ public class GroupServiceImpl implements GroupService {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             Pager<Member> allMembers = gitLabApi.getGroupApi().getAllMembers(groupId, search, null, page, size);
-            return new Page<>(allMembers.current(), new PageInfo(allMembers.getCurrentPage(), allMembers.getItemsPerPage()), allMembers.getTotalItems());
+            Page<Member> members = new Page<>();
+            members.setContent(allMembers.current());
+            members.setSize(allMembers.getItemsPerPage());
+            members.setNumber(allMembers.getCurrentPage());
+            members.setTotalElements(allMembers.getTotalItems());
+            members.setTotalPages(allMembers.getTotalPages());
+            return members;
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
@@ -320,7 +325,13 @@ public class GroupServiceImpl implements GroupService {
             GroupFilter groupFilter = new GroupFilter();
             groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search);
             Pager<Group> groups = gitLabApi.getGroupApi().getGroups(groupFilter, page, size);
-            return new Page<>(groups.current(), new PageInfo(groups.getCurrentPage(), groups.getItemsPerPage()), groups.getTotalItems());
+            Page<Group> groupPage = new Page<>();
+            groupPage.setContent(groups.current());
+            groupPage.setSize(groups.getItemsPerPage());
+            groupPage.setNumber(groups.getCurrentPage());
+            groupPage.setTotalElements(groups.getTotalItems());
+            groupPage.setTotalPages(groups.getTotalPages());
+            return groupPage;
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
