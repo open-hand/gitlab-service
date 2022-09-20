@@ -206,5 +206,5 @@ public interface GroupService {
 
     Page<Member> pageMember(Integer groupId, Integer page, Integer size, Integer userId, String search);
 
-    Page<Group> pagingGroupsWithParam(Integer userId, Integer page, Integer size, Boolean owned, String search, List<Integer> skipGroups);
+    Page<Group> pagingGroupsWithParam(Integer userId, Integer page, Integer size, Boolean owned, String search, List<Integer> skipGroups, Integer minAccessLevel);
 }

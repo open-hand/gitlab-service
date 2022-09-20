@@ -58,8 +58,9 @@ public class GroupsController {
                                               @RequestParam(value = "size") Integer size,
                                               @RequestParam(value = "owned", required = false) Boolean owned,
                                               @RequestParam(value = "search", required = false) String search,
+                                              @RequestParam(value = "minAccessLevel", required = false) Integer minAccessLevel,
                                               @RequestBody List<Integer> skipGroups) {
-        return ResponseEntity.ok(groupService.pagingGroupsWithParam(userId, page, size, owned, search, skipGroups));
+        return ResponseEntity.ok(groupService.pagingGroupsWithParam(userId, page, size, owned, search, skipGroups,minAccessLevel));
     }
 
     /**

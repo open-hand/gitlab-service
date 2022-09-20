@@ -314,11 +314,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Page<Group> pagingGroupsWithParam(Integer userId, Integer page, Integer size, Boolean owned, String search, List<Integer> skipGroups) {
+    public Page<Group> pagingGroupsWithParam(Integer userId, Integer page, Integer size, Boolean owned, String search, List<Integer> skipGroups, Integer minAccessLevel) {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             GroupFilter groupFilter = new GroupFilter();
-            groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search);
+            groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search).withMinAccessLevel(AccessLevel.forValue(minAccessLevel));
             Pager<Group> groups = gitLabApi.getGroupApi().getGroups(groupFilter, page + 1, size);
             return new Page<>(groups.getCurrentItems(), new PageInfo(page, size), groups.getTotalItems());
         } catch (GitLabApiException e) {
