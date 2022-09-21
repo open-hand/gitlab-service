@@ -318,7 +318,11 @@ public class GroupServiceImpl implements GroupService {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             GroupFilter groupFilter = new GroupFilter();
-            groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search).withMinAccessLevel(AccessLevel.forValue(minAccessLevel));
+            if (minAccessLevel != null) {
+                groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search).withMinAccessLevel(AccessLevel.forValue(minAccessLevel));
+            } else {
+                groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search);
+            }
             Pager<Group> groups = gitLabApi.getGroupApi().getGroups(groupFilter, page + 1, size);
             return new Page<>(groups.getCurrentItems(), new PageInfo(page, size), groups.getTotalItems());
         } catch (GitLabApiException e) {
