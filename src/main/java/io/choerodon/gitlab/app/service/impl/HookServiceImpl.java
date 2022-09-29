@@ -53,4 +53,13 @@ public class HookServiceImpl implements HookService {
         }
 
     }
+
+    @Override
+    public ProjectHook updateProjectHook(Integer projectId, Integer hookId, Integer userId, ProjectHook projectHook) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId).getProjectApi().modifyHook(projectHook);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }

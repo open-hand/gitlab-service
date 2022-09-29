@@ -326,4 +326,16 @@ public class ProjectServiceImpl implements ProjectService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public Member getAllMember(Integer projectId, Integer userId) {
+        try {
+            return gitlab4jclient.getGitLabApi().getProjectApi().getMember(projectId, userId, true);
+        } catch (GitLabApiException e) {
+            LOGGER.error("no member found");
+            Member member = new Member();
+            member.setAccessLevel(AccessLevel.NONE);
+            return member;
+        }
+    }
 }

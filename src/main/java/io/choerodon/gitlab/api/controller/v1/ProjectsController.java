@@ -323,7 +323,7 @@ public class ProjectsController {
             @ApiParam(value = "项目ID", required = true)
             @RequestParam Integer projectId,
             @ApiParam(value = "用户Id")
-            @RequestParam Integer userId) {
+            @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(projectService.getDeployKeys(projectId, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.project.deploy.key.get"));
@@ -459,6 +459,23 @@ public class ProjectsController {
         return Optional.ofNullable(projectService.getMember(projectId, userId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.groups.member.create"));
+    }
+
+    /**
+     * 查询项目角色
+     *
+     * @param projectId 项目id
+     * @param userId    用户Id
+     * @return Member
+     */
+    @ApiOperation(value = "查询项目角色,包含继承的角色")
+    @GetMapping(value = "/{projectId}/members/all/{userId}")
+    public ResponseEntity<Member> getAllMember(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "projectId") Integer projectId,
+            @ApiParam(value = "成员信息", required = true)
+            @PathVariable(value = "userId") Integer userId) {
+        return ResponseEntity.ok(projectService.getAllMember(projectId, userId));
     }
 
     /**
