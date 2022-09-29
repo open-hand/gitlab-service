@@ -3,6 +3,7 @@ package io.choerodon.gitlab.app.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.gitlab4j.api.Constants;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.MergeRequest;
@@ -68,7 +69,7 @@ public class MergeRequestServiceImpl implements MergeRequestService {
     public List<MergeRequest> listMergeRequests(Integer projectId) {
         try {
             return gitlab4jclient.getGitLabApi(null).getMergeRequestApi()
-                    .getMergeRequests(projectId);
+                    .getMergeRequests(projectId, Constants.MergeRequestState.ALL);
         } catch (GitLabApiException e) {
             throw new FeignException("error.mergeRequests.list");
         }
