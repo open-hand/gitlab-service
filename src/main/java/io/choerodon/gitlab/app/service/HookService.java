@@ -22,4 +22,6 @@ public interface HookService {
     ProjectHook updateProjectHook(Integer projectId,Integer hookId, Integer userId);
 
     List<ProjectHook> listProjectHook(Integer projectId, Integer userId);
+
+    ProjectHook updateProjectHook(Integer projectId, Integer hookId, Integer userId, ProjectHook projectHook);
 }

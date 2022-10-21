@@ -7,13 +7,15 @@ import java.util.stream.Collectors;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.GroupApi;
+import org.gitlab4j.api.Pager;
 import org.gitlab4j.api.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.domain.PageInfo;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.GroupVO;
 import io.choerodon.gitlab.api.vo.MemberVO;
@@ -295,6 +297,34 @@ public class GroupServiceImpl implements GroupService {
         GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
         try {
             return gitLabApi.getGroupApi().getGroup(groupIid);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Page<Member> pageMember(Integer groupId, Integer page, Integer size, Integer userId, String search) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            Pager<Member> allMembers = gitLabApi.getGroupApi().getAllMembers(groupId, search, null, page + 1, size);
+            return new Page<>(allMembers.getCurrentItems(), new PageInfo(page, size), allMembers.getTotalItems());
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Page<Group> pagingGroupsWithParam(Integer userId, Integer page, Integer size, Boolean owned, String search, List<Integer> skipGroups, Integer minAccessLevel) {
+        GitLabApi gitLabApi = gitlab4jclient.getGitLabApi(userId);
+        try {
+            GroupFilter groupFilter = new GroupFilter();
+            if (minAccessLevel != null) {
+                groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search).withMinAccessLevel(AccessLevel.forValue(minAccessLevel));
+            } else {
+                groupFilter.withSkipGroups(skipGroups).withOwned(owned).withSearch(search);
+            }
+            Pager<Group> groups = gitLabApi.getGroupApi().getGroups(groupFilter, page + 1, size);
+            return new Page<>(groups.getCurrentItems(), new PageInfo(page, size), groups.getTotalItems());
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }

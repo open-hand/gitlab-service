@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.gitlab.api.vo.GitlabTransferVO;
 import io.choerodon.gitlab.api.vo.GroupVO;
@@ -42,6 +43,24 @@ public class GroupsController {
                                             @RequestParam(value = "search", required = false) String search,
                                             @RequestBody List<Integer> skipGroups) {
         return ResponseEntity.ok(groupService.listGroupsWithParam(userId, owned, search, skipGroups));
+    }
+
+    /**
+     * 分页查询所有组
+     *
+     * @return List
+     */
+    @ApiOperation(value = "分页查询有权限的所有组")
+    @PostMapping("/{userId}/paging")
+    public ResponseEntity<Page<Group>> paging(@ApiParam(value = "userId")
+                                              @PathVariable(value = "userId") Integer userId,
+                                              @RequestParam(value = "page") Integer page,
+                                              @RequestParam(value = "size") Integer size,
+                                              @RequestParam(value = "owned", required = false) Boolean owned,
+                                              @RequestParam(value = "search", required = false) String search,
+                                              @RequestParam(value = "minAccessLevel", required = false) Integer minAccessLevel,
+                                              @RequestBody List<Integer> skipGroups) {
+        return ResponseEntity.ok(groupService.pagingGroupsWithParam(userId, page, size, owned, search, skipGroups,minAccessLevel));
     }
 
     /**
@@ -120,6 +139,25 @@ public class GroupsController {
         return Optional.ofNullable(groupService.listMember(groupId))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.groups.members.get"));
+    }
+
+    /**
+     * 查询组中的成员
+     *
+     * @param groupId 组对象Id
+     * @return List
+     */
+    @ApiOperation(value = "分页查询成员列表")
+    @GetMapping(value = "/{groupId}/members/page")
+    public ResponseEntity<Page<Member>> pageMember(
+            @ApiParam(value = "组ID", required = true)
+            @PathVariable Integer groupId,
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @ApiParam(value = "用户userId")
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(value = "search", required = false) String search) {
+        return ResponseEntity.ok(groupService.pageMember(groupId, page, size, userId, search));
     }
 
     /**
