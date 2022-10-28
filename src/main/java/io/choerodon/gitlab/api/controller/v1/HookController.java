@@ -58,14 +58,14 @@ public class HookController {
      * @return ProjectHook
      */
     @ApiOperation(value = "更新ProjectHook对象")
-    @PutMapping
+    @PutMapping("/{hookId}")
     public ResponseEntity<ProjectHook> create(
             @ApiParam(value = "项目ID", required = true)
             @RequestParam Integer projectId,
             @ApiParam(value = "userId")
             @RequestParam(required = false) Integer userId,
             @ApiParam(value = "hookId", required = true)
-            @RequestParam Integer hookId) {
+            @PathVariable Integer hookId) {
         return Optional.ofNullable(hookService.updateProjectHook(projectId, hookId, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.NO_CONTENT))
                 .orElseThrow(() -> new FeignException("error.projects.update.hook"));

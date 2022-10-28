@@ -4,6 +4,7 @@
 
 `Gitlab Service`通过引入外部java客户端与Gitlab进行交互。该客户端通过直接调用Gitlab提供的api，处理来自其他服务的Gitlab请求。
 
+
 ## 功能
 
 - 项目组管理
