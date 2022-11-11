@@ -114,7 +114,7 @@ public class JobController {
             @ApiParam(value = "jobId", required = true)
             @PathVariable Integer jobId,
             @ApiParam(value = "userId")
-            @RequestParam(value = "userId") Integer userId) {
+            @RequestParam(value = "userId", required = false) Integer userId) {
         return ResponseEntity.ok(jobService.play(projectId, userId, jobId));
     }
 }
