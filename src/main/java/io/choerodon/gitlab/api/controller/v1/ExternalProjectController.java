@@ -7,10 +7,7 @@ import javax.validation.Valid;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.gitlab4j.api.models.Commit;
-import org.gitlab4j.api.models.Project;
-import org.gitlab4j.api.models.ProjectHook;
-import org.gitlab4j.api.models.RepositoryFile;
+import org.gitlab4j.api.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -140,6 +137,27 @@ public class ExternalProjectController {
         return Optional.ofNullable(commitService.listExternalCommits(projectId, page, size, appExternalConfigDTO))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.commits.get"));
+    }
+
+    @ApiOperation(value = "查询项目Variable")
+    @GetMapping(value = "/{projectId}/variable")
+    public ResponseEntity<List<Variable>> listProjectVariable(
+            @ApiParam(value = "用户", required = true)
+            @PathVariable Integer projectId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return ResponseEntity.ok(externalProjectService.listProjectVariable(projectId, appExternalConfigDTO));
+    }
+
+    @ApiOperation(value = "批量删除项目中指定key的变量")
+    @DeleteMapping(value = "/{projectId}/variables")
+    public ResponseEntity<Void> deleteVariable(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable Integer projectId,
+            AppExternalConfigDTO appExternalConfigDTO,
+            @ApiParam(value = "variable key", required = true)
+            @RequestParam String key) {
+        externalProjectService.deleteVariable(projectId, key, appExternalConfigDTO);
+        return ResponseEntity.noContent().build();
     }
 
 }

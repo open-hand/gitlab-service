@@ -97,4 +97,23 @@ public class ExternalProjectServiceImpl implements ExternalProjectService {
         }
     }
 
+    @Override
+    public List<Variable> listProjectVariable(Integer projectId, AppExternalConfigDTO appExternalConfigDTO) {
+        try {
+            return ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO).getProjectApi().getVariable(projectId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void deleteVariable(Integer projectId, String key, AppExternalConfigDTO appExternalConfigDTO) {
+        try {
+            ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO)
+                    .getProjectApi().deleteVariable(projectId, key);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
 }
