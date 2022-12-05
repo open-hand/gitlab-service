@@ -85,6 +85,28 @@ public class ExternalProjectController {
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.add.hook"));
     }
+    @ApiOperation(value = "获取ProjectHook对象")
+    @GetMapping("/hooks")
+    public ResponseEntity<List<ProjectHook>> listHooks(
+            @ApiParam(value = "项目ID", required = true)
+            @RequestParam Integer projectId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        return ResponseEntity.ok(externalProjectService.listProjectHook(projectId, appExternalConfigDTO));
+    }
+
+
+    @ApiOperation(value = "删除ProjectHook对象")
+    @DeleteMapping("/hooks/{hookId}")
+    public ResponseEntity<ProjectHook> deleteHook(
+            @ApiParam(value = "项目ID", required = true)
+            @RequestParam Integer projectId,
+            @ApiParam(value = "hookId", required = true)
+            @PathVariable Integer hookId,
+            AppExternalConfigDTO appExternalConfigDTO) {
+        externalProjectService.deleteHook(projectId, hookId, appExternalConfigDTO);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
     /**

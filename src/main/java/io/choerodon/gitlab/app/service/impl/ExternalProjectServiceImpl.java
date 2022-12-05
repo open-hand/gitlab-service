@@ -77,4 +77,24 @@ public class ExternalProjectServiceImpl implements ExternalProjectService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public void deleteHook(Integer projectId, Integer hookId, AppExternalConfigDTO appExternalConfigDTO) {
+        try {
+            ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO).getProjectApi()
+                    .deleteHook(projectId, hookId);
+        } catch (Exception e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<ProjectHook> listProjectHook(Integer projectId, AppExternalConfigDTO appExternalConfigDTO) {
+        try {
+            return ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO).getProjectApi().getHooks(projectId);
+        } catch (GitLabApiException e) {
+            throw new CommonException(e.getMessage(),e);
+        }
+    }
+
 }
