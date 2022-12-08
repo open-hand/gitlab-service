@@ -26,4 +26,13 @@ public interface ExternalProjectService {
     List<Map<String, Object>> batchCreateVariable(Integer projectId, List<VariableVO> list, AppExternalConfigDTO appExternalConfigDTO);
 
     ProjectHook createProjectHook(Integer projectId, ProjectHook projectHook, AppExternalConfigDTO appExternalConfigDTO);
+
+    void deleteHook(Integer projectId, Integer hookId, AppExternalConfigDTO appExternalConfigDTO);
+
+    List<ProjectHook> listProjectHook(Integer projectId, AppExternalConfigDTO appExternalConfigDTO);
+
+    List<Variable> listProjectVariable(Integer projectId, AppExternalConfigDTO appExternalConfigDTO);
+
+
+    void deleteVariable(Integer projectId, String key, AppExternalConfigDTO appExternalConfigDTO);
 }
