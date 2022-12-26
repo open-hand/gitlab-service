@@ -504,7 +504,7 @@ public class ProjectsController {
     public ResponseEntity<List<Member>> getAllMemberByProjectIdAndQuery(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Integer projectId,
-            @RequestParam(value = "query") String query) {
+            @RequestParam(value = "query", required = false) String query) {
         return ResponseEntity.ok(projectService.getAllMemberByProjectIdAndQuery(projectId, query));
     }
 
