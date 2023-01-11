@@ -2,6 +2,7 @@ package io.choerodon.gitlab.app.service;
 
 import java.util.List;
 
+import org.gitlab4j.api.Constants;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.MergeRequest;
 
@@ -13,8 +14,8 @@ public interface MergeRequestService {
     /**
      * 创建merge请求
      *
-     * @param projectId    工程ID
-     * @param userId       用户Id Optional
+     * @param projectId 工程ID
+     * @param userId    用户Id Optional
      * @return MergeRequest
      */
     MergeRequest createMergeRequest(Integer projectId, MergeRequestVO mergeRequestParams, Integer userId);
@@ -36,7 +37,7 @@ public interface MergeRequestService {
      * @param projectId 项目id
      * @return MergeRequest
      */
-    List<MergeRequest> listMergeRequests(Integer projectId);
+    List<MergeRequest> listMergeRequests(Integer projectId, Constants.MergeRequestState mergeRequestState);
 
     /**
      * 获取合并请求列表merge request

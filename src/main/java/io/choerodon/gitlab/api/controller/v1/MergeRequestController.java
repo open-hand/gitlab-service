@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.gitlab4j.api.Constants;
 import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.MergeRequest;
 import org.springframework.http.HttpStatus;
@@ -83,8 +84,9 @@ public class MergeRequestController {
     @GetMapping
     public ResponseEntity<List<MergeRequest>> list(
             @ApiParam(value = "工程id", required = true)
-            @PathVariable Integer projectId) {
-        return Optional.ofNullable(mergeRequestService.listMergeRequests(projectId))
+            @PathVariable Integer projectId,
+            @RequestParam("state") String state) {
+        return Optional.ofNullable(mergeRequestService.listMergeRequests(projectId, Constants.MergeRequestState.valueOf(state.toUpperCase())))
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException(ERROR_MERGE_REQUEST_CREATE));
     }
