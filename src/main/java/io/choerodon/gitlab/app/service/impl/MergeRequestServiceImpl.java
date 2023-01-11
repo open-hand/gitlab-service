@@ -66,10 +66,10 @@ public class MergeRequestServiceImpl implements MergeRequestService {
     }
 
     @Override
-    public List<MergeRequest> listMergeRequests(Integer projectId) {
+    public List<MergeRequest> listMergeRequests(Integer projectId, Constants.MergeRequestState mergeRequestState) {
         try {
             return gitlab4jclient.getGitLabApi(null).getMergeRequestApi()
-                    .getMergeRequests(projectId, Constants.MergeRequestState.ALL);
+                    .getMergeRequests(projectId, mergeRequestState);
         } catch (GitLabApiException e) {
             throw new FeignException("error.mergeRequests.list");
         }
@@ -77,7 +77,7 @@ public class MergeRequestServiceImpl implements MergeRequestService {
 
     @Override
     public List<Integer> listMergeRequestIds(Integer projectId) {
-        List<MergeRequest> mergeRequestList = listMergeRequests(projectId);
+        List<MergeRequest> mergeRequestList = listMergeRequests(projectId, Constants.MergeRequestState.ALL);
         return mergeRequestList.stream().map(MergeRequest::getIid).collect(Collectors.toList());
     }
 
