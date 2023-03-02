@@ -50,6 +50,9 @@ public class GitlabHealthy implements HealthIndicator {
                 if (!Boolean.TRUE.equals(applicationSettings.getSetting(Setting.ALLOW_LOCAL_REQUESTS_FROM_WEB_HOOKS_AND_SERVICES))) {
                     gitLabApi.getApplicationSettingsApi().updateApplicationSetting(Setting.ALLOW_LOCAL_REQUESTS_FROM_WEB_HOOKS_AND_SERVICES, true);
                 }
+                if (!Boolean.TRUE.equals(applicationSettings.getSetting(Setting.ALLOW_LOCAL_REQUESTS_FROM_SYSTEM_HOOKS))) {
+                    gitLabApi.getApplicationSettingsApi().updateApplicationSetting(Setting.ALLOW_LOCAL_REQUESTS_FROM_SYSTEM_HOOKS, true);
+                }
             } catch (GitLabApiException e) {
                 throw new FeignException(e);
             }
