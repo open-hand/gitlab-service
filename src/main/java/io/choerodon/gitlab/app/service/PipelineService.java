@@ -1,9 +1,10 @@
 package io.choerodon.gitlab.app.service;
 
-import org.gitlab4j.api.models.Pipeline;
-
 import java.util.List;
 import java.util.Map;
+
+import org.gitlab4j.api.models.Pipeline;
+import org.gitlab4j.api.models.PipelineTrigger;
 
 import io.choerodon.gitlab.api.vo.PipelineVO;
 import io.choerodon.gitlab.infra.dto.AppExternalConfigDTO;
@@ -23,7 +24,7 @@ public interface PipelineService {
      * @param userId    用户Id
      * @return List
      */
-    List<Pipeline> listPipelinesByPage(Integer projectId, Integer page, Integer size,Integer userId);
+    List<Pipeline> listPipelinesByPage(Integer projectId, Integer page, Integer size, Integer userId);
 
     /**
      * 查询项目下的pipelines
@@ -32,7 +33,7 @@ public interface PipelineService {
      * @param userId    用户Id
      * @return List
      */
-    List<Pipeline> listPipelines(Integer projectId,Integer userId);
+    List<Pipeline> listPipelines(Integer projectId, Integer userId);
 
     /**
      * 查询某个pipelines的具体信息
