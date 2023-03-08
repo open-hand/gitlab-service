@@ -29,7 +29,7 @@ public class PipelineTriggerController {
      * @param userId    用户id
      * @return Pipeline
      */
-    @ApiOperation(value = "Create a pipelines")
+    @ApiOperation(value = "创建流水线trigger")
     @PostMapping
     public ResponseEntity<PipelineTrigger> create(
             @ApiParam(value = "项目id", required = true)
@@ -50,7 +50,7 @@ public class PipelineTriggerController {
      * @param userId    用户id
      * @return Pipeline
      */
-    @ApiOperation(value = "Create a pipelines")
+    @ApiOperation(value = "删除流水线trigger")
     @DeleteMapping
     public ResponseEntity<Void> delete(
             @ApiParam(value = "项目id", required = true)
@@ -70,7 +70,7 @@ public class PipelineTriggerController {
      * @param userId    用户id
      * @return Pipeline
      */
-    @ApiOperation(value = "Create a pipelines")
+    @ApiOperation(value = "查询流水线trigger")
     @GetMapping
     public ResponseEntity<List<PipelineTrigger>> listPipelineTrigger(
             @ApiParam(value = "项目id", required = true)
