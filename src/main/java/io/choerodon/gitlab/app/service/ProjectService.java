@@ -117,6 +117,10 @@ public interface ProjectService {
      */
     Project updateProject(Project project, Integer userId);
 
+    Project archiveProject(Integer projectId, Integer userId);
+
+    Project unarchiveProject(Integer projectId, Integer userId);
+
     /**
      * 通过分支名查询保护分支
      *

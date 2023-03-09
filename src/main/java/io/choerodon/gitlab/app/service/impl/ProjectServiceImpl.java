@@ -1,10 +1,5 @@
 package io.choerodon.gitlab.app.service.impl;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.google.gson.Gson;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -12,6 +7,11 @@ import org.gitlab4j.api.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.exception.FeignException;
@@ -182,6 +182,26 @@ public class ProjectServiceImpl implements ProjectService {
                     .getProjectApi().updateProject(newProject);
         } catch (GitLabApiException e) {
             LOGGER.warn("Failed to update project, the user id is {} and project is [id={},ciConfigPath={}]", userId, newProject.getId(), newProject.getCiConfigPath());
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Project archiveProject(Integer projectId, Integer userId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId)
+                    .getProjectApi().archiveProject(projectId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Project unarchiveProject(Integer projectId, Integer userId) {
+        try {
+            return gitlab4jclient.getGitLabApi(userId)
+                    .getProjectApi().unarchiveProject(projectId);
+        } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
         }
     }
