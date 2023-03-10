@@ -208,6 +208,44 @@ public class ProjectsController {
     }
 
     /**
+     * 归档项目
+     *
+     * @param projectId 项目id
+     * @param userId  用户Id
+     * @return Project
+     */
+    @ApiOperation(value = "归档项目")
+    @PostMapping("/archive")
+    public ResponseEntity<Project> archiveProject(
+            @ApiParam(value = "用户Id", required = true)
+            @RequestParam Integer userId,
+            @ApiParam(value = "项目id", required = true)
+            @RequestBody Integer projectId) {
+        return Optional.ofNullable(projectService.archiveProject(projectId, userId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.projects.archive"));
+    }
+
+    /**
+     * 解档项目
+     *
+     * @param projectId 项目id
+     * @param userId  用户Id
+     * @return Project
+     */
+    @ApiOperation(value = "归档项目")
+    @PostMapping("/unarchive")
+    public ResponseEntity<Project> unarchiveProject(
+            @ApiParam(value = "用户Id", required = true)
+            @RequestParam Integer userId,
+            @ApiParam(value = "项目id", required = true)
+            @RequestBody Integer projectId) {
+        return Optional.ofNullable(projectService.unarchiveProject(projectId, userId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new FeignException("error.projects.unarchive"));
+    }
+
+    /**
      * 更新项目
      *
      * @param userId  用户Id
