@@ -251,4 +251,5 @@ public interface ProjectService {
 
     Project updateNameAndPath(Integer projectId, Integer userId, String name);
 
+    void deleteDeployKeys(Integer projectId, Integer userId,Integer keyId);
 }

@@ -317,4 +317,13 @@ public class ProjectServiceImpl implements ProjectService {
             throw new FeignException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public void deleteDeployKeys(Integer projectId, Integer userId, Integer keyId) {
+        try {
+            gitlab4jclient.getGitLabApi(userId).getDeployKeysApi().deleteDeployKey(projectId, keyId);
+        } catch (GitLabApiException e) {
+            throw new FeignException(e.getMessage(), e);
+        }
+    }
 }

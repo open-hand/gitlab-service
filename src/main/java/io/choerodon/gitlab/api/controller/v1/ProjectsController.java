@@ -330,6 +330,25 @@ public class ProjectsController {
     }
 
     /**
+     * 删除deployKeys
+     *
+     * @param projectId 项目Id
+     * @param userId    用户Id
+     * @Return List
+     */
+    @ApiOperation(value = "删除deployKeys")
+    @DeleteMapping(value = "/deploy_key")
+    public ResponseEntity<Void> deleteDeployKeys(
+            @ApiParam(value = "项目ID", required = true)
+            @RequestParam Integer projectId,
+            @ApiParam(value = "用户Id")
+            @RequestParam(required = false) Integer userId,
+            @RequestParam Integer keyId) {
+        projectService.deleteDeployKeys(projectId, userId, keyId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * 通过项目id查询项目
      *
      * @param projectId 项目id
