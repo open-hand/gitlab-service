@@ -182,8 +182,8 @@ public class ProjectsController {
             @ApiParam(value = "用户Id")
             @RequestParam(required = false) Integer userId) {
         return Optional.ofNullable(projectService.createProtectedBranches(projectId,
-                gitlabTransferVO.getBranchName(), gitlabTransferVO.getMergeAccessLevel(), gitlabTransferVO.getPushAccessLevel(),
-                userId))
+                        gitlabTransferVO.getBranchName(), gitlabTransferVO.getMergeAccessLevel(), gitlabTransferVO.getPushAccessLevel(),
+                        userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.CREATED))
                 .orElseThrow(() -> new FeignException("error.projects.protected.branches.create"));
     }
@@ -211,7 +211,7 @@ public class ProjectsController {
      * 归档项目
      *
      * @param projectId 项目id
-     * @param userId  用户Id
+     * @param userId    用户Id
      * @return Project
      */
     @ApiOperation(value = "归档项目")
@@ -230,7 +230,7 @@ public class ProjectsController {
      * 解档项目
      *
      * @param projectId 项目id
-     * @param userId  用户Id
+     * @param userId    用户Id
      * @return Project
      */
     @ApiOperation(value = "归档项目")
@@ -248,7 +248,7 @@ public class ProjectsController {
     /**
      * 更新项目
      *
-     * @param userId  用户Id
+     * @param userId 用户Id
      * @return Project
      */
     @ApiOperation(value = "更新项目")
@@ -365,6 +365,25 @@ public class ProjectsController {
         return Optional.ofNullable(projectService.getDeployKeys(projectId, userId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.project.deploy.key.get"));
+    }
+
+    /**
+     * 删除deployKeys
+     *
+     * @param projectId 项目Id
+     * @param userId    用户Id
+     * @Return List
+     */
+    @ApiOperation(value = "删除deployKeys")
+    @DeleteMapping(value = "/deploy_key")
+    public ResponseEntity<Void> deleteDeployKeys(
+            @ApiParam(value = "项目ID", required = true)
+            @RequestParam Integer projectId,
+            @ApiParam(value = "用户Id")
+            @RequestParam(required = false) Integer userId,
+            @RequestParam Integer keyId) {
+        projectService.deleteDeployKeys(projectId, userId, keyId);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -531,6 +550,7 @@ public class ProjectsController {
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new FeignException("error.project.member.list"));
     }
+
     /**
      * 获取项目下所有成员
      *

@@ -258,4 +258,6 @@ public interface ProjectService {
     List<Member> getAllMemberByProjectIdAndQuery(Integer projectId, String query);
 
     Member getAllMember(Integer projectId, Integer userId);
+
+    void deleteDeployKeys(Integer projectId, Integer userId,Integer keyId);
 }
