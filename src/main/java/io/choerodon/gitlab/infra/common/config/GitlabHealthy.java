@@ -2,8 +2,6 @@ package io.choerodon.gitlab.infra.common.config;
 
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.models.ApplicationSettings;
-import org.gitlab4j.api.models.Setting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +10,6 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
 import io.choerodon.core.exception.CommonException;
-import io.choerodon.core.exception.FeignException;
 
 @Component
 public class GitlabHealthy implements HealthIndicator {
@@ -45,17 +42,6 @@ public class GitlabHealthy implements HealthIndicator {
         if (errorCode == 401 || errorCode == 404) {
             return Health.down().withDetail("Error Code", "the token or the url is error, or the ingress resolution error!").build();
         } else {
-            try {
-                ApplicationSettings applicationSettings = gitLabApi.getApplicationSettingsApi().getApplicationSettings();
-                if (!Boolean.TRUE.equals(applicationSettings.getSetting(Setting.ALLOW_LOCAL_REQUESTS_FROM_WEB_HOOKS_AND_SERVICES))) {
-                    gitLabApi.getApplicationSettingsApi().updateApplicationSetting(Setting.ALLOW_LOCAL_REQUESTS_FROM_WEB_HOOKS_AND_SERVICES, true);
-                }
-                if (!Boolean.TRUE.equals(applicationSettings.getSetting(Setting.ALLOW_LOCAL_REQUESTS_FROM_SYSTEM_HOOKS))) {
-                    gitLabApi.getApplicationSettingsApi().updateApplicationSetting(Setting.ALLOW_LOCAL_REQUESTS_FROM_SYSTEM_HOOKS, true);
-                }
-            } catch (GitLabApiException e) {
-                throw new FeignException(e);
-            }
             return Health.up().build();
         }
     }
