@@ -81,9 +81,15 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Job play(Integer projectId, Integer userId, Integer jobId) {
+    public Job play(Integer projectId, Integer userId, Integer jobId, AppExternalConfigDTO appExternalConfigDTO) {
         try {
-            return gitlab4jclient.getGitLabApi(userId)
+            GitLabApi gitLabApi;
+            if (appExternalConfigDTO == null || appExternalConfigDTO.getGitlabUrl() == null) {
+                gitLabApi = gitlab4jclient.getGitLabApi(userId);
+            } else {
+                gitLabApi = ExternalGitlabApiUtil.createGitLabApi(appExternalConfigDTO);
+            }
+            return gitLabApi
                     .getJobApi().playJob(projectId, jobId);
         } catch (GitLabApiException e) {
             throw new FeignException(e.getMessage(), e);
